@@ -6,7 +6,7 @@ use tauri::command;
 
 lazy_static! {
     pub static ref DB: Db = {
-        let project_dirs = ProjectDirs::from("com", "yubo", "todos").unwrap();
+        let project_dirs = ProjectDirs::from("com", "yubo", "redo").unwrap();
         let db_path = project_dirs.data_dir().join("todos.db");
         open(db_path).unwrap()
     };
@@ -56,10 +56,7 @@ impl From<serde_json::Error> for Error {
 #[command]
 pub async fn add_todo(todo: Todo) -> Result<u64, Error> {
     let id = DB.generate_id()?;
-    let todo = Todo {
-        id,
-        ..todo
-    };
+    let todo = Todo { id, ..todo };
     DB.insert(id.to_be_bytes(), serde_json::to_vec(&todo)?)?;
     Ok(id)
 }

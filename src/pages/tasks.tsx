@@ -32,11 +32,7 @@ export default function Tasks() {
                 <Button
                     className="flex items-center gap-2"
                     onClick={() => {
-                        const act = addTodo({
-                            title: "New Task",
-                            description: ""
-                        });
-                        dispatch(act);
+                        dispatch(addTodo({}) as any);
                     }}
                 >
                     <Icon name="add" size={24} />

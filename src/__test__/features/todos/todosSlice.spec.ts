@@ -9,8 +9,8 @@ import {
     selectTodoTotal,
     todoAdded,
     todoDeleted,
-    todoUpdated,
     todoToggled,
+    todoUpdated,
     todosReducer
 } from "../../../features/todos/todosSlice";
 

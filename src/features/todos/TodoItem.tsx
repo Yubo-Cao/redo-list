@@ -1,15 +1,14 @@
 import { useRef } from "react";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateTodo, deleteTodo } from "./todosSlice";
 
 import { cls } from "@lib/utils";
 
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
-import { Menu, Item, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-
+import { deleteTodo, updateTodo } from "./todosSlice";
 import {
     Todo,
     selectEditTodoId,
@@ -250,7 +249,10 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 }
             `}</style>
             <Menu id={menuId} theme="accent">
-                <Item id="delete" onClick={() => dispatch(deleteTodo(id))}>
+                <Item
+                    id="delete"
+                    onClick={() => dispatch(deleteTodo(id) as any)}
+                >
                     <div className="flex gap-1 items-center">
                         <Icon name="delete" size={16} />
                         <span>Delete</span>

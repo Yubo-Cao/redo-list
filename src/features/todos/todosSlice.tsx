@@ -4,8 +4,9 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
-import { invoke } from "@lib/tauri";
 import { Queue } from "queue-typescript";
+
+import { invoke } from "@lib/tauri";
 
 export type Todo = {
     id: number;

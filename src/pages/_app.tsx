@@ -1,11 +1,11 @@
 import { Roboto_Flex } from "@next/font/google";
+import "@styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 
 import { cls } from "@lib/utils";
 
 import store from "../store";
-import "@styles/globals.css";
 
 const sans = Roboto_Flex({
     variable: "--font-sans",
