@@ -8,7 +8,13 @@ type ButtonProps = {
     style?: React.CSSProperties;
 };
 
-export default function Button({ children, className, onClick, disabled, style }: ButtonProps) {
+export default function Button({
+    children,
+    className,
+    onClick,
+    disabled,
+    style
+}: ButtonProps) {
     return (
         <button
             className={cls(

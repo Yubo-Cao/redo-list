@@ -21,7 +21,12 @@ export function Sidebar() {
                     />
                 }
                 nextLabel={
-                    <Icon name="chevron_right" size={28} wrap={true} className="text-pri-400" />
+                    <Icon
+                        name="chevron_right"
+                        size={28}
+                        wrap={true}
+                        className="text-pri-400"
+                    />
                 }
                 formatDay={(locale, date) => date.getDate()}
                 defaultActiveStartDate={new Date()}

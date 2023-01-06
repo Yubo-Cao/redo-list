@@ -101,7 +101,13 @@ export default function Layout({
 
     headerResizable &&
         useEffect(
-            resizer("left", headerRef, headerResizableMinWidth, headerResizableMaxWidth, setHw),
+            resizer(
+                "left",
+                headerRef,
+                headerResizableMinWidth,
+                headerResizableMaxWidth,
+                setHw
+            ),
             []
         );
     sideBarResizable &&

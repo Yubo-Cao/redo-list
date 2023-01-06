@@ -1,9 +1,6 @@
-# Tauri + Next.js + Typescript
+# Redo-List
 
-This template should help get you started developing with Tauri, Next.js and Typescript.
-
-## Recommended IDE Setup
-
--   [VS Code](https://code.visualstudio.com/) +
-    [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) +
-    [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+A material design power, minimalistic, rust-based to-do list manager. Further,
+this project integrates the spider to provide automatic task scheduling by
+solving the todo as an optimization problem with constraints via the genetic
+algorithm.

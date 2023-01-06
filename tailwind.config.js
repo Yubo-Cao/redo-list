@@ -45,12 +45,15 @@ module.exports = {
             ringOffsetColor: colors,
             gridTemplateColumns: (theme) => {
                 const spacing = theme("spacing");
-                return Object.keys(spacing).reduce((accumulator, spacingKey) => {
-                    return {
-                        ...accumulator,
-                        [`fit-${spacingKey}`]: `repeat(auto-fit,minmax(${spacing[spacingKey]}, 1fr))`
-                    };
-                }, {});
+                return Object.keys(spacing).reduce(
+                    (accumulator, spacingKey) => {
+                        return {
+                            ...accumulator,
+                            [`fit-${spacingKey}`]: `repeat(auto-fit,minmax(${spacing[spacingKey]}, 1fr))`
+                        };
+                    },
+                    {}
+                );
             },
             translate: {
                 fuller: "200%"
@@ -69,8 +72,5 @@ module.exports = {
             "2xl": "1536px"
         }
     },
-    plugins: [
-        require("@tailwindcss/forms"),
-        require("@tailwindcss/typography")
-    ]
+    plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")]
 };

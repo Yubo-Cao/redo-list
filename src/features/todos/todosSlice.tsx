@@ -127,8 +127,14 @@ const todosSlice = createSlice({
     }
 });
 
-export const { todoAdded, todoToggled, todoDeleted, todoEdited, todoStartEdit, todoStopEdit } =
-    todosSlice.actions;
+export const {
+    todoAdded,
+    todoToggled,
+    todoDeleted,
+    todoEdited,
+    todoStartEdit,
+    todoStopEdit
+} = todosSlice.actions;
 
 export const todosReducer = todosSlice.reducer;
 export default todosReducer;
@@ -166,7 +172,10 @@ export const selectTodoSubtasks = (todoId: number) =>
     );
 
 export const selectTodoSubtaskTotal = (todoId: number) =>
-    createSelector(selectTodoSubtasks(todoId), (subtasks: number[]) => subtasks.length);
+    createSelector(
+        selectTodoSubtasks(todoId),
+        (subtasks: number[]) => subtasks.length
+    );
 
 export const selectTodoSubtaskCompleteTotal = (todoId: number) =>
     createSelector(

@@ -73,7 +73,12 @@ export default function Title({
                 []
             )}
             {subtitle !== "" &&
-                React.createElement("div", { className: cls(subtitleClassName) }, subtitle, [])}
+                React.createElement(
+                    "div",
+                    { className: cls(subtitleClassName) },
+                    subtitle,
+                    []
+                )}
         </div>
     );
 }

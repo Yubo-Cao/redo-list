@@ -48,7 +48,13 @@ function _icon(props: InnerIconProps) {
                 className = ""
             } = props as ImageIconProps;
             return (
-                <Image src={src} alt={alt} width={size} height={size} className={className} />
+                <Image
+                    src={src}
+                    alt={alt}
+                    width={size}
+                    height={size}
+                    className={className}
+                />
             );
         },
         material: () => {
@@ -62,7 +68,11 @@ function _icon(props: InnerIconProps) {
             } = props as MaterialIconProps;
             return (
                 <i
-                    className={cls("antialiased", materialIcons.className, className)}
+                    className={cls(
+                        "antialiased",
+                        materialIcons.className,
+                        className
+                    )}
                     style={{
                         // ligature
                         WebkitFontFeatureSettings: "liga",
@@ -107,7 +117,10 @@ export default function Icon(props: IconProps) {
     if (!wrap && !wrapperClassName) return icon;
     return (
         <div
-            className={cls("flex items-center justify-center", wrapperClassName)}
+            className={cls(
+                "flex items-center justify-center",
+                wrapperClassName
+            )}
             style={{
                 width: size,
                 height: size,

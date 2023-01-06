@@ -21,7 +21,9 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         subtaskCompleteCount = useSelector(selectTodoSubtaskCompleteTotal(id)),
         editTodoId = useSelector(selectEditTodoId);
 
-    const sep = () => <span className="text-light-text dark:text-dark-text">·</span>;
+    const sep = () => (
+        <span className="text-light-text dark:text-dark-text">·</span>
+    );
 
     const [important, setImportant] = useState(false),
         [completed, setCompleted] = useState(false);
@@ -51,10 +53,17 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 )}
             />
             <div className={cls("flex-1")}>
-                <p className={cls("text-light-text dark:text-dark-text", "font-semibold")}>
+                <p
+                    className={cls(
+                        "text-light-text dark:text-dark-text",
+                        "font-semibold"
+                    )}
+                >
                     {title}
                 </p>
-                <p className="text-uim-400 text-sm text-ellipsis">{description}</p>
+                <p className="text-uim-400 text-sm text-ellipsis">
+                    {description}
+                </p>
                 <div className="text-sm text-uim-400">
                     {tags.length > 0 && (
                         <>
@@ -101,7 +110,9 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                         size={24}
                         fill={true}
                         className={cls(
-                            important ? "text-pri-400" : "text-uim-400 dark:text-dark-text",
+                            important
+                                ? "text-pri-400"
+                                : "text-uim-400 dark:text-dark-text",
                             "transition-colors"
                         )}
                     />

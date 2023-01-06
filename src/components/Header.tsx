@@ -49,7 +49,13 @@ const navigationItems: NavigationItemProps[] = [
     }
 ];
 
-function NavigationItem({ name, icon, href, className, active }: NavigationItemProps) {
+function NavigationItem({
+    name,
+    icon,
+    href,
+    className,
+    active
+}: NavigationItemProps) {
     const [hover, setHover] = useState(false);
     return (
         <Link
@@ -154,7 +160,12 @@ function DarkLightToggle({
     );
 }
 
-function Navigation({ items, activeItemId, className, style }: NavigationProps) {
+function Navigation({
+    items,
+    activeItemId,
+    className,
+    style
+}: NavigationProps) {
     const [open, setOpen] = useState(false),
         [prevWidth, setPrevWidth] = useState(0),
         ref = useRef<HTMLDivElement>(null);
@@ -224,7 +235,9 @@ function Navigation({ items, activeItemId, className, style }: NavigationProps) 
                         "max-sm:rounded-r-xl",
                         "max-sm:shadow-lg",
                         "max-sm:px-2",
-                        open ? "max-sm:translate-x-0" : "max-sm:-translate-x-fuller",
+                        open
+                            ? "max-sm:translate-x-0"
+                            : "max-sm:-translate-x-fuller",
                         "max-sm:bg-uim-50 max-sm:dark:bg-uim-900"
                     ),
                     // header
@@ -317,7 +330,10 @@ export default function Header({
                 )}
             >
                 <Logo className="lg:ml-2" />
-                <Navigation items={navigationItems} activeItemId={activeItemId} />
+                <Navigation
+                    items={navigationItems}
+                    activeItemId={activeItemId}
+                />
             </div>
             <DarkLightToggle />
         </header>
