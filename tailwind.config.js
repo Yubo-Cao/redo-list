@@ -21,7 +21,7 @@ const primaryColors = prefixer("pri", primary),
         "light-surface": lightSurface,
         "dark-surface": darkSurface,
         "dark-text": "#e3e3e3",
-        "light-text": "#000000",
+        "light-text": "#000000"
     };
 
 /** @type {import('tailwindcss').Config} */
@@ -29,7 +29,7 @@ module.exports = {
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx}",
         "./src/components/**/*.{js,ts,jsx,tsx}",
-        "./src/features/**/*.{js,ts,jsx,tsx}",
+        "./src/features/**/*.{js,ts,jsx,tsx}"
     ],
     darkMode: "class",
     theme: {
@@ -45,22 +45,19 @@ module.exports = {
             ringOffsetColor: colors,
             gridTemplateColumns: (theme) => {
                 const spacing = theme("spacing");
-                return Object.keys(spacing).reduce(
-                    (accumulator, spacingKey) => {
-                        return {
-                            ...accumulator,
-                            [`fit-${spacingKey}`]: `repeat(auto-fit,minmax(${spacing[spacingKey]}, 1fr))`,
-                        };
-                    },
-                    {}
-                );
+                return Object.keys(spacing).reduce((accumulator, spacingKey) => {
+                    return {
+                        ...accumulator,
+                        [`fit-${spacingKey}`]: `repeat(auto-fit,minmax(${spacing[spacingKey]}, 1fr))`
+                    };
+                }, {});
             },
             translate: {
-                fuller: "200%",
+                fuller: "200%"
             },
             fontFamily: {
-                sans: ["var(--font-sans)"],
-            },
+                sans: ["var(--font-sans)"]
+            }
         },
         screens: {
             "2xs": "320px",
@@ -69,12 +66,11 @@ module.exports = {
             md: "768px",
             lg: "1024px",
             xl: "1280px",
-            "2xl": "1536px",
-        },
+            "2xl": "1536px"
+        }
     },
     plugins: [
         require("@tailwindcss/forms"),
-        require("@tailwindcss/typography"),
-        require("@tailwindcss/container-queries"),
-    ],
+        require("@tailwindcss/typography")
+    ]
 };

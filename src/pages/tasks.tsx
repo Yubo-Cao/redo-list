@@ -1,20 +1,27 @@
+import dynamic from "next/dynamic";
+
 import Button from "../components/Button";
+import { formatDate } from "../components/Date";
 import Icon from "../components/Icon";
 import Layout from "../components/Layout";
+import { Sidebar } from "../features/todos/TodoEditor";
 
-export default function Index() {
+const TodoList = dynamic(() => import("../features/todos/TodoList"), { ssr: false });
+
+export default function Tasks() {
     return (
-        <Layout activeItemId={"my-day"}>
+        <Layout activeItemId={"tasks"} sideBarWidth={"22rem"} sideBarChildren={<Sidebar />}>
             <div className="flex justify-between items-center">
                 <h1 className="text-xl font-bold text-light-text dark:text-dark-text">
-                    <p>My Day</p>
-                    <p className="text-uim-400 text-sm font-normal">Today</p>
+                    <p>Tasks</p>
+                    <p className="text-uim-400 text-sm font-normal">{formatDate(new Date())}</p>
                 </h1>
                 <Button className="flex items-center gap-2">
                     <Icon name="add" size={24} />
                     <span>new Task</span>
                 </Button>
             </div>
+            <TodoList className="mt-4" />
         </Layout>
     );
 }
