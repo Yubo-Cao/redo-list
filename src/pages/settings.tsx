@@ -1,9 +1,11 @@
-import Header from "../components/Header";
+import Layout from "@components/Layout";
 
 export default function Index() {
     return (
         <>
-            <Header activeItemId="settings" />
+            <Layout activeItemId={"settings"}>
+                Settings
+            </Layout>
         </>
     );
 }

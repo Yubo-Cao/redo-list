@@ -97,7 +97,7 @@ function NavigationItem({
                     "sm:hidden",
                     "md:block",
                     "md:text-sm",
-                    active && hover && "text-pri-500 dark:text-pri-100",
+                    active && "text-pri-500 dark:text-pri-100",
                     active && "font-bold",
                     !active && "font-light",
                     "lg:flex-1",

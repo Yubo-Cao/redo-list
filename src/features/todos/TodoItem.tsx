@@ -1,11 +1,14 @@
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateTodo } from "./todosSlice";
+import { updateTodo, deleteTodo } from "./todosSlice";
 
 import { cls } from "@lib/utils";
 
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
+
+import { Menu, Item, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 
 import {
     Todo,
@@ -21,7 +24,9 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         dispatch = useDispatch(),
         subtaskCount = useSelector(selectTodoSubtaskTotal(id)),
         subtaskCompleteCount = useSelector(selectTodoSubtaskCompleteTotal(id)),
-        editTodoId = useSelector(selectEditTodoId);
+        editTodoId = useSelector(selectEditTodoId),
+        menuId = `todo-${id}-menu`,
+        { show } = useContextMenu({ id: menuId });
 
     const _wrap =
         <T,>(name: string, hook?: (T) => any) =>
@@ -63,6 +68,11 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         setDescription = _wrap("description");
 
     const RESETTER = cls("p-0", "border-0", "bg-transparent", "outline-none");
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
+        show({ event: e, props: {} });
+    };
 
     const Sep = () => (
         <span className={cls("text-light-text", "dark:text-dark-text", "mx-1")}>
@@ -151,7 +161,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 "rounded-full p-1",
                 "focus:outline-0 focus:ring-1 focus:ring-pri-400 dark:focus:ring-uim-500",
                 important
-                    ? "hover:bg-pri-100 dark:hover:bg-pri-800"
+                    ? "hover:bg-pri-100 dark:hover:bg-pri-600/50"
                     : "hover:bg-uim-100 dark:hover:bg-uim-900"
             )}
             ref={importantRef}
@@ -178,18 +188,14 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 "bg-light-surface dark:bg-dark-surface",
                 "hover:bg-uim-50/50 dark:hover:bg-uim-900",
                 "cursor-pointer",
+                "todo-item",
                 editing && "editing"
             )}
             onClick={(e) => {
                 if (e.target === completedRef.current) return;
                 setEditing(true);
-                if (e.button === 2) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dispatch(todoStartEdit(null));
-                    dispatch(todoStartEdit(id));
-                }
             }}
+            onContextMenu={handleContextMenu}
             tabIndex={0}
             onFocus={() => setEditing(true)}
         >
@@ -235,12 +241,61 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 :global(*:focus),
                 :global(.editing) {
                     outline: 1px solid #fb923c;
-                    box-shadow: 0 0 0 #fb923c;
+                    box-shadow: 0 2px 3px -1px #fb923c, 0 1px 2px -2px #fb923c;
                 }
 
                 :global([type="text"]:focus) {
                     outline: none;
                     box-shadow: none;
+                }
+            `}</style>
+            <Menu id={menuId} theme="accent">
+                <Item id="delete" onClick={() => dispatch(deleteTodo(id))}>
+                    <div className="flex gap-1 items-center">
+                        <Icon name="delete" size={16} />
+                        <span>Delete</span>
+                    </div>
+                </Item>
+                <Item id="edit" onClick={() => setEditing(true)}>
+                    <div className="flex gap-1 items-center">
+                        <Icon name="edit" size={16} />
+                        <span>Edit</span>
+                    </div>
+                </Item>
+                <Item id="important" onClick={() => setImportant(!important)}>
+                    <div className="flex gap-1 items-center">
+                        <Icon name="star" size={16} />
+                        <span>Mark as important</span>
+                    </div>
+                </Item>
+            </Menu>
+            <style jsx>{`
+                :global(.todo-item *:focus),
+                :global(.todo-item .editing) {
+                    outline: 1px solid #fb923c;
+                    box-shadow: 0 2px 3px -1px #fb923c, 0 1px 2px -2px #fb923c;
+                }
+
+                :global(.todo-item [type="text"]:focus) {
+                    outline: none;
+                    box-shadow: none;
+                }
+
+                :global(.todo-item .contexify_theme-accent) {
+                    --contexify-menu-bgColor: #fff;
+                    --contexify-separator-color: #eee;
+                    --contexify-item-color: #666;
+                    --contexify-activeItem-color: #ec913f;
+                    --contexify-activeItem-bgColor: #fbedd5;
+                    --contexify-rightSlot-color: #6f6e77;
+                    --contexify-activeRightSlot-color: #ec913f;
+                    --contexify-arrow-color: #6f6e77;
+                    --contexify-activeArrow-color: #fff;
+
+                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+                        0 2px 4px -2px rgb(0 0 0 / 0.1);
+                    padding: 0.5rem 0;
+                    gap: 0.5rem;
                 }
             `}</style>
         </li>

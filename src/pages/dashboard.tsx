@@ -1,9 +1,9 @@
-import Header from "../components/Header";
+import Layout from "@components/Layout";
 
 export default function Dashboard() {
     return (
         <>
-            <Header activeItemId="dashboard" />
+            <Layout activeItemId={"dashboard"}>Dashboard</Layout>
         </>
     );
 }

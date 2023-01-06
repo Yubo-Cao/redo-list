@@ -104,6 +104,9 @@ const todosSlice = createSlice({
         builder.addCase(addTodo.fulfilled, (state, action) => {
             todosAdapter.addOne(state, action.payload);
         });
+        builder.addCase(deleteTodo.fulfilled, (state, action) => {
+            todosAdapter.removeOne(state, action.payload);
+        });
     }
 });
 

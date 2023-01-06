@@ -1,6 +1,6 @@
-import Button from "../components/Button";
-import Icon from "../components/Icon";
-import Layout from "../components/Layout";
+import Button from "@components/Button";
+import Icon from "@components/Icon";
+import Layout from "@components/Layout";
 
 export default function Index() {
     return (
