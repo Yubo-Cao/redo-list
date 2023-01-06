@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Calendar from "react-calendar";
 import { useSelector } from "react-redux";
 
 import Icon from "../../components/Icon";
 import { LayoutContext } from "../../components/Layout";
+
 import { selectEditTodoId } from "./todosSlice";
 
 export function Sidebar() {

@@ -13,9 +13,12 @@
         "@next/font": "^13.1.1",
         "@reduxjs/toolkit": "^1.9.1",
         "@tauri-apps/api": "^1.2.0",
+        "@types/react-redux": "^7.1.25",
         "next": "^13.0.0",
+        "queue-typescript": "^1.0.1",
         "react": "^18.2.0",
         "react-calendar": "^4.0.0",
+        "react-contexify": "^6.0.0",
         "react-dom": "^18.2.0",
         "react-redux": "^8.0.5",
         "to-px": "^1.1.0"

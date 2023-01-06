@@ -4,6 +4,8 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
+import { invoke } from "@lib/tauri";
+import { Queue } from "queue-typescript";
 
 export type Todo = {
     id: number;
@@ -19,10 +21,11 @@ export type Todo = {
     parentTaskId?: number;
     resources?: string[];
     subtasks: number[];
+    dependencies: number[];
 };
 
-export const DefaultTodo: Todo = {
-    id: 0,
+export const DEFAULT_TODO: Todo = {
+    id: 0, // placeholder ID for rust serialzer
     title: "",
     description: "",
     completed: false,
@@ -34,63 +37,30 @@ export const DefaultTodo: Todo = {
     estimatedDuration: null,
     parentTaskId: null,
     resources: [],
-    subtasks: []
+    subtasks: [],
+    dependencies: []
 };
 
 export type TodosState = {
-    status: "idle" | "loading" | "failed";
+    status: "idle" | "loading" | "failed" | "needsUpdate";
     entities: { [id: number]: Todo };
     editTodoId: number | null;
 };
 
 const initialState: TodosState = {
-    status: "idle",
+    status: "needsUpdate",
     entities: {},
     editTodoId: null
 };
 
 const todosAdapter = createEntityAdapter<Todo>();
 
-const nextId = (state: TodosState) => {
-    return Object.keys(state.entities).length + 1;
-};
-
 const todosSlice = createSlice({
     name: "todos",
     initialState: todosAdapter.getInitialState(initialState),
     reducers: {
-        todoAdded: (state, action) => {
-            const {
-                title,
-                createDate,
-                dueDate,
-                completed = false,
-                description = "",
-                importance = 0,
-                important = false,
-                tags = [],
-                subtasks = [],
-                estimatedDuration,
-                parentTaskId,
-                resources
-            } = action.payload;
-            if (!title) throw new Error("Title is required");
-            if (!createDate) throw new Error("Create date is required");
-            todosAdapter.addOne(state, {
-                id: nextId(state),
-                title,
-                description,
-                completed,
-                createDate: createDate,
-                dueDate,
-                importance,
-                important,
-                tags,
-                subtasks,
-                estimatedDuration,
-                parentTaskId,
-                resources
-            });
+        todoAdded: (state, action: { payload: Todo }) => {
+            todosAdapter.addOne(state, action.payload);
         },
         todoToggled: (state, action) => {
             const todo = state.entities[action.payload];
@@ -101,11 +71,11 @@ const todosSlice = createSlice({
         todoDeleted: (state, action) => {
             todosAdapter.removeOne(state, action.payload);
         },
-        todoEdited: (state, action) => {
+        todoUpdated: (state, action) => {
             const { id, ...todo } = action.payload;
-            const todoToEdit = state.entities[id];
-            if (!todoToEdit) throw new Error("Todo not found");
-            Object.assign(todoToEdit, todo);
+            const old = state.entities[id];
+            if (!old) throw new Error("Todo not found");
+            Object.assign(old, todo);
         },
         todoStartEdit: (state, action) => {
             state.editTodoId = action.payload;
@@ -119,24 +89,36 @@ const todosSlice = createSlice({
             state.status = "loading";
         });
         builder.addCase(fetchTodos.fulfilled, (state, action) => {
-            console.log(action);
-            todosAdapter.setAll(state, JSON.parse(action.payload));
+            todosAdapter.setAll(state, action.payload);
             state.status = "idle";
+        });
+        builder.addCase(fetchTodos.rejected, (state, action) => {
+            state.status = "failed";
+        });
+        builder.addCase(updateTodo.fulfilled, (state, action) => {
+            const { id, update } = action.payload;
+            if (!Object.hasOwn(state.entities, id))
+                throw new Error("Todo not found");
+            state.entities[id] = { ...state.entities[id], ...update };
+        });
+        builder.addCase(addTodo.fulfilled, (state, action) => {
+            todosAdapter.addOne(state, action.payload);
         });
     }
 });
 
+export const todosReducer = todosSlice.reducer;
+export default todosReducer;
+
+// selectors
 export const {
     todoAdded,
     todoToggled,
     todoDeleted,
-    todoEdited,
+    todoUpdated,
     todoStartEdit,
     todoStopEdit
 } = todosSlice.actions;
-
-export const todosReducer = todosSlice.reducer;
-export default todosReducer;
 
 export const {
     selectAll: selectAllTodos,
@@ -184,7 +166,54 @@ export const selectTodoSubtaskCompleteTotal = (todoId: number) =>
             subtasks.filter((subtaskId) => entities[subtaskId].completed).length
     );
 
+// thunks
 export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
-    const response = await fetch("/api/todos");
-    return await response.json();
+    const todos: Todo[] = await invoke("get_root_todos");
+    console.log("fetching todos");
+    return todos;
 });
+
+export const addTodo = createAsyncThunk(
+    "todos/addTodo",
+    async (todo: Partial<Todo>): Promise<Todo> => {
+        const final: Todo = { ...DEFAULT_TODO, ...todo };
+        const id: number = await invoke("add_todo", { todo: final });
+        const result = { ...final, id };
+        return result;
+    }
+);
+
+const updateQueue: Queue<[number, { [key: string]: any }]> = new Queue();
+export const updateTodo = createAsyncThunk(
+    "todos/updateTodo",
+    async ({ id, update }: { id: number; update: Partial<Todo> }) => {
+        updateQueue.enqueue([id, update]);
+        return { id, update };
+    }
+);
+const updateTodoWorker = async () => {
+    if (updateQueue.length === 0) return;
+    const updates = new Map<number, { [key: string]: Partial<Todo> }>();
+    while (updateQueue.length > 0) {
+        const [id, update] = updateQueue.dequeue();
+        if (updates.has(id)) updates.set(id, { ...updates.get(id), ...update });
+        else updates.set(id, update);
+    }
+    updates.forEach(async (update, id) => {
+        const old: Todo = await invoke("get_todo", { id });
+        console.debug(`updating todo ${id}`);
+        await invoke("update_todo", {
+            id,
+            todo: { ...old, ...update }
+        });
+    });
+};
+setInterval(updateTodoWorker, 15000);
+
+export const deleteTodo = createAsyncThunk(
+    "todos/deleteTodo",
+    async (todoId: number) => {
+        await invoke("delete_todo", { id: todoId });
+        return todoId;
+    }
+);

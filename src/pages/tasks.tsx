@@ -1,16 +1,21 @@
 import dynamic from "next/dynamic";
+import { useDispatch } from "react-redux";
 
-import Button from "../components/Button";
-import { formatDate } from "../components/Date";
-import Icon from "../components/Icon";
-import Layout from "../components/Layout";
-import { Sidebar } from "../features/todos/TodoEditor";
+import { Sidebar } from "@features/todos/TodoEditor";
+import { addTodo } from "@features/todos/todosSlice";
+
+import Button from "@components/Button";
+import { formatDate } from "@components/Date";
+import Icon from "@components/Icon";
+import Layout from "@components/Layout";
 
 const TodoList = dynamic(() => import("../features/todos/TodoList"), {
     ssr: false
 });
 
 export default function Tasks() {
+    const dispatch = useDispatch();
+
     return (
         <Layout
             activeItemId={"tasks"}
@@ -24,7 +29,16 @@ export default function Tasks() {
                         {formatDate(new Date())}
                     </p>
                 </h1>
-                <Button className="flex items-center gap-2">
+                <Button
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                        const act = addTodo({
+                            title: "New Task",
+                            description: ""
+                        });
+                        dispatch(act);
+                    }}
+                >
                     <Icon name="add" size={24} />
                     <span>new Task</span>
                 </Button>

@@ -8,7 +8,13 @@
     "bracketSpacing": true,
     "jsxBracketSameLine": false,
     "semi": true,
-    "importOrder": ["^@features/(.*)$", "^@api/(.*)$", "^@lib/(.*)$", "^[./]"],
+    "importOrder": [
+        "^(\\.+/)*@?features/(.*)$",
+        "^(\\.+/)*@?api/(.*)$",
+        "^(\\.+/)*@?lib/(.*)$",
+        "^(\\.+/)*@?components/(.*)$",
+        "^[./]"
+    ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { cls } from "../lib/utils";
+
 import Icon from "./Icon";
 
 type LogoProps = {
