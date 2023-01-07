@@ -36,7 +36,6 @@ export default function Checkbox(
                 input:active,
                 input:focus {
                     outline: none;
-                    box-shadow: none;
                 }
 
                 input:hover:not(:checked) {

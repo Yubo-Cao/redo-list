@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cls } from "@lib/utils";
 
 import { formatDate } from "@components/Date";
+import Checkbox from "@components/Checkbox";
 import Icon from "@components/Icon";
 
 import {
@@ -135,18 +136,10 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
     };
 
     const Completed = () => (
-        <input
-            type="checkbox"
+        <Checkbox
             checked={completed}
             onChange={() => setCompleted(!completed)}
             onClick={(e) => e.stopPropagation()}
-            className={cls(
-                "w-5 h-5",
-                "rounded-lg",
-                "text-pri-500 checked:bg-pri-500 hover:border-pri-400",
-                "dark:bg-dark-surface dark:checked:bg-pri-500 dark:border-uim-500",
-                "focus:border-pri-400 focus:ring-0 focus:ring-transparent"
-            )}
             ref={completedRef}
         />
     );
@@ -246,18 +239,6 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 </div>
             </div>
             {Important()}
-            <style jsx>{`
-                :global(*:focus),
-                :global(.editing) {
-                    outline: 1px solid #fb923c;
-                    box-shadow: 0 2px 3px -1px #fb923c, 0 1px 2px -2px #fb923c;
-                }
-
-                :global([type="text"]:focus) {
-                    outline: none;
-                    box-shadow: none;
-                }
-            `}</style>
             <Menu id={menuId} theme="accent">
                 <Item
                     id="delete"
@@ -282,12 +263,6 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 </Item>
             </Menu>
             <style jsx>{`
-                :global(.todo-item *:focus),
-                :global(.todo-item .editing) {
-                    outline: 1px solid #fb923c;
-                    box-shadow: 0 2px 3px -1px #fb923c, 0 1px 2px -2px #fb923c;
-                }
-
                 :global(.todo-item [type="text"]:focus) {
                     outline: none;
                     box-shadow: none;

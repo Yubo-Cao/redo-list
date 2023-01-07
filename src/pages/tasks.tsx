@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useDispatch } from "react-redux";
 
-import { Sidebar } from "@features/todos/TodoEditor";
+import Sidebar from "@features/todos/TodoEditor";
 import { addTodo, todoStartEdit } from "@features/todos/todosSlice";
 
 import Button from "@components/Button";
@@ -40,7 +40,7 @@ export default function Tasks() {
                         }}
                     >
                         <Icon name="add" size={24} />
-                        <span>new Task</span>
+                        <span>New Task</span>
                     </Button>
                 </div>
                 <TodoList className="mt-4" />

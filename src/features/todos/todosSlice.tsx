@@ -154,7 +154,7 @@ export const selectTodoIds = createSelector(selectAllTodos, (todos: Todo[]) =>
 
 export const selectEditTodoId = createSelector(
     (state: any) => state.todos,
-    (todos) => todos.editTodoId
+    (todos) => todos.editTodoId as Todo["id"]
 );
 
 export const selectEditTodo = createSelector(

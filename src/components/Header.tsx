@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { cls } from "../lib/utils";
 
+import Button, { ButtonProps } from "./Button";
 import Icon from "./Icon";
-import { IconButton, IconButtonProps } from "./IconButton";
 import Logo from "./Logo";
 
 type NavigationItemProps = {
@@ -110,54 +110,49 @@ function NavigationItem({
     );
 }
 
-function MenuButton({
-    open,
-    size = 44,
-    iconSize = 24,
-    ...props
-}: Omit<IconButtonProps, "size" | "iconSize" | "name"> & {
-    open: boolean;
-    size?: number;
-    iconSize?: number;
-}) {
+const BUTTON_STYLE: {
+    variant: "outline";
+    style: React.CSSProperties;
+    accent: "uim";
+} = {
+    variant: "outline",
+    style: { width: 44, height: 44 },
+    accent: "uim"
+};
+
+function MenuButton({ open, ...props }: ButtonProps & { open: boolean }) {
     return (
-        <IconButton
-            name={open ? "menu_open" : "menu"}
-            size={size}
-            iconSize={iconSize}
+        <Button
             {...props}
-        />
+            content="icon"
+            {...BUTTON_STYLE}
+            className="ml-1 mt-2 mb-2 sm:hidden"
+        >
+            <Icon name={open ? "menu_open" : "menu"} size={24} />
+        </Button>
     );
 }
 
-function DarkLightToggle({
-    size = 44,
-    iconSize = 24,
-    ...props
-}: Omit<IconButtonProps, "size" | "iconSize" | "name" | "onClick"> & {
-    size?: number;
-    iconSize?: number;
-}) {
+function DarkLightToggle() {
     const [dark, setDark] = useState(false);
-    // first time detect
     useEffect(() => {
         if (!window) return;
         setDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
     }, []);
     return (
-        <IconButton
-            name={dark ? "dark_mode" : "light_mode"}
-            size={size}
-            iconSize={iconSize}
-            {...props}
-            className="lg:ml-4"
+        <Button
             onClick={() => {
                 setDark(!dark);
                 const html = document?.documentElement;
                 if (!html) return;
                 html.classList.toggle("dark");
             }}
-        />
+            content="icon"
+            className="lg:ml-4"
+            {...BUTTON_STYLE}
+        >
+            <Icon name={dark ? "dark_mode" : "light_mode"} size={24} />
+        </Button>
     );
 }
 

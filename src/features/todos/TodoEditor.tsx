@@ -2,14 +2,17 @@ import { useContext } from "react";
 import Calendar from "react-calendar";
 import { useSelector } from "react-redux";
 
-import Icon from "../../components/Icon";
-import { LayoutContext } from "../../components/Layout";
+import Icon from "@components/Icon";
+import { LayoutContext } from "@components/Layout";
 
-import { selectEditTodoId } from "./todosSlice";
+import {
+    Todo,
+    selectEditTodoId,
+    selectTodoById
+} from "@features/todos/todosSlice";
 
-export function Sidebar() {
-    const value = useContext(LayoutContext),
-        editTodoId = useSelector(selectEditTodoId);
+function CalendarSidebar() {
+    const value = useContext(LayoutContext);
     return (
         <>
             <Calendar
@@ -127,4 +130,39 @@ export function Sidebar() {
             </style>
         </>
     );
+}
+
+function EditorSidebar() {
+    const editTodoId = useSelector(selectEditTodoId),
+        todo = useSelector((state) => selectTodoById(state, editTodoId));
+    
+    if (!todo) return null;
+
+    let {
+        title,
+        description,
+        important,
+        completed,
+        tags,
+        createDate,
+        dueDate,
+        importance
+    } = todo;
+
+    return (
+        <>
+            <h2 className="text-xl font-bold text-light-text dark:text-dark-text">
+                {title}
+            </h2>
+            <p className="text-sm color-uim-400 dark:text-dark-text">
+                {description}
+            </p>
+        </>
+    );
+}
+
+export default function Sidebar() {
+    const editTodoId = useSelector(selectEditTodoId);
+    if (editTodoId) return <EditorSidebar />;
+    return <CalendarSidebar />;
 }
