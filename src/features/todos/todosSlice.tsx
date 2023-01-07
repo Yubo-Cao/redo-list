@@ -46,12 +46,16 @@ export type TodosState = {
     status: "idle" | "loading" | "failed" | "needsUpdate";
     entities: { [id: number]: Todo };
     editTodoId: number | null;
+    extendedEditor: boolean;
+    selectedTodoIds: number[];
 };
 
 const initialState: TodosState = {
     status: "needsUpdate",
     entities: {},
-    editTodoId: null
+    editTodoId: null,
+    extendedEditor: false,
+    selectedTodoIds: []
 };
 
 const todosAdapter = createEntityAdapter<Todo>();
@@ -83,6 +87,17 @@ const todosSlice = createSlice({
         },
         todoStopEdit: (state) => {
             state.editTodoId = null;
+        },
+        todoSelected: (state, action: { payload: Todo["id"] }) => {
+            state.selectedTodoIds.push(action.payload);
+        },
+        todoDeselected: (state, action: { payload: Todo["id"] }) => {
+            state.selectedTodoIds = state.selectedTodoIds.filter(
+                (id) => id !== action.payload
+            );
+        },
+        todoSetExtendedEditor: (state, action: { payload: boolean }) => {
+            state.extendedEditor = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -121,7 +136,10 @@ export const {
     todoDeleted,
     todoUpdated,
     todoStartEdit,
-    todoStopEdit
+    todoStopEdit,
+    todoSelected,
+    todoDeselected,
+    todoSetExtendedEditor
 } = todosSlice.actions;
 
 export const {
