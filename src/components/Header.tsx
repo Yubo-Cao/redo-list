@@ -150,7 +150,7 @@ function DarkLightToggle({
             size={size}
             iconSize={iconSize}
             {...props}
-            className="lg:ml-2"
+            className="lg:ml-4"
             onClick={() => {
                 setDark(!dark);
                 const html = document?.documentElement;
@@ -172,10 +172,11 @@ function Navigation({
         ref = useRef<HTMLDivElement>(null);
     // scroll/resize/esc close
     useEffect(() => {
-        const resize = (e) => {
+        const resize = (e: Event) => {
             setOpen(false);
+            const target = e.target as Window;
             // prevent animation of transition between sm and md
-            if (prevWidth > 640 && e.target.innerWidth <= 640) {
+            if (prevWidth > 640 && (target.innerWidth || 0) <= 640) {
                 const current = ref.current;
                 if (!current) return; // never happens
                 current.classList.remove("transition-transform");
@@ -183,7 +184,7 @@ function Navigation({
                     current.classList.add("transition-transform");
                 }, 100);
             }
-            setPrevWidth(e.target.innerWidth);
+            setPrevWidth(target.innerWidth);
         };
         window.addEventListener("resize", resize);
         const srcollClose = () => {

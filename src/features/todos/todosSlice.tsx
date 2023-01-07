@@ -35,8 +35,8 @@ export const DEFAULT_TODO: Todo = {
     importance: 1,
     important: false,
     tags: [],
-    estimatedDuration: null,
-    parentTaskId: null,
+    estimatedDuration: undefined,
+    parentTaskId: undefined,
     resources: [],
     subtasks: [],
     dependencies: []
@@ -78,7 +78,7 @@ const todosSlice = createSlice({
             if (!old) throw new Error("Todo not found");
             Object.assign(old, todo);
         },
-        todoStartEdit: (state, action) => {
+        todoStartEdit: (state, action: { payload: Todo["id"] | null }) => {
             state.editTodoId = action.payload;
         },
         todoStopEdit: (state) => {
@@ -152,8 +152,8 @@ export const selectTodoStatus = createSelector(
 
 export const selectTodoSubtasks = (todoId: number) =>
     createSelector(
-        (state) => selectTodoById(state, todoId),
-        (todo: Todo) => todo.subtasks
+        (state: any) => state.todos.entities,
+        (entities: { [id: number]: Todo }) => entities[todoId].subtasks
     );
 
 export const selectTodoSubtaskTotal = (todoId: number) =>

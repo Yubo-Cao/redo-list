@@ -8,18 +8,21 @@ import { cls } from "@lib/utils";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
-import { deleteTodo, updateTodo } from "./todosSlice";
 import {
     Todo,
+    deleteTodo,
     selectEditTodoId,
     selectTodoById,
     selectTodoSubtaskCompleteTotal,
     selectTodoSubtaskTotal,
-    todoStartEdit
+    todoStartEdit,
+    updateTodo
 } from "./todosSlice";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
-    const todo: Todo = useSelector((state) => selectTodoById(state, id)),
+    const todo: Todo | undefined = useSelector((state) =>
+            selectTodoById(state, id)
+        ),
         dispatch = useDispatch(),
         subtaskCount = useSelector(selectTodoSubtaskTotal(id)),
         subtaskCompleteCount = useSelector(selectTodoSubtaskCompleteTotal(id)),
@@ -28,7 +31,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         { show } = useContextMenu({ id: menuId });
 
     const _wrap =
-        <T,>(name: string, hook?: (T) => any) =>
+        <T,>(name: string, hook?: (val: T) => any) =>
         (value: T) => {
             if (eval(name) === value) return;
             dispatch(
@@ -40,10 +43,12 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             if (hook) hook(value);
         };
 
-    const completedRef = useRef(null),
-        titleRef = useRef(null),
-        descriptionRef = useRef(null),
-        importantRef = useRef(null);
+    const completedRef = useRef<HTMLInputElement>(null),
+        titleRef = useRef<HTMLInputElement>(null),
+        descriptionRef = useRef<HTMLInputElement>(null),
+        importantRef = useRef<HTMLButtonElement>(null);
+
+    if (!todo) return null;
 
     const editing = editTodoId === id,
         setEditing = (value: boolean) => {
@@ -61,6 +66,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         dueDate,
         importance
     } = todo;
+
     const setImportant = _wrap("important"),
         setCompleted = _wrap("completed"),
         setTitle = _wrap("title"),
@@ -105,9 +111,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 ref={titleRef}
             />
         ) : (
-            <p className={style} ref={titleRef}>
-                {title}
-            </p>
+            <p className={style}>{title}</p>
         );
     };
 
@@ -126,9 +130,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 ref={descriptionRef}
             />
         ) : (
-            <p className={style} ref={descriptionRef}>
-                {description}
-            </p>
+            <p className={style}>{description}</p>
         );
     };
 
@@ -224,6 +226,14 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                         <>
                             <span>
                                 {subtaskCompleteCount}/{subtaskCount}
+                            </span>
+                            {Sep()}
+                        </>
+                    )}
+                    {createDate && (
+                        <>
+                            <span className="text-pri-400 mr-1">
+                                {formatDate(createDate)}
                             </span>
                             {Sep()}
                         </>

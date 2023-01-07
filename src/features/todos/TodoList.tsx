@@ -1,10 +1,13 @@
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { cls } from "../../lib/utils";
+import { cls } from "@lib/utils";
 
-import TodoItem from "./TodoItem";
-import { fetchTodos, selectTodoIds, selectTodoStatus } from "./todosSlice";
+import TodoItem from "@features/todos/TodoItem";
+import {
+    fetchTodos,
+    selectTodoIds,
+    selectTodoStatus
+} from "@features/todos/todosSlice";
 
 export default function TodoList({ className }: { className?: string }) {
     const dispatch = useDispatch(),

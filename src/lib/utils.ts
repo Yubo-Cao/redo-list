@@ -1,5 +1,5 @@
-function cls(...args: string[]) {
-    return args.filter((x) => x).join(" ");
+function cls(...args: (string | null | undefined | boolean)[]): string {
+    return args.filter((x) => x && typeof x === "string").join(" ");
 }
 
 export { cls };

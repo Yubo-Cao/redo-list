@@ -11,7 +11,7 @@ type TitleProps = {
     children?: string | ReactNode;
 };
 
-const titleCase = (str: string | ReactNode) =>
+const titleCase = (str: string | ReactNode): string | ReactNode =>
     typeof str === "string"
         ? str
               .split(/\s+/)
@@ -24,11 +24,12 @@ export default function Title({
     level,
     children,
     title = children,
-    subtitle = (title !== children && children) || "",
+    subtitle = title !== children ? children : "",
     className = "",
     subtitleClassName = ""
 }: TitleProps) {
     if (!title) throw new Error("Title is required");
+
     title = titleCase(title);
     subtitle = titleCase(subtitle);
 
