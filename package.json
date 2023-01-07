@@ -10,6 +10,7 @@
         "preinstall": "npx only-allow pnpm"
     },
     "dependencies": {
+        "@bytemd/react": "^1.20.0",
         "@next/font": "^13.1.1",
         "@reduxjs/toolkit": "^1.9.1",
         "@tauri-apps/api": "^1.2.0",
