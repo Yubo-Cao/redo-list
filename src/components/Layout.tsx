@@ -1,9 +1,8 @@
-import { createContext, useEffect, useRef, useState } from "react";
-import toPX from "to-px";
-
 import { cls } from "../lib/utils";
 
 import Header from "./Header";
+import { createContext, useEffect, useRef, useState } from "react";
+import toPX from "to-px";
 
 export const LayoutContext = createContext({
     headerWidth: 0,
@@ -157,6 +156,7 @@ export default function Layout({
                                     "content content";
                                 grid-gap: 1.5rem;
                                 overflow: hidden;
+                                max-width: 100%;
                             }
 
                             :global(.header-layout-header) {
@@ -229,6 +229,7 @@ export default function Layout({
                                     "content content";
                                 grid-gap: 1.5rem;
                                 overflow: hidden;
+                                max-width: 100vw;
                             }
 
                             :global(.header-layout-header) {

@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-
 import { cls } from "../lib/utils";
+
+import React, { ReactNode } from "react";
 
 type TitleProps = {
     level: 1 | 2 | 3 | 4 | 5 | 6;

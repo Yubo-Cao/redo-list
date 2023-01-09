@@ -1,9 +1,13 @@
 import { cls } from "@lib/utils";
+import { forwardRef } from "react";
 
-export type CheckboxProps = React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-> & { variant?: "pri" | "sec" | "uim" };
+export type CheckboxProps = Omit<
+    React.DetailedHTMLProps<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+    > & { variant?: "pri" | "sec" | "uim" },
+    "ref"
+>;
 
 export const VARIANT_CLASSNAMES = {
     pri: "checked:bg-pri-500 dark:checked:bg-pri-600  checked:text-pri-500",
@@ -11,13 +15,15 @@ export const VARIANT_CLASSNAMES = {
     uim: "checked:bg-uim-500 dark:checked:bg-uim-600  checked:text-uim-500"
 };
 
-export default function Checkbox(
-    props: CheckboxProps
+function checkbox(
+    props: CheckboxProps,
+    ref
 ): React.ReactElement<CheckboxProps> {
     return (
         <>
             <input
                 {...props}
+                ref={ref}
                 type="checkbox"
                 className={cls(
                     "w-5 h-5",
@@ -53,3 +59,6 @@ export default function Checkbox(
         </>
     );
 }
+
+const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(checkbox);
+export default Checkbox;

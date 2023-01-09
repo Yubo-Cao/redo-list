@@ -59,7 +59,8 @@ module.exports = {
                 fuller: "200%"
             },
             fontFamily: {
-                sans: ["var(--font-sans)"]
+                sans: ["Inter", "sans-serif"],
+                mono: ["Fira Code", "monospace"]
             }
         },
         screens: {

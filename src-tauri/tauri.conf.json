@@ -16,6 +16,15 @@
             "shell": {
                 "all": false,
                 "open": true
+            },
+            "fs": {
+                "readFile": true,
+                "scope": [
+                    "C:/Users/yubo/AppData/Roaming/yubo/redo/data/images/**/*"
+                ]
+            },
+            "path": {
+                "all": true
             }
         },
         "bundle": {

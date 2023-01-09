@@ -1,6 +1,3 @@
-import { describe, expect, test } from "@jest/globals";
-import { configureStore } from "@reduxjs/toolkit";
-
 import {
     selectAllTodos,
     selectTodoById,
@@ -13,6 +10,9 @@ import {
     todoUpdated,
     todosReducer
 } from "../../../features/todos/todosSlice";
+
+import { describe, expect, test } from "@jest/globals";
+import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
     reducer: {

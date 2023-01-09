@@ -1,27 +1,56 @@
-import { useContext } from "react";
-import Calendar from "react-calendar";
-import { useSelector } from "react-redux";
-
-import Icon from "@components/Icon";
-import { LayoutContext } from "@components/Layout";
-
 import {
     Todo,
     selectEditTodoId,
     selectTodoById
 } from "@features/todos/todosSlice";
 
+import Icon from "@components/Icon";
+
+import "bytemd/dist/index.css";
+
+import { AppDispatch } from "@/store";
+import { useEffect, useRef } from "react";
+import Calendar from "react-calendar";
+import { useDispatch, useSelector } from "react-redux";
+import DocumentEditor from "../documents/DocumentEditor";
+
 function CalendarSidebar() {
-    const value = useContext(LayoutContext);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!ref.current) return;
+        const navigation = ref.current.querySelector(
+            ".react-calendar__navigation"
+        );
+        let label = null,
+            icons = [];
+        Array.from(navigation.children).forEach((child) => {
+            if (child.classList.contains("react-calendar__navigation__label"))
+                label = child;
+            if (child.querySelectorAll("i").length) icons.push(child);
+        });
+        const f = (tag, cls, ...Children) => {
+            const el = document.createElement(tag);
+            el.className = cls;
+            el.append(...Children);
+            return el;
+        };
+        navigation.innerHTML = "";
+        navigation.append(
+            label,
+            f("div", "flex items-center flex-0", ...icons)
+        );
+    }, [ref]);
+
     return (
-        <>
+        <div ref={ref}>
             <Calendar
                 prevLabel={
                     <Icon
                         name="chevron_left"
                         size={28}
                         wrap={true}
-                        wrapperClassName="text-pri-400 absolute right-8 top-0"
+                        wrapperClassName="text-pri-400"
                     />
                 }
                 nextLabel={
@@ -38,105 +67,101 @@ function CalendarSidebar() {
             <style jsx global>
                 {`
                     .react-calendar {
-                        border: none;
-                        border-radius: 0.5rem;
+                        @apply max-w-xs dark:text-dark-text text-light-text
+                            mx-auto border-0 rounded-md select-none;
                     }
 
                     .react-calendar__navigation {
-                        margin-bottom: 1.5rem;
-                        position: relative;
-                        display: flex;
+                        @apply flex relative mb-6 px-1 justify-between items-center;
                     }
 
                     .react-calendar__navigation__label {
-                        text-align: left;
-                    }
-
-                    .react-calendar__navigation__label {
-                        height: 28px;
-                        padding: 0 0.3rem;
+                        @apply text-left;
                     }
 
                     .react-calendar__navigation__label__labelText {
-                        font-weight: 700;
-                        text-align: left;
-                        font-size: 1.25rem;
+                        @apply font-bold text-xl text-left;
                     }
 
                     .react-calendar__month-view__weekdays > div {
-                        display: flex;
-                        justify-content: center;
-                        margin-bottom: 0.5rem;
+                        @apply flex justify-center items-center mb-2;
                     }
 
                     .react-calendar__month-view__weekdays abbr {
-                        text-decoration: none;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        font-size: 0.75rem;
-                        text-align: center;
-                        color: #a3a3a3;
+                        @apply no-underline font-bold uppercase text-xs 
+                            text-center text-uim-400;
                     }
 
                     .react-calendar__month-view__days {
                         display: grid !important;
-                        grid-template-columns: repeat(
-                            7,
-                            calc((${value.sideBarWidth}px - 2rem) / 7)
-                        );
-                        grid-template-rows: repeat(
-                            6,
-                            calc((${value.sideBarWidth}px - 2rem) / 7)
-                        );
-                    }
-
-                    .dark .react-calendar__month-view__days__day,
-                    .dark .react-calendar__navigation__label {
-                        color: #fff;
-                    }
-
-                    .react-calendar__tile--active {
-                        background-color: #f97316;
-                        color: #fff;
-                    }
-
-                    .dark .react-calendar__tile--active {
-                        background-color: #f97316;
-                        color: #fff;
+                        @apply grid-rows-6 grid-cols-7 gap-1;
                     }
 
                     .react-calendar__month-view__days__day {
-                        margin: 0.15rem;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        border-radius: 1.5rem;
-                        border: none;
+                        @apply aspect-square;
+                        transition: background-color 0.3s ease;
                     }
 
-                    .react-calendar__month-view__days__day::after,
-                    .react-calendar__month-view__days__day::before {
-                        content: "";
-                        display: block;
-                        width: 0.75rem;
-                        height: 0.75rem;
+                    .react-calendar__month-view__days__day:hover:not(
+                            .react-calendar__tile--active
+                        ) {
+                        @apply bg-uim-100 dark:bg-uim-800;
+                    }
+
+                    .react-calendar__month-view__days__day--neighboringMonth {
+                        @apply text-uim-400 font-thin;
+                        @apply hover:bg-transparent dark:hover:bg-transparent;
+                    }
+
+                    .react-calendar__month-view__days__day {
+                        @apply flex justify-center items-center rounded-full;
+                    }
+
+                    .react-calendar__tile--active {
+                        @apply text-white bg-pri-500 dark:bg-pri-400;
                     }
 
                     .react-calendar__navigation__prev2-button,
                     .react-calendar__navigation__next2-button {
                         display: none;
                     }
+
+                    @tailwind components;
+                    @layer components {
+                        .solid-button {
+                            @apply bg-uim-100 dark:bg-uim-800 px-4 py-2 rounded-full 
+                            hover:bg-uim-200 hover:dark:bg-uim-700;
+                        }
+                    }
+
+                    .react-calendar__century-view__decades,
+                    .react-calendar__decade-view__years,
+                    .react-calendar__year-view__months {
+                        @apply gap-3;
+
+                        & > button {
+                            flex: 0 0 auto !important;
+                            @apply solid-button;
+                        }
+                    }
+
+                    .react-calendar__century-view__decades {
+                        @apply justify-center;
+                    }
                 `}
             </style>
-        </>
+        </div>
     );
 }
 
 function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
-        todo = useSelector((state) => selectTodoById(state, editTodoId));
-    
+        todo: Todo = useSelector((state) => selectTodoById(state, editTodoId)),
+        dispatch = useDispatch<AppDispatch>();
+
     if (!todo) return null;
+
+    const id = editTodoId;
 
     let {
         title,
@@ -151,12 +176,10 @@ function EditorSidebar() {
 
     return (
         <>
-            <h2 className="text-xl font-bold text-light-text dark:text-dark-text">
-                {title}
-            </h2>
-            <p className="text-sm color-uim-400 dark:text-dark-text">
-                {description}
-            </p>
+            <div className="prose max-w-none">
+                <h2 className="text-light-text dark:text-dark-text">{title}</h2>
+            </div>
+            <DocumentEditor id={description} />
         </>
     );
 }

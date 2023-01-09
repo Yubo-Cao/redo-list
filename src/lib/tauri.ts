@@ -10,10 +10,8 @@ export const invoke = async <T>(
     args?: InvokeArgs | undefined
 ): Promise<T> => {
     if (isNode()) {
-        console.error("Tauri invoke called in Node.js");
         return Promise.resolve(undefined as unknown as T);
     }
-    console.log("Tauri invoke called in browser");
     const tauriAppsApi = await import("@tauri-apps/api");
     const tauriInvoke = tauriAppsApi.invoke;
     return tauriInvoke(cmd, args);

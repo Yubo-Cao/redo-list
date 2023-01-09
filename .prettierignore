@@ -1,5 +1,5 @@
 .next
 node_modules
-src-tauri/target
+src-tauri
 dist
 coverage

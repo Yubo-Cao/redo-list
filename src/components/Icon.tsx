@@ -1,12 +1,7 @@
-import localFont from "@next/font/local";
-import Image from "next/image";
-
 import { cls } from "../lib/utils";
 
-const materialIcons = localFont({
-    src: "../public/fonts/material-symbols.woff2",
-    display: "block" // no fallback
-});
+import localFont from "@next/font/local";
+import Image from "next/image";
 
 interface MaterialIconProps {
     size: number;
@@ -15,11 +10,13 @@ interface MaterialIconProps {
     grade?: number;
     fill?: boolean;
     weight?: number;
+    style?: React.CSSProperties;
 }
 
 interface ImageIconProps {
     size: number;
     className?: string;
+    style?: React.CSSProperties;
     name: string;
     alt?: string;
 }
@@ -45,7 +42,8 @@ function _icon(props: InnerIconProps) {
                 name: src,
                 size,
                 alt = "Image Icon",
-                className = ""
+                className = "",
+                style
             } = props as ImageIconProps;
             return (
                 <Image
@@ -54,6 +52,7 @@ function _icon(props: InnerIconProps) {
                     width={size}
                     height={size}
                     className={className}
+                    style={style}
                 />
             );
         },
@@ -64,13 +63,14 @@ function _icon(props: InnerIconProps) {
                 grade = 0,
                 fill = false,
                 weight = 400,
-                className = ""
+                className = "",
+                style
             } = props as MaterialIconProps;
             return (
                 <i
                     className={cls(
                         "antialiased",
-                        materialIcons.className,
+                        "material-icons",
                         className
                     )}
                     style={{
@@ -90,7 +90,8 @@ function _icon(props: InnerIconProps) {
                         textRendering: "optimizeLegibility",
                         fontVariationSettings: `'wght' ${weight}, 'GRAD' ${grade}, 'FILL' ${
                             fill ? 1 : 0
-                        }, 'opsz' ${size}`
+                        }, 'opsz' ${size}`,
+                        ...style
                     }}
                 >
                     {name}

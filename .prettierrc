@@ -13,7 +13,9 @@
         "^(\\.+/)*@?api/(.*)$",
         "^(\\.+/)*@?lib/(.*)$",
         "^(\\.+/)*@?components/(.*)$",
-        "^[./]"
+        "^@?bytemd",
+        "^@?tauri",
+        "^"
     ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true

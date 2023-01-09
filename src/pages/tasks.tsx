@@ -1,15 +1,18 @@
-import dynamic from "next/dynamic";
-import { useDispatch } from "react-redux";
-
-import Sidebar from "@features/todos/TodoEditor";
 import { addTodo, todoStartEdit } from "@features/todos/todosSlice";
 
 import Button from "@components/Button";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
+import Sidebar from "@components/Sidebar";
 import Layout from "@components/Layout";
 
-const TodoList = dynamic(() => import("../features/todos/TodoList"), {
+import dynamic from "next/dynamic";
+import { useDispatch } from "react-redux";
+
+const TodoList = dynamic(() => import("@features/todos/TodoList"), {
+    ssr: false
+});
+const Editor = dynamic(() => import("@features/todos/TodoEditor"), {
     ssr: false
 });
 
@@ -17,11 +20,7 @@ export default function Tasks() {
     const dispatch = useDispatch();
 
     return (
-        <Layout
-            activeItemId={"tasks"}
-            sideBarWidth={"22rem"}
-            sideBarChildren={<Sidebar />}
-        >
+        <Layout activeItemId={"tasks"} sideBarWidth={"22rem"}>
             <div
                 onClick={() => dispatch(todoStartEdit(null))}
                 className="w-full h-full"
@@ -38,12 +37,20 @@ export default function Tasks() {
                         onClick={() => {
                             dispatch(addTodo({}) as any);
                         }}
+                        content="both"
                     >
                         <Icon name="add" size={24} />
                         <span>New Task</span>
                     </Button>
                 </div>
                 <TodoList className="mt-4" />
+                <Sidebar
+                    minWidth={200}
+                    maxWidth={-1}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <Editor />
+                </Sidebar>
             </div>
         </Layout>
     );

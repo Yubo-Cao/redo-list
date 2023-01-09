@@ -1,12 +1,7 @@
-import { useRef } from "react";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-import { useDispatch, useSelector } from "react-redux";
-
 import { cls } from "@lib/utils";
 
-import { formatDate } from "@components/Date";
 import Checkbox from "@components/Checkbox";
+import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
 import {
@@ -19,15 +14,23 @@ import {
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
+import Button from "@/components/Button";
+import { useRef } from "react";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { selectDocumentSummaryById } from "../documents/documentSlice";
+import { AppDispatch } from "@/store";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>
             selectTodoById(state, id)
         ),
-        dispatch = useDispatch(),
+        dispatch = useDispatch<AppDispatch>(),
         subtaskCount = useSelector(selectTodoSubtaskTotal(id)),
         subtaskCompleteCount = useSelector(selectTodoSubtaskCompleteTotal(id)),
         editTodoId = useSelector(selectEditTodoId),
+        description = useSelector(selectDocumentSummaryById(todo?.description)),
         menuId = `todo-${id}-menu`,
         { show } = useContextMenu({ id: menuId });
 
@@ -57,21 +60,11 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             else if (!value && editing) dispatch(todoStartEdit(null));
         };
 
-    let {
-        title,
-        description,
-        important,
-        completed,
-        tags,
-        createDate,
-        dueDate,
-        importance
-    } = todo;
+    let { title, important, completed, tags, createDate, dueDate } = todo;
 
     const setImportant = _wrap("important"),
         setCompleted = _wrap("completed"),
-        setTitle = _wrap("title"),
-        setDescription = _wrap("description");
+        setTitle = _wrap("title");
 
     const RESETTER = cls("p-0", "border-0", "bg-transparent", "outline-none");
 
@@ -116,24 +109,21 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         );
     };
 
-    const Description = () => {
-        const style = cls("text-uim-400", "text-sm", "text-ellipsis", RESETTER);
-        return editing ? (
-            <input
-                type="text"
-                value={description}
-                className={style}
-                onChange={(e) => setDescription(e.target.value)}
-                onClick={(e) => {
-                    e.stopPropagation();
-                }}
-                placeholder="Description of the task"
-                ref={descriptionRef}
-            />
-        ) : (
-            <p className={style}>{description}</p>
-        );
-    };
+    const Description = () => (
+        <p
+            className={cls(
+                "text-uim-400",
+                "min-w-0",
+                "text-sm",
+                "overflow-hidden",
+                "text-ellipsis",
+                "whitespace-nowrap",
+                RESETTER
+            )}
+        >
+            {description}
+        </p>
+    );
 
     const Completed = () => (
         <Checkbox
@@ -141,37 +131,21 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             onChange={() => setCompleted(!completed)}
             onClick={(e) => e.stopPropagation()}
             ref={completedRef}
+            className="flex-shrink-0"
         />
     );
 
     const Important = () => (
-        <button
-            onClick={(e) => {
-                e.stopPropagation();
-                setImportant(!important);
-            }}
-            className={cls(
-                "flex justify-center items-center",
-                "rounded-full p-1",
-                "focus:outline-0 focus:ring-1 focus:ring-pri-400 dark:focus:ring-uim-500",
-                important
-                    ? "hover:bg-pri-100 dark:hover:bg-pri-600/50"
-                    : "hover:bg-uim-100 dark:hover:bg-uim-900"
-            )}
+        <Button
+            onClick={(e) => [e.stopPropagation(), setImportant(!important)]}
+            content="icon"
+            variant="none"
+            padding={false}
+            accent={important ? "pri" : "uim"}
             ref={importantRef}
         >
-            <Icon
-                name="star"
-                size={24}
-                fill={true}
-                className={cls(
-                    important
-                        ? "text-pri-400"
-                        : "text-uim-400 dark:text-dark-text",
-                    "transition-colors"
-                )}
-            />
-        </button>
+            <Icon name="star" size={24} fill={true} />
+        </Button>
     );
 
     return (
@@ -182,19 +156,26 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                 "bg-light-surface dark:bg-dark-surface",
                 "hover:bg-uim-50/50 dark:hover:bg-uim-900",
                 "cursor-pointer",
-                "todo-item",
-                editing && "editing"
+                "todo-item"
             )}
             onClick={(e) => {
-                if (e.target === completedRef.current) return;
                 setEditing(true);
+                e.stopPropagation();
             }}
             onContextMenu={handleContextMenu}
             tabIndex={0}
             onFocus={() => setEditing(true)}
         >
             {Completed()}
-            <div className={cls("flex-1", "flex", "flex-col")}>
+            <div
+                className={cls(
+                    "flex-1",
+                    "flex",
+                    "flex-col",
+                    "max-w-full",
+                    "min-w-0"
+                )}
+            >
                 {Title()}
                 {Description()}
                 <div className="text-sm text-uim-400">

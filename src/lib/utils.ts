@@ -6,4 +6,8 @@ function cls(...args: (string | null | undefined | boolean)[]): string {
     return clz.join(" ");
 }
 
-export { cls };
+function coerce(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max);
+}
+
+export { cls, coerce };

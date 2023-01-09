@@ -1,3 +1,6 @@
+import { invoke } from "@lib/tauri";
+import { Status } from "@lib/common";
+
 import {
     createAsyncThunk,
     createEntityAdapter,
@@ -5,13 +8,12 @@ import {
     createSlice
 } from "@reduxjs/toolkit";
 import { Queue } from "queue-typescript";
-
-import { invoke } from "@lib/tauri";
+import { addDocument } from "../documents/documentSlice";
 
 export type Todo = {
     id: number;
     title: string;
-    description: string;
+    description: number; // id of the document
     completed: boolean;
     createDate: string;
     dueDate?: string;
@@ -20,7 +22,6 @@ export type Todo = {
     tags: string[];
     estimatedDuration?: number;
     parentTaskId?: number;
-    resources?: string[];
     subtasks: number[];
     dependencies: number[];
 };
@@ -28,7 +29,7 @@ export type Todo = {
 export const DEFAULT_TODO: Todo = {
     id: 0, // placeholder ID for rust serialzer
     title: "",
-    description: "",
+    description: 0, // placeholder document ID for rust serializer
     completed: false,
     createDate: "",
     dueDate: "",
@@ -37,13 +38,12 @@ export const DEFAULT_TODO: Todo = {
     tags: [],
     estimatedDuration: undefined,
     parentTaskId: undefined,
-    resources: [],
     subtasks: [],
     dependencies: []
 };
 
 export type TodosState = {
-    status: "idle" | "loading" | "failed" | "needsUpdate";
+    status: Status;
     entities: { [id: number]: Todo };
     editTodoId: number | null;
     extendedEditor: boolean;
@@ -191,21 +191,24 @@ export const selectTodoSubtaskCompleteTotal = (todoId: number) =>
 // thunks
 export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
     const todos: Todo[] = await invoke("get_root_todos");
-    console.log("fetching todos");
     return todos;
 });
 
 export const addTodo = createAsyncThunk(
     "todos/addTodo",
-    async (todo: Partial<Todo>): Promise<Todo> => {
+    async (todo: Partial<Todo>, { dispatch }): Promise<Todo> => {
         const final: Todo = { ...DEFAULT_TODO, ...todo };
-        const id: number = await invoke("add_todo", { todo: final });
-        const result = { ...final, id };
+        const descriptionId: number = (
+            (await dispatch(addDocument(""))).payload as any
+        ).id;
+        final.description = descriptionId;
+        const todoId: number = await invoke("add_todo", { todo: final });
+        const result = { ...final, id: todoId };
         return result;
     }
 );
 
-const updateQueue: Queue<[number, { [key: string]: any }]> = new Queue();
+const updateQueue: Queue<[number, Partial<Todo>]> = new Queue();
 export const updateTodo = createAsyncThunk(
     "todos/updateTodo",
     async ({ id, update }: { id: number; update: Partial<Todo> }) => {
@@ -213,24 +216,21 @@ export const updateTodo = createAsyncThunk(
         return { id, update };
     }
 );
-const updateTodoWorker = async () => {
-    if (updateQueue.length === 0) return;
-    const updates = new Map<number, { [key: string]: Partial<Todo> }>();
-    while (updateQueue.length > 0) {
+const updateWorker = async () => {
+    if (!updateQueue.length) return;
+    const updates = new Map<number, Partial<Todo>>();
+    while (updateQueue.length) {
         const [id, update] = updateQueue.dequeue();
         if (updates.has(id)) updates.set(id, { ...updates.get(id), ...update });
         else updates.set(id, update);
     }
     updates.forEach(async (update, id) => {
         const old: Todo = await invoke("get_todo", { id });
-        console.debug(`updating todo ${id}`);
-        await invoke("update_todo", {
-            id,
-            todo: { ...old, ...update }
-        });
+        const todo = { ...old, ...update };
+        await invoke("update_todo", { id, todo });
     });
 };
-setInterval(updateTodoWorker, 15000);
+setInterval(updateWorker, 15000);
 
 export const deleteTodo = createAsyncThunk(
     "todos/deleteTodo",

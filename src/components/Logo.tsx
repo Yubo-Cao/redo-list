@@ -1,8 +1,7 @@
-import Link from "next/link";
-
 import { cls } from "../lib/utils";
 
 import Icon from "./Icon";
+import Link from "next/link";
 
 type LogoProps = {
     className?: string;
@@ -49,7 +48,8 @@ export default function Logo({ className = "" }: LogoProps) {
                     "font-mono",
                     "max-2xs:hidden",
                     "mr-1",
-                    "dark:text-dark-text"
+                    "dark:text-dark-text",
+                    'min-w-fit'
                 )}
             >
                 GRADE TODO

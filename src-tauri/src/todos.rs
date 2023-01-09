@@ -1,4 +1,6 @@
-use directories::ProjectDirs;
+use crate::error::Error;
+use crate::globals::PROJECT_DIRS;
+
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use sled::{open, Db};
@@ -6,8 +8,7 @@ use tauri::command;
 
 lazy_static! {
     pub static ref DB: Db = {
-        let project_dirs = ProjectDirs::from("com", "yubo", "redo").unwrap();
-        let db_path = project_dirs.data_dir().join("todos.db");
+        let db_path = PROJECT_DIRS.data_dir().join("todos.db");
         open(db_path).unwrap()
     };
 }
@@ -17,7 +18,7 @@ lazy_static! {
 pub struct Todo {
     pub id: u64,
     pub title: String,
-    pub description: String,
+    pub description: u64,
     pub completed: bool,
     pub create_date: String,
     pub due_date: Option<String>,
@@ -26,31 +27,8 @@ pub struct Todo {
     pub tags: Vec<String>,
     pub estimated_duration: Option<u64>,
     pub parent_task_id: Option<u64>,
-    pub resources: Option<Vec<String>>,
     pub subtasks: Vec<u64>,
     pub dependencies: Vec<u64>,
-}
-
-// serde serializable Error
-#[derive(Debug, Serialize)]
-pub struct Error {
-    message: String,
-}
-
-impl From<sled::Error> for Error {
-    fn from(error: sled::Error) -> Self {
-        Error {
-            message: error.to_string(),
-        }
-    }
-}
-
-impl From<serde_json::Error> for Error {
-    fn from(error: serde_json::Error) -> Self {
-        Error {
-            message: error.to_string(),
-        }
-    }
 }
 
 #[command]
