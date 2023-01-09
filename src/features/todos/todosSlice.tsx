@@ -202,6 +202,8 @@ export const addTodo = createAsyncThunk(
             (await dispatch(addDocument(""))).payload as any
         ).id;
         final.description = descriptionId;
+        const createDate = new Date();
+        final.createDate = createDate.toISOString().split("T")[0];
         const todoId: number = await invoke("add_todo", { todo: final });
         const result = { ...final, id: todoId };
         return result;

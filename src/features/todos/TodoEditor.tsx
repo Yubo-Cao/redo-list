@@ -1,4 +1,4 @@
-import DocumentEditor from "@features/documents/DocumentEditor";
+import { formatDate } from "@/components/Date";
 import {
     Todo,
     selectEditTodoId,
@@ -7,7 +7,6 @@ import {
 
 import "bytemd/dist/index.css";
 
-import { DocumentViewer } from "../documents/DocumentViewer";
 import TodoCompleted from "./TodoCompleted";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,19 +33,29 @@ export default function EditorSidebar() {
     } = todo;
 
     return (
-        <>
-            <div className="flex justify-between items-center mb-3 card">
+        <div className="space-y-3">
+            <div className="flex justify-between items-center outlined-card">
                 <h2 className="font-bold text-2xl text-light-text dark:text-dark-text">
                     {title}
                 </h2>
                 <TodoCompleted id={id} />
             </div>
-            <div className="card">
+            <div className="outlined-card py-2">
                 <TodoDescription id={id} />
             </div>
-            <div className="card">
-                
+            <div className="outlined-card">
+                <>
+                    <span className="text-pri-400 mr-1">
+                        {formatDate(createDate)}
+                    </span>
+                </>
             </div>
-        </>
+
+            <style jsx>{`
+                .outlined-card {
+                    @apply border border-uim-300 dark:border-uim-700 rounded-lg px-2 py-4;
+                }
+            `}</style>
+        </div>
     );
 }
