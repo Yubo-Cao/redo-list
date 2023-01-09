@@ -11,9 +11,9 @@ export type CheckboxProps = Omit<
 >;
 
 export const VARIANT_CLASSNAMES = {
-    pri: "checked:bg-pri-500 dark:checked:bg-pri-600  checked:text-pri-500",
-    sec: "checked:bg-sec-500 dark:checked:bg-sec-600  checked:text-sec-500",
-    uim: "checked:bg-uim-500 dark:checked:bg-uim-600  checked:text-uim-500"
+    pri: "checked:bg-pri-500 dark:checked:bg-pri-600 checked:text-pri-500",
+    sec: "checked:bg-sec-500 dark:checked:bg-sec-600 checked:text-sec-500",
+    uim: "checked:bg-uim-500 dark:checked:bg-uim-600 checked:text-uim-500"
 };
 
 function checkbox(
@@ -45,12 +45,12 @@ function checkbox(
                     outline: none;
                 }
 
-                input:hover:not(:checked) {
-                    background-color: #f3f4f6;
+                :global(input:hover:not(:checked)) {
+                    @apply bg-uim-100;
                 }
 
                 :global(.dark input:hover:not(:checked)) {
-                    background-color: #1f2937;
+                    @apply bg-uim-800;
                 }
 
                 input:checked {
