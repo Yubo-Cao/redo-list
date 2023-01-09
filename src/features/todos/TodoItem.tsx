@@ -130,7 +130,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             <Menu id={menuId} theme="accent">
                 <Item
                     id="delete"
-                    onClick={() => dispatch(deleteTodo(id) as any)}
+                    onClick={() => dispatch(deleteTodo(id))}
                 >
                     <div className="flex gap-1 items-center">
                         <Icon name="delete" size={16} />
