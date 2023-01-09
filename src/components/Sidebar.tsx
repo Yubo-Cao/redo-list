@@ -1,5 +1,5 @@
-import { pauseEvent } from "@/lib/common";
 import Icon from "./Icon";
+import { pauseEvent } from "@/lib/common";
 import { cls, coerce } from "@/lib/utils";
 import React, { useRef } from "react";
 

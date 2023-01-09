@@ -88,7 +88,7 @@ const documentSlice = createSlice({
         });
         builder.addCase(fetchDocumentIds.fulfilled, (state, { payload }) => {
             if (!payload) return;
-            
+
             payload.forEach((id) => {
                 if (!state.entities[id]) {
                     documentAdapter.addOne(state, { ...DEFAULT_DOCUMENT, id });

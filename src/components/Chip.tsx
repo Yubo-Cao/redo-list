@@ -1,6 +1,6 @@
+import Icon from "./Icon";
 import { cls } from "@/lib/utils";
 import React from "react";
-import Icon from "./Icon";
 
 type ChipProps = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,

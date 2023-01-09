@@ -1,10 +1,10 @@
 import gfm from "@bytemd/plugin-gfm";
 import { Viewer } from "@bytemd/react";
 import "bytemd/dist/index.css";
-import fileImage from "./fileImage";
 
 import { selectDocumentById } from "./documentSlice";
 import { Document } from "./documentSlice";
+import fileImage from "./fileImage";
 import { useSelector } from "react-redux";
 
 export function DocumentViewer({

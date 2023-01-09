@@ -1,12 +1,10 @@
 import { Todo, selectTodoById, updateTodo } from "@features/todos/todosSlice";
 
+import Chip from "@/components/Chip";
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
-
 import { useState } from "react";
-
-import Chip from "@/components/Chip";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TodoTags({ id }: { id: Todo["id"] }) {
     const { tags } = useSelector((state) => selectTodoById(state, id)),

@@ -10,8 +10,8 @@ import {
 import gfm from "@bytemd/plugin-gfm";
 import { Editor, EditorProps } from "@bytemd/react";
 import "bytemd/dist/index.css";
-import fileImage from "./fileImage";
 
+import fileImage from "./fileImage";
 import { cls } from "@/lib/utils";
 import { AppDispatch } from "@/store";
 import { useEffect, useRef } from "react";

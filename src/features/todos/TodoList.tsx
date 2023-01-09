@@ -1,8 +1,7 @@
 import TodoItem from "@features/todos/TodoItem";
+import { Todo } from "@features/todos/todosSlice";
 
 import { cls } from "@lib/utils";
-
-import { Todo } from "@features/todos/todosSlice";
 
 export default function TodoList({
     ids,

@@ -1,25 +1,24 @@
 import {
     Todo,
+    addTodo,
     selectEditTodoId,
     selectTodoById,
-    addTodo,
     updateTodo
 } from "@features/todos/todosSlice";
 
+import TodoBreadcrumb from "./TodoBreadcrumb";
+import TodoCompleted from "./TodoCompleted";
+import TodoDate from "./TodoDate";
+import TodoDescription from "./TodoDescription";
+import TodoDuration from "./TodoDuration";
+import TodoImportant from "./TodoImportant";
+import TodoList from "./TodoList";
+import TodoTags from "./TodoTags";
+import TodoTitle from "./TodoTitle";
+import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import TodoCompleted from "./TodoCompleted";
-import TodoDescription from "./TodoDescription";
-import TodoTitle from "./TodoTitle";
-
-import TodoDate from "./TodoDate";
-import Button from "@/components/Button";
-import TodoTags from "./TodoTags";
-import TodoImportant from "./TodoImportant";
-import TodoDuration from "./TodoDuration";
-import TodoList from "./TodoList";
-import TodoBreadcrumb from "./TodoBreadcrumb";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),

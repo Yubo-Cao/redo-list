@@ -1,9 +1,9 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import { fromDuration, toDuration } from "@/components/Date";
+import { cls } from "@/lib/utils";
 import { AppDispatch } from "@/store";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
-import { cls } from "@/lib/utils";
 
 export default function TodoDuration({
     id,

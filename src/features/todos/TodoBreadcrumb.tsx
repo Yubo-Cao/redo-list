@@ -1,12 +1,12 @@
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
 import {
     Todo,
     selectParentTodosById,
     selectTodoById,
     todoStartEdit
 } from "./todosSlice";
+import Icon from "@/components/Icon";
+import { AppDispatch } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
     const dispatch = useDispatch<AppDispatch>();
