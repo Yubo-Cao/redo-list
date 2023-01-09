@@ -122,7 +122,13 @@ const todosSlice = createSlice({
             todosAdapter.addOne(state, action.payload);
         });
         builder.addCase(deleteTodo.fulfilled, (state, action) => {
-            todosAdapter.removeOne(state, action.payload);
+            let id: Todo["id"] = action.payload,
+                subtasks: Todo["subtasks"] = [id];
+            while (!subtasks.length) {
+                const currentId = subtasks.pop();
+                subtasks = [...subtasks, ...selectTodoSubtasks(id)(state)];
+                todosAdapter.removeOne(state, currentId); // recursive removal
+            }
         });
     }
 });
@@ -194,6 +200,25 @@ export const selectTodoSubtaskCompleteTotal = (todoId: number) =>
         (subtasks: Todo["id"][], entities: { [id: Todo["id"]]: Todo }) =>
             subtasks?.filter((subtaskId) => entities[subtaskId]?.completed)
                 .length
+    );
+
+export const selectTodoSubtaskIdsRecursivelyById = (id: Todo["id"]) =>
+    createSelector(
+        (state: RootState) => state,
+        (state: RootState) => {
+            let todo = selectTodoById(state, id),
+                result = [],
+                stack = [todo];
+            while (!stack.length) {
+                let current = stack.pop();
+                result = [...result, ...current.subtasks];
+                stack = [
+                    ...stack,
+                    ...current.subtasks.map((id) => selectTodoById(state, id))
+                ];
+            }
+            return result;
+        }
     );
 
 // thunks

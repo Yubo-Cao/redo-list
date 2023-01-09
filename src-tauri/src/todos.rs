@@ -62,7 +62,16 @@ pub async fn get_root_todos() -> Result<Vec<Todo>, Error> {
 
 #[command]
 pub async fn delete_todo(id: u64) -> Result<(), Error> {
-    DB.remove(id.to_be_bytes())?;
+    let mut stack = Vec::new();
+    stack.push(id);
+
+    while let Some(todo_id) = stack.pop() {
+        let todo_bytes = DB.get(todo_id.to_be_bytes())?.unwrap();
+        let todo: Todo = serde_json::from_slice(&todo_bytes)?;
+        stack.extend(todo.subtasks);
+        DB.remove(todo_id.to_be_bytes())?;
+    }
+
     Ok(())
 }
 
