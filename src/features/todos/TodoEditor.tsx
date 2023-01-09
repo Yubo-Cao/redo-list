@@ -11,6 +11,7 @@ import { DocumentViewer } from "../documents/DocumentViewer";
 import TodoCompleted from "./TodoCompleted";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
+import TodoDescription from "./TodoDescription";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
@@ -40,8 +41,8 @@ export default function EditorSidebar() {
                 </h2>
                 <TodoCompleted id={id} />
             </div>
-            <div className="card py-4">
-                <DocumentViewer id={description} />
+            <div className="card">
+                <TodoDescription id={id} />
             </div>
         </>
     );

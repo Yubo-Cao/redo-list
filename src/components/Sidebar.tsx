@@ -124,7 +124,7 @@ function HorizontalSidebar({
                     ${direction === "left" ? "left: 0;" : "right: 0;"}
                     width: ${w}px;
                     @apply absolute top-0 bottom-0
-                        shadow-lg lg:py-8 px-4 z-10
+                        shadow-lg lg:py-8 px-6 z-10
                         transition-all overflow-hidden;
 
                     &.collapsed {

@@ -35,7 +35,6 @@ pub struct Document {
 #[command]
 pub async fn add_document(document: Document) -> Result<u64, Error> {
     let id = DB.generate_id()?;
-    println!("ID: {}", id);
     let document = Document { id, ..document };
     DB.insert(id.to_be_bytes(), serde_json::to_vec(&document)?)?;
     Ok(id)
