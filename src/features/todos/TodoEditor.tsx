@@ -20,15 +20,16 @@ import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function EditorSidebar() {
-    const editTodoId = useSelector(selectEditTodoId),
-        todo: Todo = useSelector((state) => selectTodoById(state, editTodoId)),
+export type EditorProps = {
+    id: Todo["id"];
+};
+
+export default function Editor({ id }: EditorProps) {
+    const todo: Todo = useSelector((state) => selectTodoById(state, id)),
         dispatch = useDispatch<AppDispatch>(),
         subtasks = todo?.subtasks || [];
 
     if (!todo) return null;
-
-    const id = editTodoId;
 
     return (
         <div className="space-y-3 root text-light-text dark:text-dark-text">

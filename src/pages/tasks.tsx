@@ -1,6 +1,7 @@
 import {
     addTodo,
     fetchTodos,
+    selectEditTodoId,
     selectExtendedEditor,
     selectRootTodoIds,
     selectTodoStatus,
@@ -16,6 +17,7 @@ import Sidebar from "@components/Sidebar";
 import { AppDispatch } from "@/store";
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
+import MDCalendar from "@/components/Calendar";
 
 const TodoList = dynamic(() => import("@features/todos/TodoList"), {
     ssr: false
@@ -27,6 +29,7 @@ const Editor = dynamic(() => import("@features/todos/TodoEditor"), {
 export default function Tasks() {
     const dispatch = useDispatch<AppDispatch>(),
         extendedEditor = useSelector(selectExtendedEditor),
+        editTodoId = useSelector(selectEditTodoId),
         ids = useSelector(selectRootTodoIds),
         status = useSelector(selectTodoStatus);
 
@@ -62,7 +65,11 @@ export default function Tasks() {
                 onCollapse={() => dispatch(todoSetExtendedEditor(false))}
                 onExpand={() => dispatch(todoSetExtendedEditor(true))}
             >
-                <Editor />
+                {editTodoId == null ? (
+                    <MDCalendar />
+                ) : (
+                    <Editor id={editTodoId} />
+                )}
             </Sidebar>
         </Layout>
     );
