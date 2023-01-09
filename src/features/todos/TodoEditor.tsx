@@ -44,6 +44,9 @@ export default function EditorSidebar() {
             <div className="card">
                 <TodoDescription id={id} />
             </div>
+            <div className="card">
+                
+            </div>
         </>
     );
 }

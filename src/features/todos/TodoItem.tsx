@@ -23,6 +23,7 @@ import { useRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import { useDispatch, useSelector } from "react-redux";
+import TodoTitle from "./TodoTitle";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>
@@ -80,36 +81,6 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             ·
         </span>
     );
-
-    const Title = () => {
-        const style = cls(
-            "font-semibold",
-            "text-light-text dark:text-dark-text",
-            RESETTER
-        );
-
-        return editing ? (
-            <input
-                type="text"
-                value={title}
-                className={style}
-                onChange={(e) => setTitle(e.target.value)}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        descriptionRef.current?.focus();
-                    }
-                }}
-                onClick={(e) => {
-                    e.stopPropagation();
-                }}
-                placeholder="Title of the task"
-                ref={titleRef}
-            />
-        ) : (
-            <p className={style}>{title}</p>
-        );
-    };
 
     const Description = () => (
         <p
@@ -171,7 +142,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                     "min-w-0"
                 )}
             >
-                {Title()}
+                <TodoTitle id={id} ref={titleRef} />
                 {Description()}
                 <div className="text-sm text-uim-400">
                     {tags.length > 0 && (
