@@ -2,13 +2,15 @@ import documentsReducer, {
     fetchDocumentIds
 } from "./features/documents/documentSlice";
 import todosReducer from "./features/todos/todosSlice";
+import myDayReducer from "./features/myday/mydaySlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
     reducer: {
         todos: todosReducer,
-        documents: documentsReducer
+        documents: documentsReducer,
+        myday: myDayReducer
     }
 });
 

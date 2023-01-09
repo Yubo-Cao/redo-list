@@ -26,6 +26,7 @@
         "react-contexify": "^6.0.0",
         "react-dom": "^18.2.0",
         "react-draggable": "^4.4.5",
+        "react-multi-select-component": "^4.3.4",
         "react-redux": "^8.0.5",
         "sass": "^1.57.1",
         "styled-jsx-plugin-postcss": "^4.0.1",
