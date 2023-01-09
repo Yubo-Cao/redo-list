@@ -17,6 +17,18 @@ export function DocumentViewer({
     return (
         <div className="prose max-w-none">
             <Viewer value={content || placeholder} />
+
+            <style global jsx>{`
+                .markdown-body *:first-child {
+                    margin-top: 0;
+                    padding-top: 0;
+                }
+
+                .markdown-body *:last-child {
+                    margin-bottom: 0;
+                    padding-bottom: 0;
+                }
+            `} </style>
         </div>
     );
 }

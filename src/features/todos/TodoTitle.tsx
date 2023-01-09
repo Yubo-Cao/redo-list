@@ -1,9 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-
-import { forwardRef, useState } from "react";
 import { Todo, selectTodoById, updateTodo } from "./todosSlice";
-import { AppDispatch } from "@/store";
 import { cls } from "@/lib/utils";
+import { AppDispatch } from "@/store";
+import { forwardRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function TodoTitle(
     {
@@ -24,7 +23,8 @@ function TodoTitle(
         "p-0",
         "border-0",
         "bg-transparent",
-        "outline-none"
+        "outline-none",
+        "w-full"
     );
 
     return (
@@ -59,7 +59,7 @@ function TodoTitle(
                     autoFocus
                 />
             ) : (
-                <p className={style}>{title}</p>
+                <p className={style}>{title || "Title of the task"}</p>
             )}
         </div>
     );

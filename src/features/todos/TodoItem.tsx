@@ -1,11 +1,11 @@
 import { cls } from "@lib/utils";
 
-import Checkbox from "@components/Checkbox";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
 import { selectDocumentSummaryById } from "../documents/documentSlice";
 import TodoCompleted from "./TodoCompleted";
+import TodoTitle from "./TodoTitle";
 import {
     Todo,
     deleteTodo,
@@ -23,7 +23,6 @@ import { useRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import { useDispatch, useSelector } from "react-redux";
-import TodoTitle from "./TodoTitle";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>
@@ -209,29 +208,6 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                     </div>
                 </Item>
             </Menu>
-            <style jsx>{`
-                :global(.todo-item [type="text"]:focus) {
-                    outline: none;
-                    box-shadow: none;
-                }
-
-                :global(.todo-item .contexify_theme-accent) {
-                    --contexify-menu-bgColor: #fff;
-                    --contexify-separator-color: #eee;
-                    --contexify-item-color: #666;
-                    --contexify-activeItem-color: #ec913f;
-                    --contexify-activeItem-bgColor: #fbedd5;
-                    --contexify-rightSlot-color: #6f6e77;
-                    --contexify-activeRightSlot-color: #ec913f;
-                    --contexify-arrow-color: #6f6e77;
-                    --contexify-activeArrow-color: #fff;
-
-                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
-                        0 2px 4px -2px rgb(0 0 0 / 0.1);
-                    padding: 0.5rem 0;
-                    gap: 0.5rem;
-                }
-            `}</style>
         </li>
     );
 }
