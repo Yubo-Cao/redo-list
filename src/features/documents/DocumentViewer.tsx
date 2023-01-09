@@ -23,7 +23,6 @@ export function DocumentViewer({
                 value={content || placeholder}
                 plugins={[gfm(), fileImage()]}
             />
-
             <style global jsx>
                 {`
                     .markdown-body *:first-child {
@@ -35,7 +34,7 @@ export function DocumentViewer({
                         margin-bottom: 0;
                         padding-bottom: 0;
                     }
-                `}{" "}
+                `}
             </style>
         </div>
     );

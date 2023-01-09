@@ -31,9 +31,12 @@ export default function TodoDate({ id, field, label }: TodoDateProps) {
     };
 
     return (
-        <div className="flex items-center gap-2" onClick={handleMenu}>
+        <div className="flex items-center gap-2">
             {label}
-            <span className="font-bold text mr-1 flex-1">
+            <span
+                className="font-bold text mr-1 flex-1 cursor-pointer hover:font-black"
+                onClick={handleMenu}
+            >
                 {_try_or(
                     () => formatDate(fromISO(date)),
                     () => "Not specified"
@@ -49,7 +52,7 @@ export default function TodoDate({ id, field, label }: TodoDateProps) {
                         dispatch(
                             updateTodo({
                                 id,
-                                update: { createDate: toISO(date) }
+                                update: { [field]: toISO(date) }
                             })
                         );
                     }}
