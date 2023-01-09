@@ -36,6 +36,7 @@ function HorizontalSidebar({
     const handle = useRef<HTMLDivElement>(null),
         sidebar = useRef<HTMLDivElement>(null),
         [w, setW] = React.useState(width),
+        [resizing, setResizing] = React.useState(false),
         minW = minWidth ?? width === -1 ? 0 : minWidth ?? width,
         maxW = maxWidth ?? width === -1 ? 9999 : maxWidth ?? width;
 
@@ -50,15 +51,19 @@ function HorizontalSidebar({
             setW(coerce(right - clientX, minW, maxW));
         }
     };
+
     const onDown = (e) => {
         e.stopPropagation();
         if (e.target === handle.current) {
+            setResizing(true);
             document.addEventListener("mousemove", onMove);
             document.addEventListener("mouseup", () => {
+                setResizing(false);
                 document.removeEventListener("mousemove", onMove);
             });
         }
     };
+
     const collapse = () => {
         if (collapsable) {
             if (collapsed) {
@@ -76,6 +81,7 @@ function HorizontalSidebar({
                     "horizontal-sidebar",
                     collapsed && "collapsed",
                     "bg-light-surface dark:bg-dark-surface",
+                    !resizing && "transition-all",
                     className
                 )}
                 ref={sidebar}
@@ -126,7 +132,7 @@ function HorizontalSidebar({
                     width: ${w}px;
                     @apply absolute top-0 bottom-0
                         shadow-lg lg:py-8 px-6 z-10
-                        transition-all overflow-hidden;
+                        overflow-hidden;
 
                     &.collapsed {
                         width: 0;
@@ -141,7 +147,7 @@ function HorizontalSidebar({
                         ? `left: ${w - SIDEBAR_RESIZE_HANDLE_SIZE / 2}px;`
                         : `right: ${w - SIDEBAR_RESIZE_HANDLE_SIZE / 2}px;`}
                     width: ${SIDEBAR_RESIZE_HANDLE_SIZE}px;
-                    @apply cursor-col-resize transition-all;
+                    @apply cursor-col-resize;
 
                     &.collapsed {
                         ${direction === "left"
@@ -154,7 +160,7 @@ function HorizontalSidebar({
                     @apply absolute top-1/2 w-12 h-12 rounded-full
                          flex items-center z-20
                          px-1
-                         select-none cursor-pointer transition-all;
+                         select-none cursor-pointer;
 
                     ${direction === "left" ? "right: -6px;" : "left: unset;"}
 
