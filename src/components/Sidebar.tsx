@@ -1,6 +1,6 @@
+import Icon from "./Icon";
 import { cls, coerce } from "@/lib/utils";
 import React, { useRef } from "react";
-import Icon from "./Icon";
 
 export type SidebarProps = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,

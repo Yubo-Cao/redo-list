@@ -68,11 +68,7 @@ function _icon(props: InnerIconProps) {
             } = props as MaterialIconProps;
             return (
                 <i
-                    className={cls(
-                        "antialiased",
-                        "material-icons",
-                        className
-                    )}
+                    className={cls("antialiased", "material-icons", className)}
                     style={{
                         // ligature
                         WebkitFontFeatureSettings: "liga",

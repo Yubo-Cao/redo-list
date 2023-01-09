@@ -4,6 +4,7 @@ import Checkbox from "@components/Checkbox";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
+import { selectDocumentSummaryById } from "../documents/documentSlice";
 import {
     Todo,
     deleteTodo,
@@ -16,12 +17,11 @@ import {
     updateTodo
 } from "./todosSlice";
 import Button from "@/components/Button";
+import { AppDispatch } from "@/store";
 import { useRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectDocumentSummaryById } from "../documents/documentSlice";
-import { AppDispatch } from "@/store";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>

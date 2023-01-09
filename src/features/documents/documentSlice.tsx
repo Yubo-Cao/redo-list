@@ -1,12 +1,12 @@
-import { invoke } from "@lib/tauri";
 import { Status } from "@lib/common";
-import { RootState } from "@/store";
+import { invoke } from "@lib/tauri";
 
+import { RootState } from "@/store";
 import {
     createAsyncThunk,
-    createSlice,
     createEntityAdapter,
-    createSelector
+    createSelector,
+    createSlice
 } from "@reduxjs/toolkit";
 import { Queue } from "queue-typescript";
 
@@ -233,7 +233,7 @@ const addResourcesToDocument = createAsyncThunk(
     "documents/addImagesToDocument",
     async (payload: { id: Document["id"]; images: File[] }) => {
         const { id, images } = payload;
-        
+
         if (!images.length) return;
         const bytes = await Promise.all(
             images.map(async (img) => {

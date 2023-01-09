@@ -49,7 +49,7 @@ export default function Logo({ className = "" }: LogoProps) {
                     "max-2xs:hidden",
                     "mr-1",
                     "dark:text-dark-text",
-                    'min-w-fit'
+                    "min-w-fit"
                 )}
             >
                 GRADE TODO

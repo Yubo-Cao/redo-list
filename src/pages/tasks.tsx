@@ -8,8 +8,8 @@ import {
 import Button from "@components/Button";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
-import Sidebar from "@components/Sidebar";
 import Layout from "@components/Layout";
+import Sidebar from "@components/Sidebar";
 
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";

@@ -13,10 +13,10 @@ import "bytemd/dist/index.css";
 
 import { readBinaryFile } from "@tauri-apps/api/fs";
 
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef } from "react";
 import { cls } from "@/lib/utils";
+import { AppDispatch } from "@/store";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 type MdEditorProps = Omit<EditorProps, "value" | "onChange"> & {
     id: Document["id"];
