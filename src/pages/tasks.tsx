@@ -18,6 +18,7 @@ import { AppDispatch } from "@/store";
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 import MDCalendar from "@/components/Calendar";
+import Title from "@/components/Title";
 
 const TodoList = dynamic(() => import("@features/todos/TodoList"), {
     ssr: false
@@ -66,7 +67,10 @@ export default function Tasks() {
                 onExpand={() => dispatch(todoSetExtendedEditor(true))}
             >
                 {editTodoId == null ? (
-                    <MDCalendar />
+                    <>
+                       
+                        <MDCalendar />
+                    </>
                 ) : (
                     <Editor id={editTodoId} />
                 )}

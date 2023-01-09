@@ -3,6 +3,10 @@ import { cls } from "@lib/utils";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
+import { AppDispatch } from "@/store";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
+import { useDispatch, useSelector } from "react-redux";
 import { selectDocumentSummaryById } from "../documents/documentSlice";
 import TodoCompleted from "./TodoCompleted";
 import TodoImportant from "./TodoImportant";
@@ -18,11 +22,7 @@ import {
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
-import { AppDispatch } from "@/store";
-import { useRef } from "react";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-import { useDispatch, useSelector } from "react-redux";
+import { pauseEvent } from "@/lib/common";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>
@@ -64,21 +64,20 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             className={cls(
                 "flex items-center gap-4 px-4 py-3 card",
                 "hover:bg-uim-50/50 dark:hover:bg-uim-900",
-                "cursor-pointer",
-                "todo-item"
+                "cursor-pointer"
             )}
             onClick={(e) => {
+                if (e.button === 2) return;
                 setEditing(true);
-                e.stopPropagation();
+                pauseEvent(e);
             }}
             onDoubleClick={(e) => {
-                setEditing(true);
                 dispatch(todoSetExtendedEditor(true));
-                e.stopPropagation();
+                setEditing(true);
+                pauseEvent(e);
             }}
             onContextMenu={handleContextMenu}
             tabIndex={0}
-            onFocus={() => setEditing(true)}
         >
             <TodoCompleted id={id} />
             <div className={cls("flex-1", "flex", "flex-col")}>
