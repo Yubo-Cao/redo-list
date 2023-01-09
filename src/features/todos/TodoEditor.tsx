@@ -1,11 +1,14 @@
 import {
     Todo,
     addTodo,
-    selectEditTodoId,
     selectTodoById,
     updateTodo
 } from "@features/todos/todosSlice";
 
+import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+import { AppDispatch } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
@@ -15,10 +18,6 @@ import TodoImportant from "./TodoImportant";
 import TodoList from "./TodoList";
 import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
-import Button from "@/components/Button";
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
 
 export type EditorProps = {
     id: Todo["id"];
@@ -27,7 +26,8 @@ export type EditorProps = {
 export default function Editor({ id }: EditorProps) {
     const todo: Todo = useSelector((state) => selectTodoById(state, id)),
         dispatch = useDispatch<AppDispatch>(),
-        subtasks = todo?.subtasks || [];
+        subtasks = todo?.subtasks || [],
+        dependencies = todo?.dependencies || [];
 
     if (!todo) return null;
 
@@ -83,8 +83,10 @@ export default function Editor({ id }: EditorProps) {
                                     id,
                                     update: {
                                         subtasks: [
-                                            ...subtasks,
-                                            newTodo.payload.id
+                                            ...new Set([
+                                                ...subtasks,
+                                                newTodo.payload.id
+                                            ])
                                         ]
                                     }
                                 })
@@ -94,10 +96,47 @@ export default function Editor({ id }: EditorProps) {
                         variant="outline"
                     >
                         <Icon name="add" size={24} />
-                        <span>New Task</span>
+                        <span>New Subtask</span>
                     </Button>
                 </h2>
                 <TodoList ids={subtasks}></TodoList>
+            </div>
+            <div className="outlined-card space-y-3">
+                <h2 className="text-lg flex justify-between items-center font-bold text-light-text dark:text-dark-text">
+                    <p>Dependencies</p>
+                    <Button
+                        className="flex items-center gap-2 text-base"
+                        onClick={async () => {
+                            const newTodo = (await dispatch(
+                                addTodo({
+                                    title: "New Subtask",
+                                    parentTaskId: id
+                                })
+                            )) as {
+                                payload: Todo;
+                            };
+                            dispatch(
+                                updateTodo({
+                                    id,
+                                    update: {
+                                        dependencies: [
+                                            ...new Set([
+                                                ...todo.dependencies,
+                                                newTodo.payload.id
+                                            ])
+                                        ]
+                                    }
+                                })
+                            );
+                        }}
+                        content="both"
+                        variant="outline"
+                    >
+                        <Icon name="add" size={24} />
+                        <span>New Dependency</span>
+                    </Button>
+                </h2>
+                <TodoList ids={dependencies}></TodoList>
             </div>
 
             <style jsx>{`
