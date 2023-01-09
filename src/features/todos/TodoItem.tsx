@@ -23,6 +23,7 @@ import { useRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import { useDispatch, useSelector } from "react-redux";
+import TodoImportant from "./TodoImportant";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>
@@ -89,19 +90,6 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         >
             {description}
         </p>
-    );
-
-    const Important = () => (
-        <Button
-            onClick={(e) => [e.stopPropagation(), setImportant(!important)]}
-            content="icon"
-            variant="none"
-            padding={false}
-            accent={important ? "pri" : "uim"}
-            ref={importantRef}
-        >
-            <Icon name="star" size={24} fill={true} />
-        </Button>
     );
 
     return (
@@ -184,7 +172,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                     )}
                 </div>
             </div>
-            {Important()}
+            <TodoImportant id={id} />
             <Menu id={menuId} theme="accent">
                 <Item
                     id="delete"

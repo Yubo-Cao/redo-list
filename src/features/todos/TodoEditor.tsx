@@ -15,6 +15,8 @@ import { useState } from "react";
 
 import TodoDate from "./TodoDate";
 import TodoTags from "./TodoTags";
+import TodoImportant from "./TodoImportant";
+import TodoDuration from "./TodoDuration";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
@@ -38,14 +40,17 @@ export default function EditorSidebar() {
 
     return (
         <div className="space-y-3 root">
-            <div className="flex items-center gap-2 outlined-card">
-                <TodoCompleted id={id} />
-                <TodoTitle id={id} />
+            <div className="flex justify-between items-center gap-2 outlined-card">
+                <div className="flex gap-2 items-center">
+                    <TodoCompleted id={id} />
+                    <TodoTitle id={id} />
+                </div>
+                <TodoImportant id={id} />
             </div>
             <div className="outlined-card py-2">
                 <TodoDescription id={id} />
             </div>
-            <div className="outlined-card space-y-2">
+            <div className="outlined-card space-y-3">
                 <TodoDate
                     id={id}
                     field="createDate"
@@ -77,6 +82,9 @@ export default function EditorSidebar() {
                     }
                 />
                 <TodoTags id={id} />
+            </div>
+            <div className="outlined-card space-y-3">
+                <TodoDuration id={id} />
             </div>
 
             <style jsx>{`
