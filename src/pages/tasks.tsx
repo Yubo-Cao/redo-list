@@ -27,40 +27,35 @@ export default function Tasks() {
 
     return (
         <Layout activeItemId={"tasks"} sideBarWidth={"22rem"}>
-            <div
-                onClick={() => dispatch(todoStartEdit(null))}
-                className="w-full h-full"
-            >
-                <div className="flex justify-between items-center">
-                    <h1 className="text-xl font-bold text-light-text dark:text-dark-text">
-                        <p>Tasks</p>
-                        <p className="text-uim-400 text-sm font-normal">
-                            {formatDate(new Date())}
-                        </p>
-                    </h1>
-                    <Button
-                        className="flex items-center gap-2"
-                        onClick={() => {
-                            dispatch(addTodo({}) as any);
-                        }}
-                        content="both"
-                    >
-                        <Icon name="add" size={24} />
-                        <span>New Task</span>
-                    </Button>
-                </div>
-                <TodoList className="mt-4" />
-                <Sidebar
-                    minWidth={200}
-                    maxWidth={-1}
-                    onClick={(e) => e.stopPropagation()}
-                    collapsed={!extendedEditor}
-                    onCollapse={() => dispatch(todoSetExtendedEditor(false))}
-                    onExpand={() => dispatch(todoSetExtendedEditor(true))}
+            <div className="flex justify-between items-center">
+                <h1 className="text-xl font-bold text-light-text dark:text-dark-text">
+                    <p>Tasks</p>
+                    <p className="text-uim-400 text-sm font-normal">
+                        {formatDate(new Date())}
+                    </p>
+                </h1>
+                <Button
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                        dispatch(addTodo({}) as any);
+                    }}
+                    content="both"
                 >
-                    <Editor />
-                </Sidebar>
+                    <Icon name="add" size={24} />
+                    <span>New Task</span>
+                </Button>
             </div>
+            <TodoList className="mt-4" />
+            <Sidebar
+                minWidth={256}
+                maxWidth={-1}
+                onClick={(e) => e.stopPropagation()}
+                collapsed={!extendedEditor}
+                onCollapse={() => dispatch(todoSetExtendedEditor(false))}
+                onExpand={() => dispatch(todoSetExtendedEditor(true))}
+            >
+                <Editor />
+            </Sidebar>
         </Layout>
     );
 }

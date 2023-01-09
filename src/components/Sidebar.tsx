@@ -98,7 +98,7 @@ function HorizontalSidebar({
                     className={cls(
                         "expand-collapse-button",
                         collapsed && "collapsed",
-                        direction === "right" && "justify-end"
+                        direction === "right" && collapsed && "justify-end"
                     )}
                     onClick={collapse}
                 >

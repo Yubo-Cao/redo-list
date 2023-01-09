@@ -11,6 +11,7 @@ import {
     selectTodoById,
     selectTodoSubtaskCompleteTotal,
     selectTodoSubtaskTotal,
+    todoSetExtendedEditor,
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
@@ -160,6 +161,11 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             )}
             onClick={(e) => {
                 setEditing(true);
+                e.stopPropagation();
+            }}
+            onDoubleClick={(e) => {
+                setEditing(true);
+                dispatch(todoSetExtendedEditor(true));
                 e.stopPropagation();
             }}
             onContextMenu={handleContextMenu}
