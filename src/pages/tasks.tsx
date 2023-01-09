@@ -1,4 +1,9 @@
-import { addTodo, todoStartEdit } from "@features/todos/todosSlice";
+import {
+    addTodo,
+    selectExtendedEditor,
+    todoSetExtendedEditor,
+    todoStartEdit
+} from "@features/todos/todosSlice";
 
 import Button from "@components/Button";
 import { formatDate } from "@components/Date";
@@ -7,7 +12,7 @@ import Sidebar from "@components/Sidebar";
 import Layout from "@components/Layout";
 
 import dynamic from "next/dynamic";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const TodoList = dynamic(() => import("@features/todos/TodoList"), {
     ssr: false
@@ -17,7 +22,8 @@ const Editor = dynamic(() => import("@features/todos/TodoEditor"), {
 });
 
 export default function Tasks() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(),
+        extendedEditor = useSelector(selectExtendedEditor);
 
     return (
         <Layout activeItemId={"tasks"} sideBarWidth={"22rem"}>
@@ -48,6 +54,9 @@ export default function Tasks() {
                     minWidth={200}
                     maxWidth={-1}
                     onClick={(e) => e.stopPropagation()}
+                    collapsed={!extendedEditor}
+                    onCollapse={() => dispatch(todoSetExtendedEditor(false))}
+                    onExpand={() => dispatch(todoSetExtendedEditor(true))}
                 >
                     <Editor />
                 </Sidebar>

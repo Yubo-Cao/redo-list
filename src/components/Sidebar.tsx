@@ -12,7 +12,9 @@ export type SidebarProps = React.DetailedHTMLProps<
     width?: number;
     direction?: "left" | "right" | "top" | "bottom";
     collapsable?: boolean;
-    openContent?: React.ReactNode;
+    collapsed?: boolean;
+    onCollapse: () => void;
+    onExpand: () => void;
 };
 
 const SIDEBAR_RESIZE_HANDLE_SIZE = 4;
@@ -24,13 +26,15 @@ function HorizontalSidebar({
     width = 256,
     direction,
     collapsable = true,
+    onCollapse,
+    onExpand,
+    collapsed = false,
     className = "",
     ...rest
 }: Omit<SidebarProps, "direction"> & { direction: "left" | "right" }) {
     const handle = useRef<HTMLDivElement>(null),
         sidebar = useRef<HTMLDivElement>(null),
         [w, setW] = React.useState(width),
-        [collapsed, setCollapsed] = React.useState(false),
         minW = minWidth ?? width === -1 ? 0 : minWidth ?? width,
         maxW = maxWidth ?? width === -1 ? 9999 : maxWidth ?? width;
 
@@ -46,6 +50,7 @@ function HorizontalSidebar({
         }
     };
     const onDown = (e) => {
+        e.stopPropagation();
         if (e.target === handle.current) {
             document.addEventListener("mousemove", onMove);
             document.addEventListener("mouseup", () => {
@@ -55,7 +60,11 @@ function HorizontalSidebar({
     };
     const collapse = () => {
         if (collapsable) {
-            setCollapsed(!collapsed);
+            if (collapsed) {
+                onExpand();
+            } else {
+                onCollapse();
+            }
         }
     };
 
@@ -88,16 +97,13 @@ function HorizontalSidebar({
                 <div
                     className={cls(
                         "expand-collapse-button",
-                        collapsed && "collapsed"
+                        collapsed && "collapsed",
+                        direction === "right" && "justify-end"
                     )}
                     onClick={collapse}
                 >
                     <Icon
-                        name={
-                            direction === "left"
-                                ? "chevron_left"
-                                : "chevron_right"
-                        }
+                        name={"chevron_right"}
                         size={24}
                         className={cls(
                             "text-uim-500 dark:text-uim-400",
@@ -119,7 +125,7 @@ function HorizontalSidebar({
                     width: ${w}px;
                     @apply absolute top-0 bottom-0
                         shadow-lg lg:py-8 px-4 z-10
-                        transition-all;
+                        transition-all overflow-hidden;
 
                     &.collapsed {
                         width: 0;
@@ -149,8 +155,9 @@ function HorizontalSidebar({
                          px-1
                          select-none cursor-pointer transition-all;
 
+                    ${direction === "left" ? "right: -6px;" : "left: unset;"}
+
                     &.collapsed {
-                        @apply justify-end;
                         ${direction === "left" ? "left: 0;" : "right: 0;"}
                     }
                 }

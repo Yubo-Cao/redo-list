@@ -239,3 +239,8 @@ export const deleteTodo = createAsyncThunk(
         return todoId;
     }
 );
+
+export const selectExtendedEditor = createSelector(
+    (state: any) => state.todos.extendedEditor,
+    (extendedEditor) => extendedEditor
+);
