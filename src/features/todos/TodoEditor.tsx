@@ -4,8 +4,6 @@ import {
     selectTodoById
 } from "@features/todos/todosSlice";
 
-import "bytemd/dist/index.css";
-
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,18 +11,15 @@ import TodoCompleted from "./TodoCompleted";
 import TodoDescription from "./TodoDescription";
 import TodoTitle from "./TodoTitle";
 
-import { useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
+import { useState } from "react";
+
 import TodoDate from "./TodoDate";
+import TodoTags from "./TodoTags";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
         todo: Todo = useSelector((state) => selectTodoById(state, editTodoId)),
         dispatch = useDispatch<AppDispatch>();
-
-    const menu_id = "todo-editor-menu",
-        { show } = useContextMenu({ id: menu_id }),
-        handleMenu = (e) => show({ event: e });
 
     if (!todo) return null;
 
@@ -42,7 +37,7 @@ export default function EditorSidebar() {
     } = todo;
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 root">
             <div className="flex items-center gap-2 outlined-card">
                 <TodoCompleted id={id} />
                 <TodoTitle id={id} />
@@ -81,11 +76,23 @@ export default function EditorSidebar() {
                         </>
                     }
                 />
+                <TodoTags id={id} />
             </div>
 
             <style jsx>{`
                 .outlined-card {
                     @apply border border-uim-300 dark:border-uim-700 rounded-lg px-3 py-4;
+                }
+
+                .root {
+                    max-height: 100%;
+                    overflow-y: auto;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
                 }
             `}</style>
         </div>

@@ -54,7 +54,10 @@
 
 @layer utilities {
     .text {
-        @apply text-base text-light-text dark:text-dark-text;
+        @apply text-light-text dark:text-dark-text;
+    }
+    .center {
+        @apply flex justify-center items-center;
     }
 }
 
@@ -71,4 +74,8 @@
     --contexify-menu-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
         0 2px 4px -2px rgb(0 0 0 / 0.1);
     --contexify-menu-padding: 0;
+}
+
+input[type="text"] {
+    @apply p-0 border-0 bg-transparent outline-none;
 }

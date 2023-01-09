@@ -79,8 +79,7 @@ export default function DocumentEditor(props: MdEditorProps) {
                     )
                 }
                 editorConfig={{
-                    ...editorConfig,
-                    theme: "material"
+                    ...editorConfig
                 }}
                 {...rest}
                 uploadImages={async (files: File[]) => {

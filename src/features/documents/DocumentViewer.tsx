@@ -18,7 +18,7 @@ export function DocumentViewer({
         { content } = document;
 
     return (
-        <div className="prose-sm max-w-none">
+        <div className="prose max-w-none text-light-text dark:text-dark-text">
             <Viewer
                 value={content || placeholder}
                 plugins={[gfm(), fileImage()]}

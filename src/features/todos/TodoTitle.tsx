@@ -20,10 +20,6 @@ function TodoTitle(
     const style = cls(
         "font-semibold",
         "text-light-text dark:text-dark-text",
-        "p-0",
-        "border-0",
-        "bg-transparent",
-        "outline-none",
         "w-full"
     );
 

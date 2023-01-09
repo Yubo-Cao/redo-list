@@ -73,11 +73,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         show({ event: e, props: {} });
     };
 
-    const Sep = () => (
-        <span className={cls("text-light-text", "dark:text-dark-text", "mx-1")}>
-            ·
-        </span>
-    );
+    const Sep = () => <span className={cls("text font-black", "mx-2")}>·</span>;
 
     const Description = () => (
         <p
@@ -141,15 +137,21 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             >
                 <TodoTitle id={id} ref={titleRef} />
                 {Description()}
-                <div className="text-sm text-uim-400">
+                <div className="flex items-center text-sm text-uim-400">
                     {tags.length > 0 && (
                         <>
-                            <div>
+                            <div className="flex items-center gap-1">
                                 {tags.map((tag) => (
                                     <span
                                         key={tag}
                                         className={cls(
-                                            "text-xs text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg rounded-full px-2 py-1 mr-1"
+                                            "text-xs",
+                                            "px-2",
+                                            "py-1",
+                                            "text-pri-400",
+                                            "bg-uim-100",
+                                            "dark:bg-uim-800",
+                                            "rounded-lg"
                                         )}
                                     >
                                         {tag}

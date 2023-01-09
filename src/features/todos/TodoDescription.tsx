@@ -19,6 +19,7 @@ export default function TodoDescription({ id }: { id: Todo["id"] }) {
                     setEdit(false);
                 }
             }}
+            tabIndex={0}
         >
             {edit ? (
                 <DocumentEditor id={description} />

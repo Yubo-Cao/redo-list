@@ -5,6 +5,7 @@ import { Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Todo, selectTodoById, updateTodo } from "./todosSlice";
+import { useRef } from "react";
 
 export type TodoDateProps = {
     id: Todo["id"];
@@ -17,7 +18,8 @@ export default function TodoDate({ id, field, label }: TodoDateProps) {
         menu_id = `todo-date-picker-${id}-${field}`,
         { show } = useContextMenu({ id: menu_id }),
         handleMenu = (e) => show({ event: e }),
-        dispatch = useDispatch<AppDispatch>();
+        dispatch = useDispatch<AppDispatch>(),
+        ref = useRef<HTMLSpanElement>(null);
 
     if (!todo) return null;
 
@@ -31,11 +33,33 @@ export default function TodoDate({ id, field, label }: TodoDateProps) {
     };
 
     return (
-        <div className="flex items-center gap-2">
+        <div
+            className="flex items-center gap-2"
+            tabIndex={0}
+            onKeyDown={(e) => {
+                const cur = ref.current;
+                if (!cur) return;
+                if (e.key === "Enter" || e.key === " ") {
+                    const rect = cur.getBoundingClientRect();
+                    const mid = {
+                        clientX: rect.left + rect.width / 2,
+                        clientY: rect.top + rect.height / 2,
+                    }
+                    const event = new MouseEvent("click", {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        ...mid
+                    });
+                    cur.dispatchEvent(event);
+                }
+            }}
+        >
             {label}
             <span
                 className="font-bold text mr-1 flex-1 cursor-pointer hover:font-black"
                 onClick={handleMenu}
+                ref={ref}
             >
                 {_try_or(
                     () => formatDate(fromISO(date)),
