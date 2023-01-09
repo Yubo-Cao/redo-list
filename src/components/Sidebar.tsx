@@ -1,3 +1,4 @@
+import { pauseEvent } from "@/lib/common";
 import Icon from "./Icon";
 import { cls, coerce } from "@/lib/utils";
 import React, { useRef } from "react";
@@ -39,7 +40,7 @@ function HorizontalSidebar({
         maxW = maxWidth ?? width === -1 ? 9999 : maxWidth ?? width;
 
     const onMove = (e: MouseEvent) => {
-        e.stopPropagation();
+        pauseEvent(e);
         const { clientX } = e;
         if (direction === "left") {
             const { left } = sidebar.current.getBoundingClientRect();

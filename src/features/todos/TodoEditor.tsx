@@ -3,7 +3,6 @@ import {
     selectEditTodoId,
     selectTodoById,
     addTodo,
-    selectTodoSubtasks,
     updateTodo
 } from "@features/todos/todosSlice";
 
@@ -20,6 +19,7 @@ import TodoTags from "./TodoTags";
 import TodoImportant from "./TodoImportant";
 import TodoDuration from "./TodoDuration";
 import TodoList from "./TodoList";
+import TodoBreadcrumb from "./TodoBreadcrumb";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
@@ -31,19 +31,9 @@ export default function EditorSidebar() {
 
     const id = editTodoId;
 
-    let {
-        title,
-        description,
-        important,
-        completed,
-        tags,
-        createDate,
-        dueDate,
-        importance
-    } = todo;
-
     return (
         <div className="space-y-3 root text-light-text dark:text-dark-text">
+            <TodoBreadcrumb id={id} />
             <div className="flex justify-between items-center gap-2 outlined-card">
                 <div className="flex gap-2 items-center">
                     <TodoCompleted id={id} />

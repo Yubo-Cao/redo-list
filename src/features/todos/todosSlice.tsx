@@ -9,6 +9,7 @@ import {
     createSlice
 } from "@reduxjs/toolkit";
 import { Queue } from "queue-typescript";
+import { RootState } from "@/store";
 
 export type Todo = {
     id: number;
@@ -155,9 +156,7 @@ export const selectTodoIds = createSelector(selectAllTodos, (todos: Todo[]) =>
 export const selectRootTodoIds = createSelector(
     selectAllTodos,
     (todos: Todo[]) =>
-        todos
-            .filter((todo) => todo.parentTaskId === undefined)
-            .map((todo) => todo.id)
+        todos.filter((todo) => todo.parentTaskId == null).map((todo) => todo.id)
 );
 
 export const selectEditTodoId = createSelector(
@@ -255,3 +254,21 @@ export const selectExtendedEditor = createSelector(
     (state: any) => state.todos.extendedEditor,
     (extendedEditor) => extendedEditor
 );
+
+export const selectParentTodosById = (id: Todo["id"]) =>
+    createSelector(
+        (state) => state,
+        (state: RootState) => {
+            const reversed: Todo[] = [];
+            let current: Todo = selectTodoById(state, id);
+            while (current.parentTaskId != null) {
+                current = selectTodoById(state, current.parentTaskId);
+                reversed.push(current);
+            }
+            const result = [];
+            for (let i = reversed.length - 1; i >= 0; i--) {
+                result.push(reversed[i]);
+            }
+            return result;
+        }
+    );
