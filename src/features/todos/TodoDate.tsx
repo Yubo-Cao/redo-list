@@ -24,7 +24,7 @@ export default function TodoDate({ id, field }: TodoDateProps) {
             }
         },
         dispatch = useDispatch<AppDispatch>(),
-        ref = useRef<HTMLSpanElement>(null);
+        ref = useRef<HTMLDivElement>(null);
 
     if (!todo) return null;
 

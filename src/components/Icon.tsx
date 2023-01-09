@@ -1,6 +1,5 @@
 import { cls } from "../lib/utils";
 
-import localFont from "@next/font/local";
 import Image from "next/image";
 
 interface MaterialIconProps {

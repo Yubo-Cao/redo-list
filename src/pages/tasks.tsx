@@ -14,11 +14,11 @@ import Icon from "@components/Icon";
 import Layout from "@components/Layout";
 import Sidebar from "@components/Sidebar";
 
+import MDCalendar from "@/components/Calendar";
+import Title from "@/components/Title";
 import { AppDispatch } from "@/store";
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
-import MDCalendar from "@/components/Calendar";
-import Title from "@/components/Title";
 
 const TodoList = dynamic(() => import("@features/todos/TodoList"), {
     ssr: false
@@ -68,7 +68,6 @@ export default function Tasks() {
             >
                 {editTodoId == null ? (
                     <>
-                       
                         <MDCalendar />
                     </>
                 ) : (

@@ -5,10 +5,6 @@ import {
     updateTodo
 } from "@features/todos/todosSlice";
 
-import Button from "@/components/Button";
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
@@ -18,6 +14,10 @@ import TodoImportant from "./TodoImportant";
 import TodoList from "./TodoList";
 import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
+import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+import { AppDispatch } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export type EditorProps = {
     id: Todo["id"];

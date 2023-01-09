@@ -3,10 +3,6 @@ import { cls } from "@lib/utils";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
-import { AppDispatch } from "@/store";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-import { useDispatch, useSelector } from "react-redux";
 import { selectDocumentSummaryById } from "../documents/documentSlice";
 import TodoCompleted from "./TodoCompleted";
 import TodoImportant from "./TodoImportant";
@@ -23,6 +19,10 @@ import {
     updateTodo
 } from "./todosSlice";
 import { pauseEvent } from "@/lib/common";
+import { AppDispatch } from "@/store";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TodoItem({ id }: { id: Todo["id"] }) {
     const todo: Todo | undefined = useSelector((state) =>
