@@ -6,21 +6,25 @@ import {
 
 import "bytemd/dist/index.css";
 
-import TodoCompleted from "./TodoCompleted";
-import TodoDescription from "./TodoDescription";
-import TodoTitle from "./TodoTitle";
-import { formatDate } from "@/components/Date";
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
+import TodoCompleted from "./TodoCompleted";
+import TodoDescription from "./TodoDescription";
+import TodoTitle from "./TodoTitle";
 
-import { Item, Menu, useContextMenu } from "react-contexify";
+import { useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
+import TodoDate from "./TodoDate";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
         todo: Todo = useSelector((state) => selectTodoById(state, editTodoId)),
         dispatch = useDispatch<AppDispatch>();
+
+    const menu_id = "todo-editor-menu",
+        { show } = useContextMenu({ id: menu_id }),
+        handleMenu = (e) => show({ event: e });
 
     if (!todo) return null;
 
@@ -39,25 +43,44 @@ export default function EditorSidebar() {
 
     return (
         <div className="space-y-3">
-            <div className="flex justify-between items-center outlined-card">
-                <TodoTitle id={id} />
+            <div className="flex items-center gap-2 outlined-card">
                 <TodoCompleted id={id} />
+                <TodoTitle id={id} />
             </div>
             <div className="outlined-card py-2">
                 <TodoDescription id={id} />
             </div>
-            <div className="outlined-card">
-                <div className="flex items-center gap-2">
-                    <Icon
-                        name="calendar_today"
-                        className="flex-0 text"
-                        size={24}
-                    />
-                    <span className="flex-0 text">Create date:</span>
-                    <span className="font-bold text-pri-400 mr-1 flex-1">
-                        {formatDate(createDate)}
-                    </span>
-                </div>
+            <div className="outlined-card space-y-2">
+                <TodoDate
+                    id={id}
+                    field="createDate"
+                    label={
+                        <>
+                            <Icon
+                                name="schedule"
+                                className="flex-0 text"
+                                size={24}
+                                wrap={true}
+                            />
+                            <span className="flex-0 text">Create date:</span>
+                        </>
+                    }
+                />
+                <TodoDate
+                    id={id}
+                    field="dueDate"
+                    label={
+                        <>
+                            <Icon
+                                name="pending_actions"
+                                className="flex-0 text"
+                                size={24}
+                                wrap={true}
+                            />
+                            <span className="flex-0 text">Due date:</span>
+                        </>
+                    }
+                />
             </div>
 
             <style jsx>{`

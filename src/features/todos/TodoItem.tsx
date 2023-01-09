@@ -64,9 +64,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
 
     let { title, important, completed, tags, createDate, dueDate } = todo;
 
-    const setImportant = _wrap("important"),
-        setCompleted = _wrap("completed"),
-        setTitle = _wrap("title");
+    const setImportant = _wrap("important");
 
     const RESETTER = cls("p-0", "border-0", "bg-transparent", "outline-none");
 

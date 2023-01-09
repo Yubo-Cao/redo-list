@@ -2,7 +2,14 @@ import Icon from "./Icon";
 import { useEffect, useRef } from "react";
 import Calendar from "react-calendar";
 
-export default function MDCalendar() {
+type MDCalendarProps = {
+    onChange?: (date: Date) => void;
+    onClickDay?: (date: Date) => void;
+    value?: Date;
+    defaultActiveStartDate?: Date;
+};
+
+export default function MDCalendar(props: MDCalendarProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -50,7 +57,9 @@ export default function MDCalendar() {
                     />
                 }
                 formatDay={(locale, date) => date.getDate()}
-                defaultActiveStartDate={new Date()}
+                locale="en-US"
+                defaultValue={new Date()}
+                {...props}
             />
             <style jsx global>
                 {`
@@ -82,7 +91,7 @@ export default function MDCalendar() {
 
                     .react-calendar__month-view__days {
                         display: grid !important;
-                        @apply grid-rows-6 grid-cols-7 gap-1;
+                        @apply grid-rows-5 grid-cols-7 gap-1;
                     }
 
                     .react-calendar__month-view__days__day {
@@ -141,3 +150,5 @@ export default function MDCalendar() {
         </div>
     );
 }
+
+export type { MDCalendarProps };
