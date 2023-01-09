@@ -152,6 +152,14 @@ export const selectTodoIds = createSelector(selectAllTodos, (todos: Todo[]) =>
     todos.map((todo) => todo.id)
 );
 
+export const selectRootTodoIds = createSelector(
+    selectAllTodos,
+    (todos: Todo[]) =>
+        todos
+            .filter((todo) => todo.parentTaskId === undefined)
+            .map((todo) => todo.id)
+);
+
 export const selectEditTodoId = createSelector(
     (state: any) => state.todos,
     (todos) => todos.editTodoId as Todo["id"]
@@ -171,26 +179,27 @@ export const selectTodoStatus = createSelector(
 export const selectTodoSubtasks = (todoId: number) =>
     createSelector(
         (state: any) => state.todos.entities,
-        (entities: { [id: number]: Todo }) => entities[todoId].subtasks
+        (entities: { [id: number]: Todo }) => entities[todoId]?.subtasks
     );
 
 export const selectTodoSubtaskTotal = (todoId: number) =>
     createSelector(
         selectTodoSubtasks(todoId),
-        (subtasks: number[]) => subtasks.length
+        (subtasks: number[]) => subtasks?.length
     );
 
 export const selectTodoSubtaskCompleteTotal = (todoId: number) =>
     createSelector(
         selectTodoSubtasks(todoId),
         (state: any) => state.todos.entities,
-        (subtasks: number[], entities: { [id: number]: Todo }) =>
-            subtasks.filter((subtaskId) => entities[subtaskId].completed).length
+        (subtasks: Todo["id"][], entities: { [id: Todo["id"]]: Todo }) =>
+            subtasks?.filter((subtaskId) => entities[subtaskId]?.completed)
+                .length
     );
 
 // thunks
 export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
-    const todos: Todo[] = await invoke("get_root_todos");
+    const todos: Todo[] = await invoke("get_todos");
     return todos;
 });
 

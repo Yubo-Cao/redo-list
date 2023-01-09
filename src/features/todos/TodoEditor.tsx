@@ -43,7 +43,7 @@ export default function EditorSidebar() {
     } = todo;
 
     return (
-        <div className="space-y-3 root">
+        <div className="space-y-3 root text-light-text dark:text-dark-text">
             <div className="flex justify-between items-center gap-2 outlined-card">
                 <div className="flex gap-2 items-center">
                     <TodoCompleted id={id} />
@@ -54,41 +54,26 @@ export default function EditorSidebar() {
             <div className="outlined-card py-2">
                 <TodoDescription id={id} />
             </div>
-            <div className="outlined-card space-y-3">
-                <TodoDate
-                    id={id}
-                    field="createDate"
-                    label={
-                        <>
-                            <Icon
-                                name="schedule"
-                                className="flex-0 text"
-                                size={24}
-                                wrap={true}
-                            />
-                            <span className="flex-0 text">Create date:</span>
-                        </>
-                    }
-                />
-                <TodoDate
-                    id={id}
-                    field="dueDate"
-                    label={
-                        <>
-                            <Icon
-                                name="pending_actions"
-                                className="flex-0 text"
-                                size={24}
-                                wrap={true}
-                            />
-                            <span className="flex-0 text">Due date:</span>
-                        </>
-                    }
-                />
-                <TodoDuration id={id} />
-                <TodoTags id={id} />
+            <div className="outlined-card tiles">
+                <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
+                    <Icon name="schedule" size={28} wrap={true} />
+                    <span>Create date</span>
+                    <TodoDate id={id} field="createDate" />
+                </div>
+                <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
+                    <Icon name="pending_actions" size={28} wrap={true} />
+                    <span>Due date</span>
+                    <TodoDate id={id} field="dueDate" />
+                </div>
+                <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
+                    <Icon name="timer" size={28} wrap={true} />
+                    <span className="text">Duration</span>
+                    <TodoDuration id={id} />
+                </div>
+                <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
+                    <TodoTags id={id} />
+                </div>
             </div>
-            {/* subtasks */}
             <div className="outlined-card space-y-3">
                 <h2 className="text-lg flex justify-between items-center font-bold text-light-text dark:text-dark-text">
                     <p>Subtasks</p>
@@ -128,6 +113,19 @@ export default function EditorSidebar() {
             <style jsx>{`
                 .outlined-card {
                     @apply border border-uim-300 dark:border-uim-700 rounded-lg px-3 py-4;
+                }
+
+                .tiles {
+                    @apply grid grid-cols-2 gap-2 p-4 justify-items-stretch;
+                }
+
+                .tiles div {
+                    aspect-ratio: 3/2;
+                    @apply rounded-lg p-4;
+
+                    span {
+                        @apply text-sm;
+                    }
                 }
 
                 .root {

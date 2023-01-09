@@ -18,14 +18,14 @@ export type ButtonProps = Omit<
 
 const COLOR_CLASSNAMES = {
     solid: {
-        pri: "bg-pri-500 dark:bg-pri-600 text-white dark:text-dark-surface",
-        sec: "bg-sec-500 dark:bg-sec-600 text-light-text dark:text-dark-text",
-        uim: "bg-uim-400 dark:bg-uim-500 text-light-text dark:text-dark-text"
+        pri: "bg-pri-500 dark:bg-pri-600 text-white hover:bg-pri-400 dark:hover:bg-pri-500",
+        sec: "bg-sec-500 dark:bg-sec-600 text-white hover:bg-sec-400 dark:hover:bg-sec-500",
+        uim: "bg-uim-300 dark:bg-uim-600 text-white hover:bg-uim-200 dark:hover:bg-uim-500"
     },
     outline: {
-        pri: "border border-pri-500 dark:border-pri-600 text-pri-500 dark:text-pri-600",
-        sec: "border border-sec-500 dark:border-sec-600 text-sec-500 dark:text-sec-600",
-        uim: "border border-uim-300 dark:border-uim-600 text-uim-500 dark:text-uim-500"
+        pri: "border border-1 border-pri-500 dark:border-pri-400 text-pri-500 dark:text-pri-400 hover:border-2 box-border",
+        sec: "border border-1 border-sec-500 dark:border-sec-400 text-sec-500 dark:text-sec-400 hover:border-2 box-border",
+        uim: "border border-1 border-uim-300 dark:border-uim-400 text-uim-300 dark:text-uim-400 hover:border-2 box-border"
     },
     none: {
         pri: "text-pri-500 dark:text-pri-600",

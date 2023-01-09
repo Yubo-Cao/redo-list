@@ -25,7 +25,7 @@ export default function Chip({
     return (
         <div
             className={cls(
-                "inline-block relative align-baseline font-sans text-xs font-medium center leading-none whitespace-nowrap py-2 px-3.5 center rounded-lg select-none bg-pri-400 text-white h-6",
+                "inline-block relative align-baseline font-sans text-xs font-medium center leading-none whitespace-nowrap py-2 px-3.5 center rounded-lg select-none bg-pri-400 dark:bg-pri-600 text-white h-6",
                 hover && deleteable && "pr-1.5",
                 className
             )}

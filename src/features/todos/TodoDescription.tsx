@@ -7,7 +7,8 @@ import { useSelector } from "react-redux";
 export default function TodoDescription({ id }: { id: Todo["id"] }) {
     const todo = useSelector((state) => selectTodoById(state, id)),
         { description } = todo,
-        [edit, setEdit] = useState(false);
+        [edit, setEdit] = useState(false),
+        ref = useRef<HTMLDivElement>(null);
 
     return (
         <div
@@ -18,7 +19,14 @@ export default function TodoDescription({ id }: { id: Todo["id"] }) {
                 if (e.ctrlKey && e.key === "Enter") {
                     setEdit(false);
                 }
+                if (document.activeElement === ref.current) {
+                    if (e.key === "Enter" || e.key === " ") {
+                        setEdit(true);
+                    }
+                }
+                if (e.key === "Escape") setEdit(false);
             }}
+            ref={ref}
             tabIndex={0}
         >
             {edit ? (

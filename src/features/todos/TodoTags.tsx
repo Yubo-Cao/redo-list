@@ -62,6 +62,7 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
                                 setEditingTag(false);
                             }
                         }}
+                        size={5}
                     />
                 </Chip>
             )}

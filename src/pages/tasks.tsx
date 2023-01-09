@@ -55,6 +55,7 @@ export default function Tasks() {
             </div>
             <TodoList className="mt-4" ids={ids} />
             <Sidebar
+                width={512}
                 minWidth={256}
                 maxWidth={-1}
                 onClick={(e) => e.stopPropagation()}
