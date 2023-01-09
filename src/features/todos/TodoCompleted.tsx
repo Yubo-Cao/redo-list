@@ -4,7 +4,7 @@ import { AppDispatch } from "@/store";
 import { forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function todoCompleted({ id }: { id: Todo["id"] }, ref) {
+function TodoCompleted({ id }: { id: Todo["id"] }, ref) {
     const todo = useSelector((state) => selectTodoById(state, id)),
         dispatch = useDispatch<AppDispatch>();
     const { completed } = todo;
@@ -21,4 +21,6 @@ function todoCompleted({ id }: { id: Todo["id"] }, ref) {
     );
 }
 
-export default forwardRef(todoCompleted);
+const ForwardedTodoCompleted = forwardRef(TodoCompleted);
+export default ForwardedTodoCompleted;
+export { TodoCompleted, ForwardedTodoCompleted };

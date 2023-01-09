@@ -45,3 +45,9 @@
 .material-icons {
     font-family: "Material Icons";
 }
+
+@layer components {
+    .card {
+        @apply px-3 py-2 rounded-lg shadow dark:border dark:border-uim-500 bg-light-surface dark:bg-dark-surface;
+    }
+}

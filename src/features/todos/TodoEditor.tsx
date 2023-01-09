@@ -5,12 +5,11 @@ import {
     selectTodoById
 } from "@features/todos/todosSlice";
 
-import Icon from "@components/Icon";
-
 import "bytemd/dist/index.css";
 
+import { DocumentViewer } from "../documents/DocumentViewer";
+import TodoCompleted from "./TodoCompleted";
 import { AppDispatch } from "@/store";
-import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function EditorSidebar() {
@@ -35,9 +34,14 @@ export default function EditorSidebar() {
 
     return (
         <>
-            <div className="prose max-w-none">
-                <h2 className="text-light-text dark:text-dark-text">{title}</h2>
-                <DocumentEditor id={description} />
+            <div className="flex justify-between items-center mb-3 card">
+                <h2 className="font-bold text-2xl text-light-text dark:text-dark-text">
+                    {title}
+                </h2>
+                <TodoCompleted id={id} />
+            </div>
+            <div className="card py-4">
+                <DocumentViewer id={description} />
             </div>
         </>
     );

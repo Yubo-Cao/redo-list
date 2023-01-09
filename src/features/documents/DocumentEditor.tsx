@@ -160,7 +160,7 @@ export default function DocumentEditor(props: MdEditorProps) {
             <style jsx global>{`
                 .documentEditor {
                     .bytemd {
-                        @apply h-auto rounded-lg border-none shadow-none;
+                        @apply rounded-lg border-none shadow-none;
                         @apply bg-light-surface dark:bg-dark-surface;
                     }
 

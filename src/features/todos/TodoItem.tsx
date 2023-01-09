@@ -5,6 +5,7 @@ import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
 import { selectDocumentSummaryById } from "../documents/documentSlice";
+import TodoCompleted from "./TodoCompleted";
 import {
     Todo,
     deleteTodo,
@@ -126,16 +127,6 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         </p>
     );
 
-    const Completed = () => (
-        <Checkbox
-            checked={completed}
-            onChange={() => setCompleted(!completed)}
-            onClick={(e) => e.stopPropagation()}
-            ref={completedRef}
-            className="flex-shrink-0"
-        />
-    );
-
     const Important = () => (
         <Button
             onClick={(e) => [e.stopPropagation(), setImportant(!important)]}
@@ -152,9 +143,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
     return (
         <li
             className={cls(
-                "flex items-center gap-4 px-4 py-3 rounded-lg",
-                "shadow dark:border dark:border-uim-500",
-                "bg-light-surface dark:bg-dark-surface",
+                "flex items-center gap-4 px-4 py-3 card",
                 "hover:bg-uim-50/50 dark:hover:bg-uim-900",
                 "cursor-pointer",
                 "todo-item"
@@ -172,7 +161,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             tabIndex={0}
             onFocus={() => setEditing(true)}
         >
-            {Completed()}
+            <TodoCompleted id={id} ref={completedRef} />
             <div
                 className={cls(
                     "flex-1",
