@@ -1,24 +1,19 @@
 import TodoItem from "@features/todos/TodoItem";
-import {
-    fetchTodos,
-    selectTodoIds,
-    selectTodoStatus
-} from "@features/todos/todosSlice";
 
 import { cls } from "@lib/utils";
 
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { Todo } from "@features/todos/todosSlice";
 
-export default function TodoList({ className }: { className?: string }) {
-    const dispatch = useDispatch(),
-        todoIds = useSelector(selectTodoIds, shallowEqual),
-        status = useSelector(selectTodoStatus);
-
-    if (status === "needsUpdate") dispatch(fetchTodos() as any);
-
+export default function TodoList({
+    ids,
+    className
+}: {
+    ids: Todo["id"][];
+    className?: string;
+}) {
     return (
         <ul className={cls("flex gap-2 flex-col", className)}>
-            {todoIds.map((id) => (
+            {ids.map((id) => (
                 <TodoItem key={id} id={id} />
             ))}
         </ul>

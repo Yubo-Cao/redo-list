@@ -1,6 +1,9 @@
 import {
     addTodo,
+    fetchTodos,
     selectExtendedEditor,
+    selectTodoIds,
+    selectTodoStatus,
     todoSetExtendedEditor,
     todoStartEdit
 } from "@features/todos/todosSlice";
@@ -13,6 +16,7 @@ import Sidebar from "@components/Sidebar";
 
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store";
 
 const TodoList = dynamic(() => import("@features/todos/TodoList"), {
     ssr: false
@@ -22,8 +26,12 @@ const Editor = dynamic(() => import("@features/todos/TodoEditor"), {
 });
 
 export default function Tasks() {
-    const dispatch = useDispatch(),
-        extendedEditor = useSelector(selectExtendedEditor);
+    const dispatch = useDispatch<AppDispatch>(),
+        extendedEditor = useSelector(selectExtendedEditor),
+        ids = useSelector(selectTodoIds),
+        status = useSelector(selectTodoStatus);
+
+    if (status !== "idle") dispatch(fetchTodos());
 
     return (
         <Layout activeItemId={"tasks"} sideBarWidth={"22rem"}>
@@ -45,7 +53,7 @@ export default function Tasks() {
                     <span>New Task</span>
                 </Button>
             </div>
-            <TodoList className="mt-4" />
+            <TodoList className="mt-4" ids={ids} />
             <Sidebar
                 minWidth={256}
                 maxWidth={-1}

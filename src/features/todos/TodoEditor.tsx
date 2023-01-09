@@ -1,7 +1,10 @@
 import {
     Todo,
     selectEditTodoId,
-    selectTodoById
+    selectTodoById,
+    addTodo,
+    selectTodoSubtasks,
+    updateTodo
 } from "@features/todos/todosSlice";
 
 import Icon from "@/components/Icon";
@@ -11,17 +14,18 @@ import TodoCompleted from "./TodoCompleted";
 import TodoDescription from "./TodoDescription";
 import TodoTitle from "./TodoTitle";
 
-import { useState } from "react";
-
 import TodoDate from "./TodoDate";
+import Button from "@/components/Button";
 import TodoTags from "./TodoTags";
 import TodoImportant from "./TodoImportant";
 import TodoDuration from "./TodoDuration";
+import TodoList from "./TodoList";
 
 export default function EditorSidebar() {
     const editTodoId = useSelector(selectEditTodoId),
         todo: Todo = useSelector((state) => selectTodoById(state, editTodoId)),
-        dispatch = useDispatch<AppDispatch>();
+        dispatch = useDispatch<AppDispatch>(),
+        subtasks = todo?.subtasks || [];
 
     if (!todo) return null;
 
@@ -81,10 +85,44 @@ export default function EditorSidebar() {
                         </>
                     }
                 />
+                <TodoDuration id={id} />
                 <TodoTags id={id} />
             </div>
+            {/* subtasks */}
             <div className="outlined-card space-y-3">
-                <TodoDuration id={id} />
+                <h2 className="text-lg flex justify-between items-center font-bold text-light-text dark:text-dark-text">
+                    <p>Subtasks</p>
+                    <Button
+                        className="flex items-center gap-2 text-base"
+                        onClick={async () => {
+                            const newTodo = (await dispatch(
+                                addTodo({
+                                    title: "New Subtask",
+                                    parentTaskId: id
+                                })
+                            )) as {
+                                payload: Todo;
+                            };
+                            dispatch(
+                                updateTodo({
+                                    id,
+                                    update: {
+                                        subtasks: [
+                                            ...subtasks,
+                                            newTodo.payload.id
+                                        ]
+                                    }
+                                })
+                            );
+                        }}
+                        content="both"
+                        variant="outline"
+                    >
+                        <Icon name="add" size={24} />
+                        <span>New Task</span>
+                    </Button>
+                </h2>
+                <TodoList ids={subtasks}></TodoList>
             </div>
 
             <style jsx>{`
