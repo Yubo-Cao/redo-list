@@ -1,9 +1,8 @@
+import Button from "@/components/Button";
+import Layout from "@/components/Layout";
 import NoSsr from "@/components/NoSsr";
 import { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import TodoItem from "@/features/todos/TodoItem";
-import Button from "@/components/Button";
-import Layout from "@/components/Layout";
 
 const getItems = (count, offset = 0) =>
     Array.from({ length: count }, (v, k) => k).map((k) => ({

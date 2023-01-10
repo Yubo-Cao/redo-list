@@ -2,6 +2,7 @@ import { Status } from "@lib/common";
 import { invoke } from "@lib/tauri";
 
 import { addDocument } from "../documents/documentSlice";
+import { Document } from "../documents/documentSlice";
 import { RootState } from "@/store";
 import {
     createAsyncThunk,
@@ -10,7 +11,6 @@ import {
     createSlice
 } from "@reduxjs/toolkit";
 import { Queue } from "queue-typescript";
-import { Document } from "../documents/documentSlice";
 
 export type Todo = {
     id: number;

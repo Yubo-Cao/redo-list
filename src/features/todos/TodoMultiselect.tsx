@@ -1,7 +1,7 @@
-import { RootState, useAppSelector } from "@/store";
-import Select, { Props as SelectProps } from "react-select";
 import TodoList from "./TodoList";
 import { Todo, selectTodoById } from "./todosSlice";
+import { RootState, useAppSelector } from "@/store";
+import Select, { Props as SelectProps } from "react-select";
 
 type IdList = Todo["id"][];
 

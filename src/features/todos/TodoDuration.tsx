@@ -1,8 +1,8 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import { fromDuration, toDuration } from "@/components/Date";
 import { cls } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useState } from "react";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 export default function TodoDuration({
     id,

@@ -6,10 +6,6 @@ import {
     updateTodo
 } from "@features/todos/todosSlice";
 
-import Button from "@/components/Button";
-import Icon from "@/components/Icon";
-import { useAppDispatch, useAppSelector } from "@/store";
-import dynamic from "next/dynamic";
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
@@ -19,6 +15,10 @@ import TodoList from "./TodoList";
 import TodoMultiselect from "./TodoMultiselect";
 import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
+import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+import { useAppDispatch, useAppSelector } from "@/store";
+import dynamic from "next/dynamic";
 
 const TodoDescription = dynamic(() => import("./TodoDescription"), {
     ssr: false

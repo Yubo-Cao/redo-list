@@ -1,12 +1,12 @@
-import Icon from "@/components/Icon";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { Fragment } from "react";
 import {
     Todo,
     selectParentTodosById,
     selectTodoById,
     todoStartEdit
 } from "./todosSlice";
+import Icon from "@/components/Icon";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { Fragment } from "react";
 
 export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
     const dispatch = useAppDispatch();

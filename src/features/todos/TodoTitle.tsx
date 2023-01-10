@@ -1,7 +1,7 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import { cls } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { forwardRef, useState } from "react";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 function TodoTitle(
     {

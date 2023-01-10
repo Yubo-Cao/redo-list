@@ -2,10 +2,6 @@ import { cls } from "@lib/utils";
 
 import Icon from "@components/Icon";
 
-import { pauseEvent } from "@/lib/common";
-import { RootState, useAppDispatch, useAppSelector } from "@/store";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
 import {
     fetchDocument,
     selectDocumentStatusById,
@@ -28,6 +24,10 @@ import {
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
+import { pauseEvent } from "@/lib/common";
+import { RootState, useAppDispatch, useAppSelector } from "@/store";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 
 export type TodoItemProps = {
     id: Todo["id"];

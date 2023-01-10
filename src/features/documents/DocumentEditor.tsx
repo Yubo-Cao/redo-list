@@ -11,10 +11,10 @@ import gfm from "@bytemd/plugin-gfm";
 import { Editor, EditorProps } from "@bytemd/react";
 import "bytemd/dist/index.css";
 
+import fileImage from "./fileImage";
 import { cls } from "@/lib/utils";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import { useEffect, useRef } from "react";
-import fileImage from "./fileImage";
 
 type MdEditorProps = Omit<EditorProps, "value" | "onChange"> & {
     id: Document["id"];

@@ -1,8 +1,8 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { forwardRef } from "react";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 export default function TodoImportant({ id }: { id: Todo["id"] }, ref) {
     const { important } = useAppSelector((state) => selectTodoById(state, id)),

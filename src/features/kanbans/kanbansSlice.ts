@@ -1,3 +1,5 @@
+import { Document, addDocument } from "../documents/documentSlice";
+import { Todo, todoAdded } from "../todos/todosSlice";
 import { Status } from "@/lib/common";
 import { invoke } from "@/lib/tauri";
 import { RootState } from "@/store";
@@ -8,8 +10,6 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
-import { Todo, todoAdded } from "../todos/todosSlice";
-import { Document, addDocument } from "../documents/documentSlice";
 import { Queue } from "queue-typescript";
 
 export type Kanban = {

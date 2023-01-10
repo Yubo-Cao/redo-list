@@ -1,8 +1,8 @@
-import { useAppSelector } from "@/store";
-import { useRef, useState } from "react";
 import DocumentEditor from "../documents/DocumentEditor";
 import { DocumentViewer } from "../documents/DocumentViewer";
 import { Todo, selectTodoById } from "./todosSlice";
+import { useAppSelector } from "@/store";
+import { useRef, useState } from "react";
 
 export default function TodoDescription({ id }: { id: Todo["id"] }) {
     const todo = useAppSelector((state) => selectTodoById(state, id)),

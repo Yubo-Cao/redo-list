@@ -2,10 +2,10 @@ import gfm from "@bytemd/plugin-gfm";
 import { Viewer } from "@bytemd/react";
 import "bytemd/dist/index.css";
 
-import { cls } from "@/lib/utils";
-import { useAppSelector } from "@/store";
 import { Document, selectDocumentById } from "./documentSlice";
 import fileImage from "./fileImage";
+import { cls } from "@/lib/utils";
+import { useAppSelector } from "@/store";
 
 export type DocumentViewerProps = Omit<
     React.HTMLAttributes<HTMLDivElement>,

@@ -1,7 +1,7 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import Checkbox from "@/components/Checkbox";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { forwardRef } from "react";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 function TodoCompleted({ id }: { id: Todo["id"] }, ref) {
     const todo = useAppSelector((state) => selectTodoById(state, id)),

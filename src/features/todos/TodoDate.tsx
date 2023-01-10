@@ -1,3 +1,4 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import MDCalendar from "@/components/Calendar";
 import { formatDate, fromISO, toISO } from "@/components/Date";
 import { pauseEvent } from "@/lib/common";
@@ -6,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { useRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 export type TodoDateProps = {
     id: Todo["id"];
