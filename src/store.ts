@@ -12,6 +12,22 @@ const store = configureStore({
         documents: documentsReducer,
         myday: myDayReducer
     }
+    /*
+        // For state debug
+        middleware: (getDefaultMiddleware) => {
+            function log_state(store) {
+                return function (next) {
+                    return function (action) {
+                        console.log("dispatching", action);
+                        let result = next(action);
+                        console.log("next state", store.getState());
+                        return result;
+                    };
+                };
+            }
+            return getDefaultMiddleware().concat([log_state]);
+        }
+    */
 });
 
 store.dispatch(fetchDocumentIds());
