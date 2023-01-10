@@ -23,7 +23,8 @@ import {
     selectTodoById,
     selectTodoCompletedSubtasksCount,
     selectTodoSubtasksCount,
-    todoSetExtendedEditor,
+    todoExtendedEditorIdChanged,
+    todoExtendedEditingChanged,
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
@@ -98,7 +99,8 @@ export default function TodoItem({
                 pauseEvent(e);
             }}
             onDoubleClick={(e) => {
-                dispatch(todoSetExtendedEditor(true));
+                dispatch(todoExtendedEditorIdChanged(id));
+                dispatch(todoExtendedEditingChanged(true));
                 setEditing(true);
                 pauseEvent(e);
             }}

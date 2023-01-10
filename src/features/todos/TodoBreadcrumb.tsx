@@ -32,7 +32,7 @@ export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
                                 key={`${todo.id}`}
                                 className={
                                     last
-                                        ? "flex-1 whitespace-nowrap text-pri-500"
+                                        ? "flex-1 whitespace-nowrap font-semibold"
                                         : "shrink-1 grow-0 basis-auto cursor-pointer overflow-hidden text-ellipsis text-uim-500 whitespace-nowrap"
                                 }
                             >

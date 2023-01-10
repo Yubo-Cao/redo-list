@@ -37,18 +37,20 @@ function HorizontalSidebar({
         sidebar = useRef<HTMLDivElement>(null),
         [w, setW] = React.useState(width),
         [resizing, setResizing] = React.useState(false),
-        minW = minWidth ?? width === -1 ? 0 : minWidth ?? width,
-        maxW = maxWidth ?? width === -1 ? 9999 : maxWidth ?? width;
+        minW = (minWidth || width) < 0 ? 0 : minWidth || width,
+        maxW = (maxWidth || width) < 0 ? 9999 : maxWidth || width;
+
+    const cc = (v) => coerce(coerce(v, minW, maxW), 0, window.innerWidth);
 
     const onMove = (e: MouseEvent) => {
         pauseEvent(e);
         const { clientX } = e;
         if (direction === "left") {
             const { left } = sidebar.current.getBoundingClientRect();
-            setW(coerce(clientX - left, minW, maxW));
+            setW(cc(clientX - left));
         } else {
             const { right } = sidebar.current.getBoundingClientRect();
-            setW(coerce(right - clientX, minW, maxW));
+            setW(cc(right - clientX));
         }
     };
 
@@ -96,7 +98,8 @@ function HorizontalSidebar({
                     "horizontal-sidebar-resize-handle",
                     "hover:bg-uim-100 dark:hover:bg-uim-800",
                     collapsed &&
-                        "shadow-lg bg-light-surface dark:bg-dark-surface collapsed"
+                        "shadow-lg bg-light-surface dark:bg-dark-surface collapsed",
+                    minW === maxW && "hidden"
                 )}
                 onMouseDown={onDown}
                 onDoubleClick={collapse}

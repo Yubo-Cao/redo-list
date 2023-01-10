@@ -47,7 +47,8 @@ export type TodosState = {
     status: Status;
     entities: { [id: number]: Todo };
     editTodoId: number | null;
-    extendedEditor: boolean;
+    extendedEditTodoId: number | null;
+    extendedEditing: boolean;
     selectedTodoIds: number[];
 };
 
@@ -55,7 +56,8 @@ const initialState: TodosState = {
     status: "needsUpdate",
     entities: {},
     editTodoId: null,
-    extendedEditor: false,
+    extendedEditTodoId: null,
+    extendedEditing: false,
     selectedTodoIds: []
 };
 
@@ -97,8 +99,14 @@ const todosSlice = createSlice({
                 (id) => id !== action.payload
             );
         },
-        todoSetExtendedEditor: (state, action: { payload: boolean }) => {
-            state.extendedEditor = action.payload;
+        todoExtendedEditorIdChanged: (
+            state,
+            action: { payload: Todo["id"] }
+        ) => {
+            state.extendedEditTodoId = action.payload;
+        },
+        todoExtendedEditingChanged: (state, action: { payload: boolean }) => {
+            state.extendedEditing = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -138,7 +146,8 @@ export const {
     todoStopEdit,
     todoSelected,
     todoDeselected,
-    todoSetExtendedEditor
+    todoExtendedEditorIdChanged,
+    todoExtendedEditingChanged
 } = todosSlice.actions;
 
 export const {
@@ -288,9 +297,14 @@ export const deleteTodo = createAsyncThunk(
     }
 );
 
-export const selectExtendedEditor = createSelector(
-    (state: any) => state.todos.extendedEditor,
-    (extendedEditor) => extendedEditor
+export const selectExtendedEditTodoId = createSelector(
+    (state) => state.todos,
+    (todos) => todos.extendedEditTodoId as Todo["id"] | null
+);
+
+export const selectExtendedEditing = createSelector(
+    (state) => state.todos,
+    (todos) => todos.extendedEditing as boolean
 );
 
 export const selectParentTodosById = (id: Todo["id"]) =>

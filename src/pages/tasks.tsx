@@ -2,10 +2,11 @@ import {
     addTodo,
     fetchTodos,
     selectEditTodoId,
-    selectExtendedEditor,
     selectRootTodoIds,
     selectTodoStatus,
-    todoSetExtendedEditor
+    selectExtendedEditTodoId,
+    selectExtendedEditing,
+    todoExtendedEditingChanged
 } from "@features/todos/todosSlice";
 
 import Button from "@components/Button";
@@ -28,10 +29,10 @@ const Editor = dynamic(() => import("@features/todos/TodoEditor"), {
 
 export default function Tasks() {
     const dispatch = useDispatch<AppDispatch>(),
-        extendedEditor = useSelector(selectExtendedEditor),
         editTodoId = useSelector(selectEditTodoId),
         ids = useSelector(selectRootTodoIds),
-        status = useSelector(selectTodoStatus);
+        status = useSelector(selectTodoStatus),
+        extendedEditing = useSelector(selectExtendedEditing);
 
     if (status !== "idle") dispatch(fetchTodos());
 
@@ -59,11 +60,11 @@ export default function Tasks() {
             <Sidebar
                 width={512}
                 minWidth={256}
-                maxWidth={window.innerWidth / 2}
+                maxWidth={768}
                 onClick={(e) => e.stopPropagation()}
-                collapsed={!extendedEditor}
-                onCollapse={() => dispatch(todoSetExtendedEditor(false))}
-                onExpand={() => dispatch(todoSetExtendedEditor(true))}
+                collapsed={!extendedEditing}
+                onCollapse={() => dispatch(todoExtendedEditingChanged(false))}
+                onExpand={() => dispatch(todoExtendedEditingChanged(true))}
             >
                 {editTodoId == null ? (
                     <>
