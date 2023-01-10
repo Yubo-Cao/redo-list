@@ -6,10 +6,6 @@ import {
     updateTodo
 } from "@features/todos/todosSlice";
 
-import Button from "@/components/Button";
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
@@ -20,6 +16,10 @@ import TodoList from "./TodoList";
 import TodoMultiselect from "./TodoMultiselect";
 import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
+import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+import { AppDispatch } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export type EditorProps = {
     id: Todo["id"];
@@ -109,7 +109,11 @@ export default function Editor({ id }: EditorProps) {
                         <span>New Subtask</span>
                     </Button>
                 </h2>
-                <TodoList ids={subtasks} variant="subtask" metas={[]}></TodoList>
+                <TodoList
+                    ids={subtasks}
+                    variant="subtask"
+                    metas={[]}
+                ></TodoList>
             </div>
             <div className="outlined-card space-y-3">
                 <h2 className="text-lg flex justify-between items-center font-bold text-light-text dark:text-dark-text">

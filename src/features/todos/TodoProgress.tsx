@@ -13,5 +13,4 @@ export default function TodoProgress({ id }: { id: Todo["id"] }) {
         total = useSelector((state: RootState) =>
             selectTodoSubtasksCount(state, id)
         );
-    
 }

@@ -3,18 +3,15 @@ import { cls } from "@lib/utils";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
-import { pauseEvent } from "@/lib/common";
-import { AppDispatch, RootState } from "@/store";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-import { useDispatch, useSelector } from "react-redux";
 import {
     fetchDocument,
     selectDocumentStatusById,
     selectDocumentSummary
 } from "../documents/documentSlice";
 import TodoCompleted from "./TodoCompleted";
+import TodoDate from "./TodoDate";
 import TodoImportant from "./TodoImportant";
+import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
 import {
     Todo,
@@ -23,13 +20,16 @@ import {
     selectTodoById,
     selectTodoCompletedSubtasksCount,
     selectTodoSubtasksCount,
-    todoExtendedEditorIdChanged,
     todoExtendedEditingChanged,
+    todoExtendedEditorIdChanged,
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
-import TodoTags from "./TodoTags";
-import TodoDate from "./TodoDate";
+import { pauseEvent } from "@/lib/common";
+import { AppDispatch, RootState } from "@/store";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
+import { useDispatch, useSelector } from "react-redux";
 
 export type TodoItemProps = {
     id: Todo["id"];

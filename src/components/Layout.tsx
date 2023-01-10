@@ -68,7 +68,7 @@ export default function Layout({
                     main {
                         min-width: 100%;
                         width: 0;
-                    }    
+                    }
                 `}</style>
             </main>
         );
@@ -237,7 +237,6 @@ export default function Layout({
                                 grid-gap: 1.5rem;
                                 overflow: hidden;
                             }
-
 
                             :global(.header-layout-header) {
                                 grid-area: header;

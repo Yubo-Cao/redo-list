@@ -1,8 +1,8 @@
+import TodoList from "./TodoList";
+import { Todo, selectTodoById } from "./todosSlice";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import Select, { Props as SelectProps } from "react-select";
-import TodoList from "./TodoList";
-import { Todo, selectTodoById } from "./todosSlice";
 
 type IdList = Todo["id"][];
 

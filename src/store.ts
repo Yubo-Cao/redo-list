@@ -1,8 +1,8 @@
 import documentsReducer, {
     fetchDocumentIds
 } from "./features/documents/documentSlice";
-import todosReducer from "./features/todos/todosSlice";
 import myDayReducer from "./features/myday/mydaySlice";
+import todosReducer from "./features/todos/todosSlice";
 
 import { configureStore } from "@reduxjs/toolkit";
 

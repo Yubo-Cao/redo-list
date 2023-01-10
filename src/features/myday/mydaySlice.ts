@@ -1,3 +1,4 @@
+import { Todo } from "../todos/todosSlice";
 import { Status } from "@/lib/common";
 import { invoke } from "@/lib/tauri";
 import { RootState } from "@/store";
@@ -7,7 +8,6 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
-import { Todo } from "../todos/todosSlice";
 
 export type MyDay = {
     status: Status;

@@ -1,12 +1,12 @@
 import { Todo, selectTodoById, updateTodo } from "@features/todos/todosSlice";
 
 import Chip from "@/components/Chip";
+import { ChipProps } from "@/components/Chip";
 import Icon from "@/components/Icon";
+import { cls } from "@/lib/utils";
 import { AppDispatch } from "@/store";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cls } from "@/lib/utils";
-import { ChipProps } from "@/components/Chip";
 
 export type TodoTagsProps = {
     id: Todo["id"];

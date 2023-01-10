@@ -2,10 +2,10 @@ import {
     addTodo,
     fetchTodos,
     selectEditTodoId,
-    selectRootTodoIds,
-    selectTodoStatus,
     selectExtendedEditTodoId,
     selectExtendedEditing,
+    selectRootTodoIds,
+    selectTodoStatus,
     todoExtendedEditingChanged
 } from "@features/todos/todosSlice";
 

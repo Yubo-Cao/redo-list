@@ -1,3 +1,7 @@
+import Button from "@components/Button";
+import Icon from "@components/Icon";
+import Layout from "@components/Layout";
+
 import Sidebar from "@/components/Sidebar";
 import {
     addMyDay,
@@ -16,9 +20,6 @@ import {
 } from "@/features/todos/todosSlice";
 import { pauseEvent } from "@/lib/common";
 import { AppDispatch } from "@/store";
-import Button from "@components/Button";
-import Icon from "@components/Icon";
-import Layout from "@components/Layout";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 

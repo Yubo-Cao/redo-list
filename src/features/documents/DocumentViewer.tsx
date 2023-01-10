@@ -5,8 +5,8 @@ import "bytemd/dist/index.css";
 import { selectDocumentById } from "./documentSlice";
 import { Document } from "./documentSlice";
 import fileImage from "./fileImage";
-import { useSelector } from "react-redux";
 import { cls } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 export type DocumentViewerProps = Omit<
     React.HTMLAttributes<HTMLDivElement>,
