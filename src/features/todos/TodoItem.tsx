@@ -34,20 +34,27 @@ import TodoDate from "./TodoDate";
 export type TodoItemProps = {
     id: Todo["id"];
     variant?: "main" | "subtask";
-    features?: ("important" | "remove")[];
+    features?: ("important" | "complete")[];
     metas?: ("tags" | "createDate" | "dueDate" | "progress")[];
     onRemove?: (id: Todo["id"]) => void;
     onClick?: (e, id: Todo["id"]) => void;
     onDoubleClick?: (e, id: Todo["id"]) => void;
+    className?: string;
+    style?: React.CSSProperties;
+};
+
+const VARIANT_CLASSNAMES = {
+    main: "card hover:bg-uim-50/50 dark:hover:bg-uim-900",
+    subtask:
+        "bg-uim-50 dark:bg-uim-900 rounded-lg hover:bg-uim-100 dark:hover:bg-uim-800"
 };
 
 export default function TodoItem(props: TodoItemProps): JSX.Element {
     let {
         id,
         variant,
-        features,
+        features = ["important", "complete"],
         metas = ["tags", "createDate", "dueDate", "progress"],
-        onRemove,
         onClick = (e, id) => {
             if (e.button === 2) return;
             setEditing(true);
@@ -58,10 +65,10 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
             dispatch(todoExtendedEditingChanged(true));
             setEditing(true);
             pauseEvent(e);
-        }
+        },
+        className = "",
+        style = {}
     } = props;
-
-    console.log(props);
 
     const dispatch = useDispatch<AppDispatch>(),
         todo: Todo | undefined = useSelector((state) =>
@@ -163,20 +170,17 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
     return (
         <li
             className={cls(
-                "flex items-center gap-4 px-4 py-3",
-                "cursor-pointer",
-                {
-                    main: "card hover:bg-uim-50/50 dark:hover:bg-uim-900",
-                    subtask:
-                        "bg-uim-50 dark:bg-uim-900 rounded-lg hover:bg-uim-100 dark:hover:bg-uim-800"
-                }[variant || "main"]
+                "flex items-center gap-4 px-4 py-3 cursor-pointer",
+                VARIANT_CLASSNAMES[variant || "main"],
+                className
             )}
             onClick={(e) => onClick(e, id)}
             onDoubleClick={(e) => onDoubleClick(e, id)}
             onContextMenu={handleContextMenu}
             tabIndex={0}
+            style={style}
         >
-            <TodoCompleted id={id} />
+            {features?.includes("complete") && <TodoCompleted id={id} />}
             <div className={cls("flex-1", "flex", "flex-col", "min-w-0")}>
                 <TodoTitle id={id} className="font-semibold" />
                 {description && (
@@ -189,7 +193,7 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
                     {extras}
                 </div>
             </div>
-            <TodoImportant id={id} />
+            {features?.includes("important") && <TodoImportant id={id} />}
 
             <Menu id={menuId} theme="accent">
                 <Item id="delete" onClick={() => dispatch(deleteTodo(id))}>

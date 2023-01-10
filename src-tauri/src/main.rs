@@ -47,6 +47,7 @@ fn main() {
             myday::add_todo_my_day,
             myday::remove_todo_my_day,
             myday::get_my_day_todos,
+            myday::set_my_days
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

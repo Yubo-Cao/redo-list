@@ -82,6 +82,16 @@ pub fn add_todo_my_day(id: u64) -> Result<(), Error> {
 }
 
 #[command]
+pub fn set_my_days(ids: Vec<u64>) -> Result<(), Error> {
+    let db = Db {
+        today: Utc::now().to_string(),
+        ids,
+    };
+    save(&db)?;
+    Ok(())
+}
+
+#[command]
 pub fn remove_todo_my_day(id: u64) -> Result<(), Error> {
     let mut db = read()?;
     let index = db.ids.iter().position(|x| *x == id);

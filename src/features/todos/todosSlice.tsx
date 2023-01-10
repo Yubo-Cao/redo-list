@@ -189,12 +189,12 @@ export const selectTodoCompletedSubtasksCount = (
     state: RootState,
     todoId: number
 ) =>
-    selectTodoSubtaskIds(state, todoId).filter(
+    selectTodoSubtaskIds(state, todoId)?.filter(
         (id) => selectTodoById(state, id).completed
-    ).length;
+    )?.length;
 
 export const selectTodoSubtasksCount = (state: RootState, todoId: number) =>
-    selectTodoSubtaskIds(state, todoId).length;
+    selectTodoSubtaskIds(state, todoId)?.length;
 
 export const selectTodoSubtaskIdsRecursively = (id: Todo["id"]) =>
     createSelector(

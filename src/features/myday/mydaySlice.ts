@@ -29,6 +29,21 @@ const myDaySlice = createSlice({
         myDayDeleted: (state, { payload: id }: { payload: Todo["id"] }) => {
             state.mydays = state.mydays.filter((myday) => myday !== id);
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchMyDays.fulfilled, (state, { payload }) => {
+            state.mydays = payload as any as Todo["id"][];
+            state.status = "idle";
+        });
+        builder.addCase(addMyDay.fulfilled, (state, { payload }) => {
+            state.mydays.push(payload);
+        });
+        builder.addCase(deleteMyDay.fulfilled, (state, { payload }) => {
+            state.mydays = state.mydays.filter((myday) => myday !== payload);
+        });
+        builder.addCase(setMyDay.fulfilled, (state, { payload }) => {
+            state.mydays = payload;
+        });
     }
 });
 
@@ -41,6 +56,11 @@ export const { myDayAdded, myDayDeleted } = myDaySlice.actions;
 export const selectMyDays = createSelector(
     (state: RootState) => state.myday,
     (myday) => myday.mydays
+);
+
+export const selectMyDayStatus = createSelector(
+    (state: RootState) => state.myday,
+    (myday) => myday.status
 );
 
 // thunks
@@ -61,6 +81,14 @@ export const deleteMyDay = createAsyncThunk(
     async (id: Todo["id"]) => {
         invoke("remove_todo_my_day", { id });
         return id;
+    }
+);
+
+export const setMyDay = createAsyncThunk(
+    "myday/setMyDay",
+    async (ids: Todo["id"][]) => {
+        invoke("set_my_days", { ids });
+        return ids;
     }
 );
 
