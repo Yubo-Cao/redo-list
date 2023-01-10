@@ -10,6 +10,7 @@
         "preinstall": "npx only-allow pnpm"
     },
     "dependencies": {
+        "@babel/core": "*",
         "@bytemd/plugin-gfm": "^1.20.0",
         "@bytemd/react": "^1.20.0",
         "@reduxjs/toolkit": "^1.9.1",
@@ -22,6 +23,7 @@
         "postcss-preset-env": "^7.8.3",
         "queue-typescript": "^1.0.1",
         "react": "^18.2.0",
+        "react-beautiful-dnd": "^13.1.1",
         "react-calendar": "^4.0.0",
         "react-circular-progressbar": "^2.1.0",
         "react-contexify": "^6.0.0",
@@ -30,6 +32,7 @@
         "react-redux": "^8.0.5",
         "react-select": "^5.7.0",
         "sass": "^1.57.1",
+        "styled-jsx": "^5.1.1",
         "styled-jsx-plugin-postcss": "^4.0.1",
         "to-px": "^1.1.0"
     },

@@ -38,7 +38,7 @@ export default function DocumentEditor(props: MdEditorProps) {
         if (!current) return;
         current
             .querySelector(".bytemd-preview")
-            .classList.add(
+            ?.classList?.add(
                 "prose",
                 "dark:prose-invert",
                 "prose-stone",

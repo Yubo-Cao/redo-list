@@ -9,7 +9,6 @@ import {
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
-import TodoDescription from "./TodoDescription";
 import TodoDuration from "./TodoDuration";
 import TodoImportant from "./TodoImportant";
 import TodoList from "./TodoList";
@@ -20,6 +19,11 @@ import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
+import dynamic from "next/dynamic";
+
+const TodoDescription = dynamic(() => import("./TodoDescription"), {
+    ssr: false
+});
 
 export type EditorProps = {
     id: Todo["id"];
