@@ -77,6 +77,7 @@ function button(props: ButtonProps, ref): React.ReactElement<ButtonProps> {
                     COLOR_CLASSNAMES[variant][accent],
                     padding && PADDING_CLASSNAMES[stack][content],
                     CONTENT_CLASSNAMES[content],
+                    "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-black",
                     className
                 )}
             >

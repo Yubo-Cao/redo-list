@@ -78,4 +78,8 @@
 
 input[type="text"] {
     @apply p-0 border-0 bg-transparent outline-none;
+
+    &:focus {
+        @apply outline outline-2;
+    }
 }

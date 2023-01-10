@@ -1,22 +1,48 @@
-import { MultiSelect, SelectProps } from "react-multi-select-component";
-import { Todo, selectTodoById } from "./todosSlice";
+import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import Select, { Props as SelectProps } from "react-select";
+import { Todo, selectTodoById } from "./todosSlice";
+import { useState } from "react";
+import TodoList from "./TodoList";
 
-type TodoMultiselectProps = Omit<SelectProps, "options" | "labelledBy"> & {
-    ids: Todo["id"][];
+type IdList = Todo["id"][];
+
+type TodoMultiselectProps = Omit<SelectProps, "onChange"> & {
+    ids: IdList;
+    value: IdList;
+    onChange: (value: IdList) => void;
 };
 
-export default function TodoMultiselect({
-    ids,
-    ...rest
-}: TodoMultiselectProps) {
-    console.log(ids);
+const createOptions = (ids: Todo["id"][]) => (state: RootState) =>
+    ids.map((id) => {
+        const { title, subtasks } = selectTodoById(state, id);
+        return subtasks.length
+            ? {
+                  label: title,
+                  options: subtasks.map((subtaskId) => ({
+                      label: selectTodoById(state, subtaskId).title,
+                      value: subtaskId
+                  }))
+              }
+            : { label: title, value: id };
+    });
 
-    const options = useSelector((state) =>
-        ids.map((id) => {
-            const { title } = selectTodoById(state, id);
-            return { label: title, value: id };
-        })
+export default function TodoMultiselect(props: TodoMultiselectProps) {
+    let { ids, value, onChange, ...rest } = props;
+    const options = useSelector<RootState>(createOptions(ids));
+    const [selected, setSelected] = useState(ids);
+    onChange = onChange != null ? onChange : setSelected;
+
+    return (
+        <>
+            <TodoList ids={selected} />
+            <Select
+                options={options}
+                onChange={(e) => {
+                    console.log(e);
+                }}
+                {...rest}
+            />
+        </>
     );
-    return <MultiSelect options={options} labelledBy="Select" {...rest} />;
 }

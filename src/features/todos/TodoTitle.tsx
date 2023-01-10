@@ -52,7 +52,7 @@ function TodoTitle(
                     }}
                     placeholder="Title of the task"
                     ref={ref}
-                    autoFocus
+                    tabIndex={0}
                 />
             ) : (
                 <p className={style}>{title || "Title of the task"}</p>

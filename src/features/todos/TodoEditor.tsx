@@ -2,9 +2,15 @@ import {
     Todo,
     addTodo,
     selectTodoById,
+    selectTodoIds,
+    selectTodoSubtaskIdsRecursivelyById,
     updateTodo
 } from "@features/todos/todosSlice";
 
+import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+import { AppDispatch } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
@@ -12,12 +18,9 @@ import TodoDescription from "./TodoDescription";
 import TodoDuration from "./TodoDuration";
 import TodoImportant from "./TodoImportant";
 import TodoList from "./TodoList";
+import TodoMultiselect from "./TodoMultiselect";
 import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
-import Button from "@/components/Button";
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
 
 export type EditorProps = {
     id: Todo["id"];
@@ -27,7 +30,15 @@ export default function Editor({ id }: EditorProps) {
     const todo: Todo = useSelector((state) => selectTodoById(state, id)),
         dispatch = useDispatch<AppDispatch>(),
         subtasks = todo?.subtasks || [],
-        dependencies = todo?.dependencies || [];
+        dependencies = todo?.dependencies || [],
+        subtasksRecursiveIds = useSelector(
+            selectTodoSubtaskIdsRecursivelyById(id)
+        ),
+        dependencyOptions = useSelector((state) =>
+            selectTodoIds(state).filter(
+                (i) => !subtasksRecursiveIds.includes(i) && i !== id
+            )
+        );
 
     if (!todo) return null;
 
@@ -104,41 +115,28 @@ export default function Editor({ id }: EditorProps) {
             <div className="outlined-card space-y-3">
                 <h2 className="text-lg flex justify-between items-center font-bold text-light-text dark:text-dark-text">
                     <p>Dependencies</p>
-                    <Button
-                        className="flex items-center gap-2 text-base"
-                        onClick={async () => {
-                            const newTodo = (await dispatch(
-                                addTodo({
-                                    title: "New Subtask",
-                                    parentTaskId: id
-                                })
-                            )) as {
-                                payload: Todo;
-                            };
-                            dispatch(
-                                updateTodo({
-                                    id,
-                                    update: {
-                                        dependencies: [
-                                            ...new Set([
-                                                ...todo.dependencies,
-                                                newTodo.payload.id
-                                            ])
-                                        ]
-                                    }
-                                })
-                            );
-                        }}
-                        content="both"
-                        variant="outline"
-                    >
-                        <Icon name="add" size={24} />
-                        <span>New Dependency</span>
-                    </Button>
                 </h2>
-                <TodoList ids={dependencies}></TodoList>
-            </div>
 
+                <TodoMultiselect
+                    ids={dependencyOptions}
+                    value={dependencies}
+                    onChange={(deps) => {
+                        dispatch(
+                            updateTodo({
+                                id,
+                                update: {
+                                    dependencies: [
+                                        ...new Set([
+                                            ...todo.dependencies,
+                                            ...deps
+                                        ])
+                                    ]
+                                }
+                            })
+                        );
+                    }}
+                />
+            </div>
             <style jsx>{`
                 .outlined-card {
                     @apply border border-uim-300 dark:border-uim-700 rounded-lg px-3 py-4;

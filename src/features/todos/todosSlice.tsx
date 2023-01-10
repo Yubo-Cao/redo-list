@@ -114,8 +114,6 @@ const todosSlice = createSlice({
         });
         builder.addCase(updateTodo.fulfilled, (state, action) => {
             const { id, update } = action.payload;
-            if (!Object.hasOwn(state.entities, id))
-                throw new Error("Todo not found");
             state.entities[id] = { ...state.entities[id], ...update };
         });
         builder.addCase(addTodo.fulfilled, (state, action) => {

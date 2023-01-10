@@ -18,11 +18,13 @@ export default function MDCalendar(props: MDCalendarProps) {
             ".react-calendar__navigation"
         );
         let label = null,
-            icons = [];
+            icons = [],
+            rest = [];
         Array.from(navigation.children).forEach((child) => {
             if (child.classList.contains("react-calendar__navigation__label"))
                 label = child;
-            if (child.querySelectorAll("i").length) icons.push(child);
+            else if (child.querySelectorAll("i").length) icons.push(child);
+            else rest.push(child);
         });
         const f = (tag, cls, ...Children) => {
             const el = document.createElement(tag);
@@ -33,12 +35,13 @@ export default function MDCalendar(props: MDCalendarProps) {
         navigation.innerHTML = "";
         navigation.append(
             label,
-            f("div", "flex items-center flex-0", ...icons)
+            f("div", "flex items-center flex-0", ...icons),
+            f("div", "hidden", ...rest)
         );
     }, [ref]);
 
     return (
-        <div ref={ref}>
+        <div ref={ref} className="flex-1 w-full h-full">
             <Calendar
                 prevLabel={
                     <Icon

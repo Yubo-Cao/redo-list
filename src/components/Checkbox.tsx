@@ -45,11 +45,11 @@ function checkbox(
                     outline: none;
                 }
 
-                :global(input:hover:not(:checked)) {
+                :global(input[type="checkbox"]:hover:not(:checked)) {
                     @apply bg-uim-100;
                 }
 
-                :global(.dark input:hover:not(:checked)) {
+                :global(.dark input[type="checkbox"]:hover:not(:checked)) {
                     @apply bg-uim-800;
                 }
 

@@ -8,38 +8,95 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function TodoTags({ id }: { id: Todo["id"] }) {
     const { tags } = useSelector((state) => selectTodoById(state, id)),
-        [tag, setTag] = useState(""),
-        [editingTag, setEditingTag] = useState(false),
+        [editingTag, setEditingTag] = useState(""),
+        [addingTag, setAddingTag] = useState(false),
+        [editingTags, setEditingTags] = useState<{ [key: string]: boolean }>(
+            Object.fromEntries(tags.map((tag) => [tag, false]))
+        ),
         dispatch = useDispatch<AppDispatch>();
+
+    const deleteTag = (tag: string) => {
+        dispatch(
+            updateTodo({
+                id,
+                update: {
+                    tags: tags.filter((t) => t !== tag)
+                }
+            })
+        );
+    };
+
+    const startEditTag = (tag: string) => {
+        setEditingTag(tag);
+        setEditingTags({
+            ...editingTags,
+            [tag]: true
+        });
+    };
+
+    const stopEditingTag = (oldTag: string) => {
+        dispatch(
+            updateTodo({
+                id,
+                update: {
+                    tags: [
+                        ...new Set(
+                            [...tags, editingTag.trim()].filter(
+                                (i) => i != oldTag
+                            )
+                        )
+                    ]
+                }
+            })
+        );
+        setEditingTag("");
+        setEditingTags({
+            ...editingTags,
+            [oldTag]: undefined
+        });
+    };
 
     return (
         <div className="flex flex-wrap gap-1">
-            {tags.map((tag) => (
+            {[...Array(tags.length).keys()].map((i) => (
                 <Chip
-                    key={tag}
+                    key={tags[i]}
                     deleteable={true}
-                    onDelete={() => {
-                        dispatch(
-                            updateTodo({
-                                id,
-                                update: {
-                                    tags: tags.filter((t) => t !== tag)
-                                }
-                            })
-                        );
+                    onDelete={() => deleteTag(tags[i])}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (editingTags[tags[i]]) return;
+                        if (e.key === "Enter" || e.key === " ")
+                            startEditTag(tags[i]);
+                        else if (e.key === "Backspace" || e.key === "Delete")
+                            deleteTag(tags[i]);
                     }}
+                    onClick={() => startEditTag(tags[i])}
                 >
-                    {tag}
+                    {editingTags[tags[i]] ? (
+                        <input
+                            autoFocus
+                            type="text"
+                            value={editingTag}
+                            onChange={(e) => setEditingTag(e.target.value)}
+                            onKeyDown={(e) =>
+                                e.key === "Enter" && stopEditingTag(tags[i])
+                            }
+                            size={5}
+                        />
+                    ) : (
+                        <span>{tags[i]}</span>
+                    )}
                 </Chip>
             ))}
-            {editingTag && (
+            {addingTag && (
                 <Chip>
                     <input
                         autoFocus
                         type="text"
-                        value={tag}
+                        value={editingTag}
                         onChange={(e) => {
-                            setTag(e.target.value);
+                            setEditingTag(e.target.value);
                         }}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
@@ -50,14 +107,14 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
                                             tags: [
                                                 ...new Set([
                                                     ...tags,
-                                                    tag.trim()
+                                                    editingTag.trim()
                                                 ])
                                             ]
                                         }
                                     })
                                 );
-                                setTag("");
-                                setEditingTag(false);
+                                setEditingTag("");
+                                setAddingTag(false);
                             }
                         }}
                         size={5}
@@ -67,7 +124,11 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
             <Chip
                 style={{ padding: 2 }}
                 className="h-6 w-6 hover:bg-pri-500 cursor-pointer"
-                onClick={() => setEditingTag(true)}
+                onClick={() => setAddingTag(true)}
+                tabIndex={0}
+                onKeyDown={(e) =>
+                    (e.key === "Enter" || e.key === " ") && setAddingTag(true)
+                }
             >
                 <Icon name="add" size={18} />
             </Chip>
