@@ -171,7 +171,7 @@ const addDocument = createAsyncThunk(
         const id: Document["id"] = await invoke("add_document", {
             document: doc
         });
-        return { ...doc, id };
+        return { ...doc, id } as Document;
     }
 );
 

@@ -1,5 +1,5 @@
 import { Status } from "@/lib/common";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@/lib/tauri";
 import { RootState } from "@/store";
 import {
     PayloadAction,
@@ -8,8 +8,9 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
-import { Todo } from "../todos/todosSlice";
+import { Todo, todoAdded } from "../todos/todosSlice";
 import { Document, addDocument } from "../documents/documentSlice";
+import { Queue } from "queue-typescript";
 
 export type Kanban = {
     id: number;
@@ -49,15 +50,21 @@ const kanbanSlice = createSlice({
         kanbanDeleted: (state, action: { payload: Kanban["id"] }) => {
             kanbanAdapter.removeOne(state, action.payload);
         },
-        kanbanUpdated: (state, action: { payload: Kanban }) => {
+        kanbanUpdated: (
+            state,
+            action: PayloadAction<{ id: Kanban["id"]; update: Partial<Kanban> }>
+        ) => {
             kanbanAdapter.updateOne(state, {
                 id: action.payload.id,
-                changes: action.payload
+                changes: action.payload.update
             });
         },
         kanbanTodoAdded: (
             state,
-            action: { payload: { kanbanId: Kanban["id"]; todoId: Todo["id"] } }
+            action: PayloadAction<{
+                kanbanId: Kanban["id"];
+                todoId: Todo["id"];
+            }>
         ) => {
             const { kanbanId, todoId } = action.payload;
             const kanban = state.entities[kanbanId];
@@ -65,7 +72,10 @@ const kanbanSlice = createSlice({
         },
         kanbanTodoRemoved: (
             state,
-            action: { payload: { kanbanId: Kanban["id"]; todoId: Todo["id"] } }
+            action: PayloadAction<{
+                kanbanId: Kanban["id"];
+                todoId: Todo["id"];
+            }>
         ) => {
             const { kanbanId, todoId } = action.payload;
             const kanban = state.enities[kanbanId];
@@ -73,29 +83,31 @@ const kanbanSlice = createSlice({
         },
         kanbanTodoMoved: (
             state,
-            action: {
-                payload: {
-                    kanbanId: Kanban["id"];
-                    todoId: Todo["id"];
-                    index: number;
-                };
-            }
+            action: PayloadAction<{
+                kanbanId: Kanban["id"];
+                todoId: Todo["id"];
+                index: number;
+            }>
         ) => {
             const { kanbanId, todoId, index } = action.payload;
             const kanban = state.entities[kanbanId];
             kanban.tasks = kanban.tasks.filter((id) => id !== todoId);
             kanban.tasks.splice(index, 0, todoId);
         }
-    },
-    extraReducers: (builder) => {
-        builder.addCase(addKanban.fulfilled, (state, action) => {
-            kanbanAdapter.addOne(state, action.payload as Kanban);
-        });
     }
 });
 
 const kanbansReducer = kanbanSlice.reducer;
 export default kanbansReducer;
+
+export const {
+    kanbanAdded,
+    kanbanDeleted,
+    kanbanUpdated,
+    kanbanTodoAdded,
+    kanbanTodoRemoved,
+    kanbanTodoMoved
+} = kanbanSlice.actions;
 
 // selector
 const selectKanban = (state) => state.kanbans;
@@ -116,56 +128,76 @@ export const addKanban = createAsyncThunk(
             title: title,
             description: documentId
         };
-        const kanbanId = await invoke("add_kanban", { kanban: kanban });
-        const result: Kanban = { ...kanban, id: kanbanId };
-        return result;
+        const kanbanId = (await invoke("add_kanban", {
+            kanban: kanban
+        })) as Kanban["id"];
+        dispatch(kanbanAdded({ ...kanban, id: kanbanId }));
     }
 );
 
 export const deleteKanban = createAsyncThunk(
     "kanbans/deleteKanban",
-    async (id: number) => {
+    async (id: number, { dispatch }) => {
         await invoke("delete_kanban", { id });
-        return id;
+        dispatch(kanbanDeleted(id));
     }
 );
 
+const updateQueue: Queue<[number, Partial<Kanban>]> = new Queue();
 export const updateKanban = createAsyncThunk(
     "kanbans/updateKanban",
-    async (kanban: Partial<Kanban> & { id: Kanban["id"] }, { getState }) => {
-        const old = selectKanbanById(getState() as RootState, kanban.id);
-        await invoke("update_kanban", { ...old, ...kanban });
-        return kanban;
+    async (
+        { id, update }: { id: number; update: Partial<Todo> },
+        { dispatch }
+    ) => {
+        updateQueue.enqueue([id, update]);
+        dispatch(kanbanUpdated({ id, update }));
     }
 );
+const updateWorker = async () => {
+    if (!updateQueue.length) return;
+    const updates = new Map<number, Partial<Todo>>();
+    while (updateQueue.length) {
+        const [id, update] = updateQueue.dequeue();
+        if (updates.has(id)) updates.set(id, { ...updates.get(id), ...update });
+        else updates.set(id, update);
+    }
+    updates.forEach(async (update, id) => {
+        const old: Todo = await invoke("get_kanban", { id });
+        const kanban = { ...old, ...update };
+        await invoke("update_kanban", { kanban });
+    });
+};
+setInterval(updateWorker, 15000);
 
-export const addTodoToKanban = createAsyncThunk(
+export const addTodoToKaFnban = createAsyncThunk(
     "kanbans/addTodoToKanban",
-    async (payload: { kanbanId: number; todoId: number }) => {
+    async (payload: { kanbanId: number; todoId: number }, { dispatch }) => {
         await invoke("add_todo_to_kanban", payload);
-        return payload;
+        dispatch(kanbanTodoAdded(payload));
     }
 );
 
 export const removeTodoFromKanban = createAsyncThunk(
     "kanbans/removeTodoFromKanban",
-    async (payload: { kanbanId: number; todoId: number }) => {
+    async (payload: { kanbanId: number; todoId: number }, { dispatch }) => {
         await invoke("remove_todo_from_kanban", payload);
-        return payload;
+        dispatch(kanbanTodoRemoved(payload));
     }
 );
 
 export const moveTodoInKanban = createAsyncThunk(
     "kanbans/moveTodoInKanban",
-    async (payload: { kanbanId: number; todoId: number; index: number }) => {
+    async (
+        payload: { kanbanId: number; todoId: number; index: number },
+        { dispatch }
+    ) => {
         await invoke("move_todo_in_kanban", payload);
-        return payload;
+        dispatch(kanbanTodoMoved(payload));
     }
 );
 
 export const getAllKanbans = createAsyncThunk(
     "kanbans/getAllKanbans",
-    async (_) => {
-        return await invoke("get_all_kanbans");
-    }
+    async (_) => await invoke("get_all_kanbans")
 );
