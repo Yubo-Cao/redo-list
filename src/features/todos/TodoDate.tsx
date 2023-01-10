@@ -14,12 +14,14 @@ export type TodoDateProps = {
     field: keyof Todo;
     className?: string;
     style?: React.CSSProperties;
+    clearStyle?: boolean;
 };
 
 export default function TodoDate({
     id,
     field,
     className,
+    clearStyle,
     ...rest
 }: TodoDateProps) {
     const todo = useSelector((state) => selectTodoById(state, id)),
@@ -50,7 +52,8 @@ export default function TodoDate({
         <>
             <div
                 className={cls(
-                    "font-bold text-xl mr-1 flex-1 cursor-pointer hover:font-black",
+                    !clearStyle &&
+                        "font-bold text-xl mr-1 flex-1 cursor-pointer hover:font-black",
                     className
                 )}
                 onClick={handleMenu}

@@ -14,5 +14,9 @@ export const invoke = async <T>(
     }
     const tauriAppsApi = await import("@tauri-apps/api");
     const tauriInvoke = tauriAppsApi.invoke;
-    return tauriInvoke(cmd, args);
+    try {
+        return tauriInvoke(cmd, args);
+    } catch (e) {
+        console.error(e);
+    }
 };

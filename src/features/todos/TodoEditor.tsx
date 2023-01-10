@@ -1,9 +1,8 @@
 import {
     Todo,
     addTodo,
+    selectRootTodoIds,
     selectTodoById,
-    selectTodoIds,
-    selectTodoSubtaskIdsRecursively,
     updateTodo
 } from "@features/todos/todosSlice";
 
@@ -31,11 +30,8 @@ export default function Editor({ id }: EditorProps) {
         dispatch = useDispatch<AppDispatch>(),
         subtasks = todo?.subtasks || [],
         dependencies = todo?.dependencies || [],
-        subtasksRecursiveIds = useSelector(selectTodoSubtaskIdsRecursively(id)),
         dependencyOptions = useSelector((state) =>
-            selectTodoIds(state).filter(
-                (i) => !subtasksRecursiveIds.includes(i) && i !== id
-            )
+            selectRootTodoIds(state).filter((i) => i !== id)
         );
 
     if (!todo) return null;
@@ -58,22 +54,22 @@ export default function Editor({ id }: EditorProps) {
             </div>
             <div className="outlined-card tiles">
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="schedule" size={36} wrap={true} />
+                    <Icon name="schedule" size={24} wrap={true} />
                     <span>Create date</span>
                     <TodoDate id={id} field="createDate" />
                 </div>
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="pending_actions" size={36} wrap={true} />
+                    <Icon name="pending_actions" size={24} wrap={true} />
                     <span>Due date</span>
                     <TodoDate id={id} field="dueDate" />
                 </div>
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="timer" size={36} wrap={true} />
+                    <Icon name="timer" size={24} wrap={true} />
                     <span className="text">Duration</span>
-                    <TodoDuration id={id} className="text-2xl" />
+                    <TodoDuration id={id} className="text-xl" />
                 </div>
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="label" size={36} wrap={true} />
+                    <Icon name="label" size={24} wrap={true} />
                     <span className="text">Tags</span>
                     <TodoTags id={id} className="mt-1" />
                 </div>
@@ -113,7 +109,7 @@ export default function Editor({ id }: EditorProps) {
                         <span>New Subtask</span>
                     </Button>
                 </h2>
-                <TodoList ids={subtasks}></TodoList>
+                <TodoList ids={subtasks} variant="subtask" metas={[]}></TodoList>
             </div>
             <div className="outlined-card space-y-3">
                 <h2 className="text-lg flex justify-between items-center font-bold text-light-text dark:text-dark-text">
@@ -147,9 +143,11 @@ export default function Editor({ id }: EditorProps) {
 
                 .tiles {
                     @apply grid gap-2 justify-items-stretch;
-                    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+                    grid-template-columns: repeat(
+                        auto-fill,
+                        minmax(15rem, 1fr)
+                    );
                 }
-
 
                 .tiles div {
                     @apply rounded-lg p-4;
@@ -158,7 +156,6 @@ export default function Editor({ id }: EditorProps) {
                         @apply text-sm;
                     }
                 }
-
 
                 .root {
                     max-height: 100%;

@@ -205,8 +205,7 @@ export const selectTodoSubtaskIdsRecursively = (id: Todo["id"]) =>
                 stack = [todo];
             while (stack.length) {
                 let current = stack.pop();
-                console.log("dep", result);
-                result = [...result, ...current.subtasks];
+                result = [...result, current.id, ...current.subtasks];
                 stack = [
                     ...stack,
                     ...current.subtasks.map((id) => selectTodoById(state, id))
@@ -215,6 +214,15 @@ export const selectTodoSubtaskIdsRecursively = (id: Todo["id"]) =>
             return result;
         }
     );
+
+export const selectTodoSubtaskDepth = (state, id: Todo["id"]) => {
+    let todo = selectTodoById(state, id),
+        depth = 0;
+    while (todo.parentTaskId != null) {
+        todo = selectTodoById(state, todo.parentTaskId);
+    }
+    return depth;
+};
 
 // thunks
 export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {

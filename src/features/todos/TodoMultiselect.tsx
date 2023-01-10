@@ -1,10 +1,8 @@
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import Select, { Props as SelectProps } from "react-select";
-import { Todo, selectTodoById } from "./todosSlice";
-import { useState } from "react";
 import TodoList from "./TodoList";
-import { indicatorsContainerCSS } from "react-select/dist/declarations/src/components/containers";
+import { Todo, selectTodoById } from "./todosSlice";
 
 type IdList = Todo["id"][];
 
@@ -30,18 +28,21 @@ const createOptions = (
     state: RootState,
     ids: Todo["id"][]
 ): SelectProps["options"] =>
-    ids.map((id) => {
+    ids.flatMap((id) => {
         const todo = selectTodoById(state, id),
             { title, subtasks } = todo;
         return subtasks.length
-            ? {
-                  label: title,
-                  options: subtasks.map((subtaskId) => ({
-                      label: selectTodoById(state, subtaskId).title,
-                      value: subtaskId
-                  }))
-              }
-            : { label: title, value: id };
+            ? [
+                  { label: title, value: id },
+                  {
+                      label: title,
+                      options: subtasks.map((subtaskId) => ({
+                          label: selectTodoById(state, subtaskId).title,
+                          value: subtaskId
+                      }))
+                  }
+              ]
+            : [{ label: title, value: id }];
     });
 
 const flattenOptions = (options: SelectProps["options"]) => {
@@ -64,14 +65,14 @@ export default function TodoMultiselect(props: TodoMultiselectProps) {
             const option = flattendOptions.find(
                 (option) => option.value === id
             );
-            if (option == null) throw new Error(`No option found for id ${id}`);
+
             return option;
         },
         optionToId = (option: Option) => option.value;
 
     return (
         <>
-            <TodoList ids={value} />
+            <TodoList ids={value} variant="subtask" metas={[]} />
             <Select
                 options={options}
                 value={value.map(idToOption)}
@@ -81,7 +82,7 @@ export default function TodoMultiselect(props: TodoMultiselectProps) {
                 classNames={{
                     indicatorSeparator: () => "hidden",
                     control: () => "bg-light-surface dark:bg-dark-surface",
-                    menuList: () => "bg-light-surface dark:bg-dark-surface",
+                    menuList: () => "bg-light-surface dark:bg-dark-surface"
                 }}
                 styles={{
                     indicatorsContainer: (base) => ({

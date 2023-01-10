@@ -12,8 +12,8 @@ export type TodoTagsProps = {
     id: Todo["id"];
     className?: string;
     styles?: {
-        chipButton?: ChipProps;
-        chipTag?: ChipProps;
+        chipButton?: Omit<ChipProps, "children"> & { size?: number };
+        chipTag?: Omit<ChipProps, "children">;
     };
 };
 
@@ -143,7 +143,7 @@ export default function TodoTags({ id, className, styles }: TodoTagsProps) {
                 }
                 {...styles?.chipButton}
             >
-                <Icon name="add" size={24} />
+                <Icon name="add" size={styles?.chipButton?.size || 24} />
             </Chip>
         </div>
     );

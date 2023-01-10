@@ -24,12 +24,11 @@ export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
                         last = i === todos.length - 1;
 
                     return (
-                        <Fragment>
+                        <Fragment key={`${todo.id}`}>
                             <li
                                 onClick={() => {
                                     dispatch(todoStartEdit(todo.id));
                                 }}
-                                key={`${todo.id}`}
                                 className={
                                     last
                                         ? "flex-1 whitespace-nowrap font-semibold"
@@ -39,10 +38,7 @@ export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
                                 {todo.title}
                             </li>
                             {!last && (
-                                <li
-                                    className="flex-none text-uim-500"
-                                    key={`${todo.id}-sep`}
-                                >
+                                <li className="flex-none text-uim-500">
                                     <Icon
                                         name="chevron_right"
                                         size={24}

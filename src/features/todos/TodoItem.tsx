@@ -28,20 +28,41 @@ import {
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
+import TodoTags from "./TodoTags";
+import TodoDate from "./TodoDate";
 
 export type TodoItemProps = {
     id: Todo["id"];
     variant?: "main" | "subtask";
     features?: ("important" | "remove")[];
+    metas?: ("tags" | "createDate" | "dueDate" | "progress")[];
     onRemove?: (id: Todo["id"]) => void;
+    onClick?: (e, id: Todo["id"]) => void;
+    onDoubleClick?: (e, id: Todo["id"]) => void;
 };
 
-export default function TodoItem({
-    id,
-    variant,
-    features,
-    onRemove
-}: TodoItemProps): JSX.Element {
+export default function TodoItem(props: TodoItemProps): JSX.Element {
+    let {
+        id,
+        variant,
+        features,
+        metas = ["tags", "createDate", "dueDate", "progress"],
+        onRemove,
+        onClick = (e, id) => {
+            if (e.button === 2) return;
+            setEditing(true);
+            pauseEvent(e);
+        },
+        onDoubleClick = (e, id) => {
+            dispatch(todoExtendedEditorIdChanged(id));
+            dispatch(todoExtendedEditingChanged(true));
+            setEditing(true);
+            pauseEvent(e);
+        }
+    } = props;
+
+    console.log(props);
+
     const dispatch = useDispatch<AppDispatch>(),
         todo: Todo | undefined = useSelector((state) =>
             selectTodoById(state, id)
@@ -62,8 +83,17 @@ export default function TodoItem({
 
     if (contentStatus.content === "needsUpdate") dispatch(fetchDocument(id));
 
+    // context menu
     const menuId = `todo-${id}-menu`,
-        { show, hideAll } = useContextMenu({ id: menuId });
+        { show } = useContextMenu({ id: menuId }),
+        handleContextMenu = (e: React.MouseEvent) => {
+            e.preventDefault();
+            try {
+                show({ event: e });
+            } catch (e) {
+                console.error(e);
+            }
+        };
 
     if (!todo) return null;
 
@@ -73,87 +103,94 @@ export default function TodoItem({
             else if (!value && editing) dispatch(todoStartEdit(null));
         };
 
+    // easy reach metas components
     let { important, tags, createDate, dueDate } = todo;
-
-    const handleContextMenu = (e: React.MouseEvent) => {
-        e.preventDefault();
-        try {
-            show({ event: e });
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
-    const Sep = () => <span className={cls("font-black", "mx-2")}>·</span>;
+    const extras: JSX.Element[] = [];
+    if (tags.length > 0 && metas.includes("tags"))
+        extras.push(
+            <TodoTags
+                id={id}
+                className="text-sm"
+                styles={{
+                    chipTag: { className: "p-1 h-6 bg-uim-100/75" },
+                    chipButton: {
+                        className: "h-6 bg-uim-100/75",
+                        size: 18
+                    }
+                }}
+                key="tags"
+            />
+        );
+    if (subtaskCount > 0 && metas.includes("progress"))
+        extras.push(
+            <span key="progress">
+                {completedSubtaskCount}/{subtaskCount}
+            </span>
+        );
+    if (createDate && metas.includes("createDate"))
+        extras.push(
+            <>
+                <span className="mr-1">Since</span>
+                <TodoDate
+                    key="createDate"
+                    id={id}
+                    field="createDate"
+                    clearStyle={true}
+                />
+            </>
+        );
+    if (dueDate && metas.includes("dueDate"))
+        extras.push(
+            <>
+                <span className="mr-1">Due </span>
+                <TodoDate
+                    key="dueDate"
+                    id={id}
+                    field="dueDate"
+                    clearStyle={true}
+                />
+            </>
+        );
+    for (let i = extras.length - 1; i > 0; i--)
+        extras.splice(
+            i,
+            0,
+            <span key={`sep-${i}`} className={cls("font-black", "mx-2")}>
+                ·
+            </span>
+        );
 
     return (
         <li
             className={cls(
-                "flex items-center gap-4 px-4 py-3 card",
-                "hover:bg-uim-50/50 dark:hover:bg-uim-900",
-                "cursor-pointer"
+                "flex items-center gap-4 px-4 py-3",
+                "cursor-pointer",
+                {
+                    main: "card hover:bg-uim-50/50 dark:hover:bg-uim-900",
+                    subtask:
+                        "bg-uim-50 dark:bg-uim-900 rounded-lg hover:bg-uim-100 dark:hover:bg-uim-800"
+                }[variant || "main"]
             )}
-            onClick={(e) => {
-                if (e.button === 2) return;
-                setEditing(true);
-                pauseEvent(e);
-            }}
-            onDoubleClick={(e) => {
-                dispatch(todoExtendedEditorIdChanged(id));
-                dispatch(todoExtendedEditingChanged(true));
-                setEditing(true);
-                pauseEvent(e);
-            }}
+            onClick={(e) => onClick(e, id)}
+            onDoubleClick={(e) => onDoubleClick(e, id)}
             onContextMenu={handleContextMenu}
             tabIndex={0}
         >
             <TodoCompleted id={id} />
             <div className={cls("flex-1", "flex", "flex-col", "min-w-0")}>
                 <TodoTitle id={id} className="font-semibold" />
-                <p
-                    className={cls(
-                        "text-uim-300 dark:text-uim-600",
-                        "min-w-0",
-                        "text-xs font-base",
-                        "overflow-hidden",
-                        "text-ellipsis",
-                        "whitespace-nowrap",
-                    )}
-                >
-                    {description}
-                </p>
-                <div className="flex font-medium items-center text-sm text-uim-400 mt-2">
-                    {tags.length > 0 && (
-                        <div className="flex items-center gap-1">
-                            {tags.map((tag) => (
-                                <span
-                                    key={tag}
-                                    className={cls(
-                                        "px-2",
-                                        "py-1",
-                                        "bg-uim-100",
-                                        "dark:bg-uim-800",
-                                        "rounded-lg"
-                                    )}
-                                >
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-                    {tags.length > 0 && subtaskCount > 0 && Sep()}
-                    {subtaskCount > 0 && (
-                        <span>
-                            {completedSubtaskCount}/{subtaskCount}
-                        </span>
-                    )}
-                    {(tags.length > 0 || subtaskCount > 0) && Sep()}
-                    {createDate && <span>{formatDate(createDate)}</span>}
-                    {createDate && dueDate && Sep()}
-                    {dueDate && <span>{formatDate(dueDate)}</span>}
+                {description && (
+                    <p className={cls("description", metas.length && "mb-2")}>
+                        {" "}
+                        {description}
+                    </p>
+                )}
+                <div className="flex items-center text-sm text-uim-400">
+                    {extras}
                 </div>
             </div>
             <TodoImportant id={id} />
+
             <Menu id={menuId} theme="accent">
                 <Item id="delete" onClick={() => dispatch(deleteTodo(id))}>
                     <div className="flex gap-1 items-center">
@@ -184,6 +221,14 @@ export default function TodoItem({
                     </div>
                 </Item>
             </Menu>
+            <style jsx>
+                {`
+                    .description {
+                        @apply text-uim-300 dark:text-uim-600 min-w-0 text-xs 
+                        font-normal overflow-hidden text-ellipsis whitespace-nowrap;
+                    }
+                `}
+            </style>
         </li>
     );
 }
