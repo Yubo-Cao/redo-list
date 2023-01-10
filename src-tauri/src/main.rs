@@ -56,7 +56,8 @@ fn main() {
             kanbans::get_all_kanbans,
             kanbans::add_todo_to_kanban,
             kanbans::remove_todo_from_kanban,
-            kanbans::move_todo_in_kanban
+            kanbans::move_todo_in_kanban,
+            kanbans::get_kanban
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

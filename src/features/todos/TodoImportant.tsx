@@ -1,14 +1,12 @@
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { forwardRef } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 export default function TodoImportant({ id }: { id: Todo["id"] }, ref) {
-    const { important } = useSelector((state) => selectTodoById(state, id)),
-        dispatch = useDispatch<AppDispatch>();
+    const { important } = useAppSelector((state) => selectTodoById(state, id)),
+        dispatch = useAppDispatch();
 
     return (
         <Button

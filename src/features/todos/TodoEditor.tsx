@@ -6,6 +6,10 @@ import {
     updateTodo
 } from "@features/todos/todosSlice";
 
+import Button from "@/components/Button";
+import Icon from "@/components/Icon";
+import { useAppDispatch, useAppSelector } from "@/store";
+import dynamic from "next/dynamic";
 import TodoBreadcrumb from "./TodoBreadcrumb";
 import TodoCompleted from "./TodoCompleted";
 import TodoDate from "./TodoDate";
@@ -15,11 +19,6 @@ import TodoList from "./TodoList";
 import TodoMultiselect from "./TodoMultiselect";
 import TodoTags from "./TodoTags";
 import TodoTitle from "./TodoTitle";
-import Button from "@/components/Button";
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
-import dynamic from "next/dynamic";
 
 const TodoDescription = dynamic(() => import("./TodoDescription"), {
     ssr: false
@@ -30,11 +29,11 @@ export type EditorProps = {
 };
 
 export default function Editor({ id }: EditorProps) {
-    const todo: Todo = useSelector((state) => selectTodoById(state, id)),
-        dispatch = useDispatch<AppDispatch>(),
+    const todo: Todo = useAppSelector((state) => selectTodoById(state, id)),
+        dispatch = useAppDispatch(),
         subtasks = todo?.subtasks || [],
         dependencies = todo?.dependencies || [],
-        dependencyOptions = useSelector((state) =>
+        dependencyOptions = useAppSelector((state) =>
             selectRootTodoIds(state).filter((i) => i !== id)
         );
 

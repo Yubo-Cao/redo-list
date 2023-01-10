@@ -86,3 +86,10 @@ pub async fn get_all_kanbans() -> Result<Vec<Kanban>, Error> {
         .collect();
     Ok(kanbans)
 }
+
+#[command]
+pub async fn get_kanban(id: u64) -> Result<Kanban, Error> {
+    let kanban = DB.get(id.to_be_bytes())?.expect("Kanban not found");
+    let kanban = serde_json::from_slice::<Kanban>(&kanban)?;
+    Ok(kanban)
+}

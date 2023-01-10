@@ -2,11 +2,10 @@ import gfm from "@bytemd/plugin-gfm";
 import { Viewer } from "@bytemd/react";
 import "bytemd/dist/index.css";
 
-import { selectDocumentById } from "./documentSlice";
-import { Document } from "./documentSlice";
-import fileImage from "./fileImage";
 import { cls } from "@/lib/utils";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/store";
+import { Document, selectDocumentById } from "./documentSlice";
+import fileImage from "./fileImage";
 
 export type DocumentViewerProps = Omit<
     React.HTMLAttributes<HTMLDivElement>,
@@ -22,7 +21,7 @@ export function DocumentViewer({
     className,
     ...rest
 }: DocumentViewerProps) {
-    const document = useSelector(selectDocumentById(id)),
+    const document = useAppSelector(selectDocumentById(id)),
         { content } = document;
 
     return (

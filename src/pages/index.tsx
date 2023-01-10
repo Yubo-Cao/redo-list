@@ -17,17 +17,16 @@ import {
     selectTodoStatus
 } from "@/features/todos/todosSlice";
 import { pauseEvent } from "@/lib/common";
-import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 export default function Index() {
-    const dispatch = useDispatch<AppDispatch>(),
-        mydays = useSelector(selectMyDays),
-        myDayStatus = useSelector(selectMyDayStatus),
+    const dispatch = useAppDispatch(),
+        mydays = useAppSelector(selectMyDays),
+        myDayStatus = useAppSelector(selectMyDayStatus),
         [collapsed, setCollapsed] = useState(true),
-        ids = useSelector(selectRootTodoIds),
-        todoStatus = useSelector(selectTodoStatus);
+        ids = useAppSelector(selectRootTodoIds),
+        todoStatus = useAppSelector(selectTodoStatus);
 
     if (myDayStatus === "needsUpdate") dispatch(fetchMyDays());
     if (todoStatus === "needsUpdate") dispatch(fetchTodos());

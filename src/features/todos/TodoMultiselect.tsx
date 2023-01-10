@@ -1,8 +1,7 @@
+import { RootState, useAppSelector } from "@/store";
+import Select, { Props as SelectProps } from "react-select";
 import TodoList from "./TodoList";
 import { Todo, selectTodoById } from "./todosSlice";
-import { RootState } from "@/store";
-import { useSelector } from "react-redux";
-import Select, { Props as SelectProps } from "react-select";
 
 type IdList = Todo["id"][];
 
@@ -57,7 +56,7 @@ const flattenOptions = (options: SelectProps["options"]) => {
 
 export default function TodoMultiselect(props: TodoMultiselectProps) {
     let { ids, value, onChange, ...rest } = props;
-    const options = useSelector((state: RootState) =>
+    const options = useAppSelector((state: RootState) =>
             createOptions(state, ids)
         ),
         flattendOptions = flattenOptions(options),

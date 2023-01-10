@@ -1,8 +1,7 @@
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import { cls } from "@/lib/utils";
-import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { forwardRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 function TodoTitle(
     {
@@ -16,10 +15,10 @@ function TodoTitle(
     },
     ref?: React.RefObject<HTMLInputElement>
 ) {
-    const todo = useSelector((state) => selectTodoById(state, id)),
+    const todo = useAppSelector((state) => selectTodoById(state, id)),
         { title } = todo,
         [edit, setEdit] = useState(false),
-        dispatch = useDispatch<AppDispatch>();
+        dispatch = useAppDispatch();
 
     const clz = cls("text-light-text dark:text-dark-text", "w-full");
 

@@ -1,12 +1,11 @@
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import Checkbox from "@/components/Checkbox";
-import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { forwardRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 function TodoCompleted({ id }: { id: Todo["id"] }, ref) {
-    const todo = useSelector((state) => selectTodoById(state, id)),
-        dispatch = useDispatch<AppDispatch>();
+    const todo = useAppSelector((state) => selectTodoById(state, id)),
+        dispatch = useAppDispatch();
     const { completed } = todo;
     return (
         <Checkbox

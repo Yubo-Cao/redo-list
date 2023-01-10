@@ -1,8 +1,11 @@
 import { cls } from "@lib/utils";
 
-import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
+import { pauseEvent } from "@/lib/common";
+import { RootState, useAppDispatch, useAppSelector } from "@/store";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
 import {
     fetchDocument,
     selectDocumentStatusById,
@@ -25,11 +28,6 @@ import {
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
-import { pauseEvent } from "@/lib/common";
-import { AppDispatch, RootState } from "@/store";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-import { useDispatch, useSelector } from "react-redux";
 
 export type TodoItemProps = {
     id: Todo["id"];
@@ -70,23 +68,23 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
         style = {}
     } = props;
 
-    const dispatch = useDispatch<AppDispatch>(),
-        todo: Todo | undefined = useSelector((state) =>
+    const dispatch = useAppDispatch(),
+        todo: Todo | undefined = useAppSelector((state) =>
             selectTodoById(state, id)
         );
 
-    const subtaskCount = useSelector((state: RootState) =>
+    const subtaskCount = useAppSelector((state: RootState) =>
             selectTodoSubtasksCount(state, id)
         ),
-        completedSubtaskCount = useSelector((state: RootState) =>
+        completedSubtaskCount = useAppSelector((state: RootState) =>
             selectTodoCompletedSubtasksCount(state, id)
         );
 
-    const editTodoId = useSelector(selectEditTodoId),
-        contentStatus = useSelector((state: RootState) =>
+    const editTodoId = useAppSelector(selectEditTodoId),
+        contentStatus = useAppSelector((state: RootState) =>
             selectDocumentStatusById(state, id)
         ),
-        description = useSelector(selectDocumentSummary(id));
+        description = useAppSelector(selectDocumentSummary(id));
 
     if (contentStatus.content === "needsUpdate") dispatch(fetchDocument(id));
 

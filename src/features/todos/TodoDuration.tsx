@@ -1,9 +1,8 @@
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import { fromDuration, toDuration } from "@/components/Date";
 import { cls } from "@/lib/utils";
-import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
 export default function TodoDuration({
     id,
@@ -14,11 +13,11 @@ export default function TodoDuration({
     className?: string;
     style?: React.CSSProperties;
 }) {
-    const { estimatedDuration } = useSelector((state) =>
+    const { estimatedDuration } = useAppSelector((state) =>
             selectTodoById(state, id)
         ),
         [duration, setDuration] = useState(toDuration(estimatedDuration)),
-        dispatch = useDispatch<AppDispatch>();
+        dispatch = useAppDispatch();
     return (
         <input
             type="text"

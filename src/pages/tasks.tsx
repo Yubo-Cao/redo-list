@@ -2,7 +2,6 @@ import {
     addTodo,
     fetchTodos,
     selectEditTodoId,
-    selectExtendedEditTodoId,
     selectExtendedEditing,
     selectRootTodoIds,
     selectTodoStatus,
@@ -16,9 +15,8 @@ import Layout from "@components/Layout";
 import Sidebar from "@components/Sidebar";
 
 import MDCalendar from "@/components/Calendar";
-import { AppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import dynamic from "next/dynamic";
-import { useDispatch, useSelector } from "react-redux";
 
 const TodoList = dynamic(() => import("@features/todos/TodoList"), {
     ssr: false
@@ -28,11 +26,11 @@ const Editor = dynamic(() => import("@features/todos/TodoEditor"), {
 });
 
 export default function Tasks() {
-    const dispatch = useDispatch<AppDispatch>(),
-        editTodoId = useSelector(selectEditTodoId),
-        ids = useSelector(selectRootTodoIds),
-        status = useSelector(selectTodoStatus),
-        extendedEditing = useSelector(selectExtendedEditing);
+    const dispatch = useAppDispatch(),
+        editTodoId = useAppSelector(selectEditTodoId),
+        ids = useAppSelector(selectRootTodoIds),
+        status = useAppSelector(selectTodoStatus),
+        extendedEditing = useAppSelector(selectExtendedEditing);
 
     if (status !== "idle") dispatch(fetchTodos());
 

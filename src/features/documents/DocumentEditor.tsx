@@ -11,11 +11,10 @@ import gfm from "@bytemd/plugin-gfm";
 import { Editor, EditorProps } from "@bytemd/react";
 import "bytemd/dist/index.css";
 
-import fileImage from "./fileImage";
 import { cls } from "@/lib/utils";
-import { AppDispatch, RootState } from "@/store";
+import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import fileImage from "./fileImage";
 
 type MdEditorProps = Omit<EditorProps, "value" | "onChange"> & {
     id: Document["id"];
@@ -25,10 +24,10 @@ type MdEditorProps = Omit<EditorProps, "value" | "onChange"> & {
 
 export default function DocumentEditor(props: MdEditorProps) {
     const { className, style, id, editorConfig, ...rest } = props,
-        dispatch = useDispatch<AppDispatch>(),
-        value = useSelector(selectDocumentContentById(id)),
+        dispatch = useAppDispatch(),
+        value = useAppSelector(selectDocumentContentById(id)),
         valueLoaded =
-            useSelector((state: RootState) =>
+            useAppSelector((state: RootState) =>
                 selectDocumentStatusById(state, id)
             )?.content === "updated",
         ref = useRef<HTMLDivElement>(null);

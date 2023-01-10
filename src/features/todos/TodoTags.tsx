@@ -1,12 +1,10 @@
 import { Todo, selectTodoById, updateTodo } from "@features/todos/todosSlice";
 
-import Chip from "@/components/Chip";
-import { ChipProps } from "@/components/Chip";
+import Chip, { ChipProps } from "@/components/Chip";
 import Icon from "@/components/Icon";
 import { cls } from "@/lib/utils";
-import { AppDispatch } from "@/store";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { useState } from "react";
 
 export type TodoTagsProps = {
     id: Todo["id"];
@@ -18,13 +16,13 @@ export type TodoTagsProps = {
 };
 
 export default function TodoTags({ id, className, styles }: TodoTagsProps) {
-    const { tags } = useSelector((state) => selectTodoById(state, id)),
+    const { tags } = useAppSelector((state) => selectTodoById(state, id)),
         [editingTag, setEditingTag] = useState(""),
         [addingTag, setAddingTag] = useState(false),
         [editingTags, setEditingTags] = useState<{ [key: string]: boolean }>(
             Object.fromEntries(tags.map((tag) => [tag, false]))
         ),
-        dispatch = useDispatch<AppDispatch>();
+        dispatch = useAppDispatch();
 
     const deleteTag = (tag: string) => {
         dispatch(

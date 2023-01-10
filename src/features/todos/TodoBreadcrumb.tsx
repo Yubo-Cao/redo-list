@@ -1,18 +1,17 @@
+import Icon from "@/components/Icon";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { Fragment } from "react";
 import {
     Todo,
     selectParentTodosById,
     selectTodoById,
     todoStartEdit
 } from "./todosSlice";
-import Icon from "@/components/Icon";
-import { AppDispatch } from "@/store";
-import { Fragment } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
-    const dispatch = useDispatch<AppDispatch>();
-    const todo = useSelector((state) => selectTodoById(state, id)),
-        parentTodos = useSelector(selectParentTodosById(id));
+    const dispatch = useAppDispatch();
+    const todo = useAppSelector((state) => selectTodoById(state, id)),
+        parentTodos = useAppSelector(selectParentTodosById(id));
 
     const todos = [...parentTodos, todo];
 

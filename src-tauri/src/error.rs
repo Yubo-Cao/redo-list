@@ -5,6 +5,7 @@ pub struct Error {
     message: String,
 }
 
+
 impl From<sled::Error> for Error {
     fn from(error: sled::Error) -> Self {
         Error {
@@ -36,7 +37,6 @@ impl From<tokio::task::JoinError> for Error {
         }
     }
 }
-
 
 impl From<image::ImageError> for Error {
     fn from(error: image::ImageError) -> Self {
