@@ -8,11 +8,9 @@ import {
     deleteMyDay,
     fetchMyDays,
     selectMyDayStatus,
-    selectMyDays,
-    setMyDay
+    selectMyDays
 } from "@/features/myday/mydaySlice";
 import TodoList from "@/features/todos/TodoList";
-import TodoMultiselect from "@/features/todos/TodoMultiselect";
 import {
     fetchTodos,
     selectRootTodoIds,

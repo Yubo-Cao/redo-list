@@ -1,21 +1,11 @@
-import gfm from "@bytemd/plugin-gfm";
-import { Editor } from "@bytemd/react";
-import 'bytemd/dist/index.css';
-import { useState } from "react";
-
-const plugins = [gfm()];
+import Layout from "@/components/Layout";
 
 export default function Index() {
-    const [value, setValue] = useState("");
     return (
-        <>
-            <Editor
-                value={value}
-                plugins={plugins}
-                onChange={(v) => {
-                    setValue(v);
-                }}
-            />
-        </>
+        <Layout activeItemId="settings">
+            <h1 className="text-xl font-bold text-light-text dark:text-dark-text">
+                <p>Settings</p>
+            </h1>
+        </Layout>
     );
 }

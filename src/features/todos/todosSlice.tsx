@@ -10,11 +10,12 @@ import {
     createSlice
 } from "@reduxjs/toolkit";
 import { Queue } from "queue-typescript";
+import { Document } from "../documents/documentSlice";
 
 export type Todo = {
     id: number;
     title: string;
-    description: number; // id of the document
+    description: Document["id"];
     completed: boolean;
     createDate: string;
     dueDate?: string;

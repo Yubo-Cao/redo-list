@@ -9,6 +9,7 @@ use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 mod documents;
 mod error;
 mod globals;
+mod kanbans;
 mod myday;
 mod todos;
 
@@ -20,7 +21,7 @@ fn main() {
             #[cfg(target_os = "macos")]
             apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
                 .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
-                
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -47,7 +48,15 @@ fn main() {
             myday::add_todo_my_day,
             myday::remove_todo_my_day,
             myday::get_my_day_todos,
-            myday::set_my_days
+            myday::set_my_days,
+            // kanbans
+            kanbans::add_kanban,
+            kanbans::delete_kanban,
+            kanbans::update_kanban,
+            kanbans::get_all_kanbans,
+            kanbans::add_todo_to_kanban,
+            kanbans::remove_todo_from_kanban,
+            kanbans::move_todo_in_kanban
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
