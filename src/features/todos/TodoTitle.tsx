@@ -6,9 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 function TodoTitle(
     {
-        id
+        id,
+        className,
+        style
     }: {
         id: Todo["id"];
+        className?: string;
+        style?: React.CSSProperties;
     },
     ref?: React.RefObject<HTMLInputElement>
 ) {
@@ -17,17 +21,11 @@ function TodoTitle(
         [edit, setEdit] = useState(false),
         dispatch = useDispatch<AppDispatch>();
 
-    const style = cls(
-        "font-semibold",
-        "text-light-text dark:text-dark-text",
-        "w-full"
-    );
+    const clz = cls("text-light-text dark:text-dark-text", "w-full");
 
     return (
         <div
-            onDoubleClick={(e) => {
-                setEdit(!edit);
-            }}
+            onClick={(e) => setEdit(true)}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setEdit(false);
@@ -37,7 +35,7 @@ function TodoTitle(
             {edit ? (
                 <input
                     type="text"
-                    className={style}
+                    className={cls(clz, "font-black", className)}
                     value={title}
                     onChange={(e) => {
                         dispatch(
@@ -53,9 +51,12 @@ function TodoTitle(
                     placeholder="Title of the task"
                     ref={ref}
                     tabIndex={0}
+                    autoFocus
                 />
             ) : (
-                <p className={style}>{title || "Title of the task"}</p>
+                <p className={cls(clz, "cursor-pointer", className)}>
+                    {title || "Title of the task"}
+                </p>
             )}
         </div>
     );

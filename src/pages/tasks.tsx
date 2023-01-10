@@ -59,7 +59,7 @@ export default function Tasks() {
             <Sidebar
                 width={512}
                 minWidth={256}
-                maxWidth={-1}
+                maxWidth={window.innerWidth / 2}
                 onClick={(e) => e.stopPropagation()}
                 collapsed={!extendedEditor}
                 onCollapse={() => dispatch(todoSetExtendedEditor(false))}

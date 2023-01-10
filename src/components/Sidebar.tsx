@@ -133,6 +133,9 @@ function HorizontalSidebar({
                     @apply absolute top-0 bottom-0
                         shadow-lg lg:py-8 px-6 z-10
                         overflow-hidden;
+                    ${direction === "left"
+                        ? "padding-right: 3rem;"
+                        : "padding-left: 3rem;"}
 
                     &.collapsed {
                         width: 0;

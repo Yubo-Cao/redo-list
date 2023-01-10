@@ -6,19 +6,33 @@ import { selectDocumentById } from "./documentSlice";
 import { Document } from "./documentSlice";
 import fileImage from "./fileImage";
 import { useSelector } from "react-redux";
+import { cls } from "@/lib/utils";
+
+export type DocumentViewerProps = Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    "id"
+> & {
+    id: Document["id"];
+    placeholder?: string;
+};
 
 export function DocumentViewer({
     id,
-    placeholder
-}: {
-    id: Document["id"];
-    placeholder?: string;
-}) {
+    placeholder,
+    className,
+    ...rest
+}: DocumentViewerProps) {
     const document = useSelector(selectDocumentById(id)),
         { content } = document;
 
     return (
-        <div className="prose max-w-none text-light-text dark:text-dark-text">
+        <div
+            className={cls(
+                "prose max-w-none text-light-text dark:text-dark-text",
+                className
+            )}
+            {...rest}
+        >
             <Viewer
                 value={content || placeholder}
                 plugins={[gfm(), fileImage()]}

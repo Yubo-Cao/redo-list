@@ -2,6 +2,7 @@ import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import MDCalendar from "@/components/Calendar";
 import { formatDate, fromISO, toISO } from "@/components/Date";
 import { pauseEvent } from "@/lib/common";
+import { cls } from "@/lib/utils";
 import { AppDispatch } from "@/store";
 import { useRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
@@ -11,9 +12,16 @@ import { useDispatch, useSelector } from "react-redux";
 export type TodoDateProps = {
     id: Todo["id"];
     field: keyof Todo;
+    className?: string;
+    style?: React.CSSProperties;
 };
 
-export default function TodoDate({ id, field }: TodoDateProps) {
+export default function TodoDate({
+    id,
+    field,
+    className,
+    ...rest
+}: TodoDateProps) {
     const todo = useSelector((state) => selectTodoById(state, id)),
         menu_id = `todo-date-picker-${id}-${field}`,
         { show, hideAll } = useContextMenu({ id: menu_id }),
@@ -41,7 +49,10 @@ export default function TodoDate({ id, field }: TodoDateProps) {
     return (
         <>
             <div
-                className="font-bold text mr-1 flex-1 cursor-pointer hover:font-black"
+                className={cls(
+                    "font-bold text-xl mr-1 flex-1 cursor-pointer hover:font-black",
+                    className
+                )}
                 onClick={handleMenu}
                 ref={ref}
                 tabIndex={0}
@@ -64,6 +75,7 @@ export default function TodoDate({ id, field }: TodoDateProps) {
                         cur.dispatchEvent(event);
                     }
                 }}
+                {...rest}
             >
                 {_try_or(
                     () => formatDate(fromISO(date)),

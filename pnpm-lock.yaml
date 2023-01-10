@@ -25,6 +25,7 @@ specifiers:
   queue-typescript: ^1.0.1
   react: ^18.2.0
   react-calendar: ^4.0.0
+  react-circular-progressbar: ^2.1.0
   react-contexify: ^6.0.0
   react-dom: ^18.2.0
   react-draggable: ^4.4.5
@@ -50,6 +51,7 @@ dependencies:
   queue-typescript: 1.0.1
   react: 18.2.0
   react-calendar: 4.0.0_biqbaboplfbrettd7655fr4n2y
+  react-circular-progressbar: 2.1.0_react@18.2.0
   react-contexify: 6.0.0_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
   react-draggable: 4.4.5_biqbaboplfbrettd7655fr4n2y
@@ -4595,6 +4597,14 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-circular-progressbar/2.1.0_react@18.2.0:
+    resolution: {integrity: sha512-xp4THTrod4aLpGy68FX/k1Q3nzrfHUjUe5v6FsdwXBl3YVMwgeXYQKDrku7n/D6qsJA9CuunarAboC2xCiKs1g==}
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-contexify/6.0.0_biqbaboplfbrettd7655fr4n2y:

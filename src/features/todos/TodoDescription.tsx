@@ -12,9 +12,6 @@ export default function TodoDescription({ id }: { id: Todo["id"] }) {
 
     return (
         <div
-            onDoubleClick={(e) => {
-                setEdit(!edit);
-            }}
             onKeyDown={(e) => {
                 if (e.ctrlKey && e.key === "Enter") {
                     setEdit(false);
@@ -35,6 +32,8 @@ export default function TodoDescription({ id }: { id: Todo["id"] }) {
                 <DocumentViewer
                     id={description}
                     placeholder="Write the description of the todo."
+                    onClick={(e) => setEdit(true)}
+                    className="px-3 py-2 cursor-pointer"
                 />
             )}
         </div>

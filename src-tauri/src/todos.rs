@@ -77,8 +77,8 @@ pub async fn delete_todo(id: u64) -> Result<(), Error> {
 
 #[command]
 pub async fn get_todo(id: u64) -> Result<Todo, Error> {
-    let todo = DB.get(id.to_be_bytes())?;
-    let todo = serde_json::from_slice::<Todo>(&todo.unwrap())?;
+    let todo = DB.get(id.to_be_bytes())?.expect("Todo not found");
+    let todo = serde_json::from_slice::<Todo>(&todo)?;
     Ok(todo)
 }
 

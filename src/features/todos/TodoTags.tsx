@@ -3,10 +3,21 @@ import { Todo, selectTodoById, updateTodo } from "@features/todos/todosSlice";
 import Chip from "@/components/Chip";
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { cls } from "@/lib/utils";
+import { ChipProps } from "@/components/Chip";
 
-export default function TodoTags({ id }: { id: Todo["id"] }) {
+export type TodoTagsProps = {
+    id: Todo["id"];
+    className?: string;
+    styles?: {
+        chipButton?: ChipProps;
+        chipTag?: ChipProps;
+    };
+};
+
+export default function TodoTags({ id, className, styles }: TodoTagsProps) {
     const { tags } = useSelector((state) => selectTodoById(state, id)),
         [editingTag, setEditingTag] = useState(""),
         [addingTag, setAddingTag] = useState(false),
@@ -57,7 +68,7 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
     };
 
     return (
-        <div className="flex flex-wrap gap-1">
+        <div className={cls("flex flex-wrap gap-1", className)}>
             {[...Array(tags.length).keys()].map((i) => (
                 <Chip
                     key={tags[i]}
@@ -72,6 +83,7 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
                             deleteTag(tags[i]);
                     }}
                     onClick={() => startEditTag(tags[i])}
+                    {...styles?.chipTag}
                 >
                     {editingTags[tags[i]] ? (
                         <input
@@ -90,7 +102,7 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
                 </Chip>
             ))}
             {addingTag && (
-                <Chip>
+                <Chip {...styles?.chipTag}>
                     <input
                         autoFocus
                         type="text"
@@ -123,14 +135,15 @@ export default function TodoTags({ id }: { id: Todo["id"] }) {
             )}
             <Chip
                 style={{ padding: 2 }}
-                className="h-6 w-6 hover:bg-pri-500 cursor-pointer"
+                className="h-8 w-8 cursor-pointer"
                 onClick={() => setAddingTag(true)}
                 tabIndex={0}
                 onKeyDown={(e) =>
                     (e.key === "Enter" || e.key === " ") && setAddingTag(true)
                 }
+                {...styles?.chipButton}
             >
-                <Icon name="add" size={18} />
+                <Icon name="add" size={24} />
             </Chip>
         </div>
     );

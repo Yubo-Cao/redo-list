@@ -120,13 +120,7 @@ const todosSlice = createSlice({
             todosAdapter.addOne(state, action.payload);
         });
         builder.addCase(deleteTodo.fulfilled, (state, action) => {
-            let id: Todo["id"] = action.payload,
-                subtasks: Todo["subtasks"] = [id];
-            while (!subtasks.length) {
-                const currentId = subtasks.pop();
-                subtasks = [...subtasks, ...selectTodoSubtasks(id)(state)];
-                todosAdapter.removeOne(state, currentId); // recursive removal
-            }
+            todosAdapter.removeOne(state, action.payload);
         });
     }
 });
@@ -179,36 +173,30 @@ export const selectTodoStatus = createSelector(
     (status) => status
 );
 
-export const selectTodoSubtasks = (todoId: number) =>
-    createSelector(
-        (state: any) => state.todos.entities,
-        (entities: { [id: number]: Todo }) => entities[todoId]?.subtasks
-    );
+export const selectTodoSubtaskIds = (state: RootState, todoId: number) =>
+    state.todos.entities[todoId]?.subtasks;
 
-export const selectTodoSubtaskTotal = (todoId: number) =>
-    createSelector(
-        selectTodoSubtasks(todoId),
-        (subtasks: number[]) => subtasks?.length
-    );
+export const selectTodoCompletedSubtasksCount = (
+    state: RootState,
+    todoId: number
+) =>
+    selectTodoSubtaskIds(state, todoId).filter(
+        (id) => selectTodoById(state, id).completed
+    ).length;
 
-export const selectTodoSubtaskCompleteTotal = (todoId: number) =>
-    createSelector(
-        selectTodoSubtasks(todoId),
-        (state: any) => state.todos.entities,
-        (subtasks: Todo["id"][], entities: { [id: Todo["id"]]: Todo }) =>
-            subtasks?.filter((subtaskId) => entities[subtaskId]?.completed)
-                .length
-    );
+export const selectTodoSubtasksCount = (state: RootState, todoId: number) =>
+    selectTodoSubtaskIds(state, todoId).length;
 
-export const selectTodoSubtaskIdsRecursivelyById = (id: Todo["id"]) =>
+export const selectTodoSubtaskIdsRecursively = (id: Todo["id"]) =>
     createSelector(
         (state: RootState) => state,
         (state: RootState) => {
             let todo = selectTodoById(state, id),
                 result = [],
                 stack = [todo];
-            while (!stack.length) {
+            while (stack.length) {
                 let current = stack.pop();
+                console.log("dep", result);
                 result = [...result, ...current.subtasks];
                 stack = [
                     ...stack,
@@ -267,9 +255,36 @@ setInterval(updateWorker, 15000);
 
 export const deleteTodo = createAsyncThunk(
     "todos/deleteTodo",
-    async (todoId: number) => {
-        await invoke("delete_todo", { id: todoId });
-        return todoId;
+    async (id: Todo["id"], { dispatch, getState }) => {
+        let state = getState() as RootState,
+            subtasks: Todo["subtasks"] = [id],
+            parentId = selectTodoById(state, id)?.parentTaskId;
+        if (parentId) {
+            const parent = selectTodoById(state, parentId);
+            if (parent) {
+                dispatch(
+                    updateTodo({
+                        id: parentId,
+                        update: {
+                            subtasks: parent.subtasks.filter(
+                                (subtaskId) => subtaskId !== id
+                            )
+                        }
+                    })
+                );
+            }
+        }
+        while (!subtasks.length) {
+            const currentId = subtasks.pop();
+            subtasks = [...subtasks, ...selectTodoSubtaskIds(state, id)];
+            dispatch(deleteTodo(currentId));
+        }
+        try {
+            await invoke("delete_todo", { id });
+        } catch (e) {
+            console.error(e);
+        }
+        return id;
     }
 );
 

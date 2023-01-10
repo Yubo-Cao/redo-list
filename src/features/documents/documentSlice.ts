@@ -286,11 +286,8 @@ const selectDocumentsStatus = createSelector(
     (status) => status
 );
 
-const selectDocumentStatusById = (id: Document["id"]) =>
-    createSelector(
-        (state: RootState) => state.documents.entities[id],
-        (doc) => doc?.fieldsStatus
-    );
+const selectDocumentStatusById = (state: RootState, id: Document["id"]) =>
+    selectDocumentById(id)(state)?.fieldsStatus;
 
 const selectDocumentIds = createSelector(
     (state: RootState) => state.documents.ids,
@@ -311,7 +308,8 @@ const selectDocumentResourcesById = (id: Document["id"]) =>
 const selectDocumentSummaryById = (id: Document["id"]) =>
     createSelector(selectDocumentById(id), (doc) => {
         if (!doc) return "";
-        const { content } = doc;
+        const { content, fieldsStatus } = doc;
+        if (fieldsStatus.content === "needsUpdate") return "";
         let headers_re = /#+\s(.*)/g,
             images_re = /!\[.*\]\(.*\)/g,
             uls_re = /^\s*[*-]\s(.*)(?:$)?/gm,
@@ -337,7 +335,7 @@ export {
     selectDocuments,
     selectDocumentsStatus,
     selectDocumentResourcesById,
-    selectDocumentSummaryById,
+    selectDocumentSummaryById as selectDocumentSummary,
     selectDocumentContentById,
     isDocumentLoadedById
 };

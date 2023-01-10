@@ -13,7 +13,7 @@ import "bytemd/dist/index.css";
 
 import fileImage from "./fileImage";
 import { cls } from "@/lib/utils";
-import { AppDispatch } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -28,7 +28,9 @@ export default function DocumentEditor(props: MdEditorProps) {
         dispatch = useDispatch<AppDispatch>(),
         value = useSelector(selectDocumentContentById(id)),
         valueLoaded =
-            useSelector(selectDocumentStatusById(id))?.content === "updated",
+            useSelector((state: RootState) =>
+                selectDocumentStatusById(state, id)
+            )?.content === "updated",
         ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

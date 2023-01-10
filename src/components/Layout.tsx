@@ -64,6 +64,12 @@ export default function Layout({
                 ref={mainRef}
             >
                 {children}
+                <style jsx>{`
+                    main {
+                        min-width: 100%;
+                        width: 0;
+                    }    
+                `}</style>
             </main>
         );
 
@@ -224,13 +230,14 @@ export default function Layout({
                                 grid-template-rows: 4rem 1fr;
                                 grid-template-columns: ${hw}px 1fr;
                                 height: 100vh;
+                                width: 100%;
                                 grid-template-areas:
                                     "header header"
                                     "content content";
                                 grid-gap: 1.5rem;
                                 overflow: hidden;
-                                max-width: 100vw;
                             }
+
 
                             :global(.header-layout-header) {
                                 grid-area: header;

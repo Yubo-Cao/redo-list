@@ -2,7 +2,7 @@ import Icon from "./Icon";
 import { cls } from "@/lib/utils";
 import React from "react";
 
-type ChipProps = React.DetailedHTMLProps<
+export type ChipProps = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
 > & {
@@ -25,7 +25,15 @@ export default function Chip({
     return (
         <div
             className={cls(
-                "inline-block relative align-baseline font-sans text-xs font-medium center leading-none whitespace-nowrap py-2 px-3.5 center rounded-lg select-none bg-pri-400 dark:bg-pri-600 text-white h-6",
+                cls(
+                    "px-2",
+                    "py-1",
+                    "bg-uim-200",
+                    "dark:bg-uim-700",
+                    "font-medium",
+                    "rounded-lg",
+                    "flex center"
+                ),
                 hover && deleteable && "pr-1.5",
                 className
             )}
@@ -38,8 +46,8 @@ export default function Chip({
                 <div onClick={onDelete}>
                     <Icon
                         name="close"
-                        iconSize={12}
-                        size={18}
+                        iconSize={18}
+                        size={24}
                         className="ml-2 hover:bg-uim-100/50 hover:dark:bg-uim-900/50 rounded-full p-1 cursor-pointer"
                     />
                 </div>

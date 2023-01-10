@@ -3,7 +3,16 @@ import { cls } from "@lib/utils";
 import { formatDate } from "@components/Date";
 import Icon from "@components/Icon";
 
-import { selectDocumentSummaryById } from "../documents/documentSlice";
+import { pauseEvent } from "@/lib/common";
+import { AppDispatch, RootState } from "@/store";
+import { Item, Menu, useContextMenu } from "react-contexify";
+import "react-contexify/ReactContexify.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    fetchDocument,
+    selectDocumentStatusById,
+    selectDocumentSummary
+} from "../documents/documentSlice";
 import TodoCompleted from "./TodoCompleted";
 import TodoImportant from "./TodoImportant";
 import TodoTitle from "./TodoTitle";
@@ -12,29 +21,48 @@ import {
     deleteTodo,
     selectEditTodoId,
     selectTodoById,
-    selectTodoSubtaskCompleteTotal,
-    selectTodoSubtaskTotal,
+    selectTodoCompletedSubtasksCount,
+    selectTodoSubtasksCount,
     todoSetExtendedEditor,
     todoStartEdit,
     updateTodo
 } from "./todosSlice";
-import { pauseEvent } from "@/lib/common";
-import { AppDispatch } from "@/store";
-import { Item, Menu, useContextMenu } from "react-contexify";
-import "react-contexify/ReactContexify.css";
-import { useDispatch, useSelector } from "react-redux";
 
-export default function TodoItem({ id }: { id: Todo["id"] }) {
-    const todo: Todo | undefined = useSelector((state) =>
+export type TodoItemProps = {
+    id: Todo["id"];
+    variant?: "main" | "subtask";
+    features?: ("important" | "remove")[];
+    onRemove?: (id: Todo["id"]) => void;
+};
+
+export default function TodoItem({
+    id,
+    variant,
+    features,
+    onRemove
+}: TodoItemProps): JSX.Element {
+    const dispatch = useDispatch<AppDispatch>(),
+        todo: Todo | undefined = useSelector((state) =>
             selectTodoById(state, id)
+        );
+
+    const subtaskCount = useSelector((state: RootState) =>
+            selectTodoSubtasksCount(state, id)
         ),
-        dispatch = useDispatch<AppDispatch>(),
-        subtaskCount = useSelector(selectTodoSubtaskTotal(id)),
-        subtaskCompleteCount = useSelector(selectTodoSubtaskCompleteTotal(id)),
-        editTodoId = useSelector(selectEditTodoId),
-        description = useSelector(selectDocumentSummaryById(todo?.description)),
-        menuId = `todo-${id}-menu`,
-        { show } = useContextMenu({ id: menuId });
+        completedSubtaskCount = useSelector((state: RootState) =>
+            selectTodoCompletedSubtasksCount(state, id)
+        );
+
+    const editTodoId = useSelector(selectEditTodoId),
+        contentStatus = useSelector((state: RootState) =>
+            selectDocumentStatusById(state, id)
+        ),
+        description = useSelector(selectDocumentSummary(id));
+
+    if (contentStatus.content === "needsUpdate") dispatch(fetchDocument(id));
+
+    const menuId = `todo-${id}-menu`,
+        { show, hideAll } = useContextMenu({ id: menuId });
 
     if (!todo) return null;
 
@@ -55,9 +83,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
         }
     };
 
-    const Sep = () => (
-        <span className={cls("font-black", "mx-2", "text-pri-500")}>·</span>
-    );
+    const Sep = () => <span className={cls("font-black", "mx-2")}>·</span>;
 
     return (
         <li
@@ -80,28 +106,27 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             tabIndex={0}
         >
             <TodoCompleted id={id} />
-            <div className={cls("flex-1", "flex", "flex-col")}>
-                <TodoTitle id={id} />
+            <div className={cls("flex-1", "flex", "flex-col", "min-w-0")}>
+                <TodoTitle id={id} className="font-semibold" />
                 <p
                     className={cls(
-                        "text-uim-400",
+                        "text-uim-300 dark:text-uim-600",
                         "min-w-0",
-                        "text-sm",
+                        "text-xs font-base",
                         "overflow-hidden",
                         "text-ellipsis",
-                        "whitespace-nowrap"
+                        "whitespace-nowrap",
                     )}
                 >
                     {description}
                 </p>
-                <div className="flex items-center text-sm text-uim-400">
+                <div className="flex font-medium items-center text-sm text-uim-400 mt-2">
                     {tags.length > 0 && (
                         <div className="flex items-center gap-1">
                             {tags.map((tag) => (
                                 <span
                                     key={tag}
                                     className={cls(
-                                        "text-xs",
                                         "px-2",
                                         "py-1",
                                         "bg-uim-100",
@@ -117,7 +142,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
                     {tags.length > 0 && subtaskCount > 0 && Sep()}
                     {subtaskCount > 0 && (
                         <span>
-                            {subtaskCompleteCount}/{subtaskCount}
+                            {completedSubtaskCount}/{subtaskCount}
                         </span>
                     )}
                     {(tags.length > 0 || subtaskCount > 0) && Sep()}
@@ -128,10 +153,7 @@ export default function TodoItem({ id }: { id: Todo["id"] }) {
             </div>
             <TodoImportant id={id} />
             <Menu id={menuId} theme="accent">
-                <Item
-                    id="delete"
-                    onClick={() => dispatch(deleteTodo(id))}
-                >
+                <Item id="delete" onClick={() => dispatch(deleteTodo(id))}>
                     <div className="flex gap-1 items-center">
                         <Icon name="delete" size={16} />
                         <span>Delete</span>

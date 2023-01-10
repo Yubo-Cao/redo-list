@@ -3,7 +3,7 @@ import {
     addTodo,
     selectTodoById,
     selectTodoIds,
-    selectTodoSubtaskIdsRecursivelyById,
+    selectTodoSubtaskIdsRecursively,
     updateTodo
 } from "@features/todos/todosSlice";
 
@@ -31,9 +31,7 @@ export default function Editor({ id }: EditorProps) {
         dispatch = useDispatch<AppDispatch>(),
         subtasks = todo?.subtasks || [],
         dependencies = todo?.dependencies || [],
-        subtasksRecursiveIds = useSelector(
-            selectTodoSubtaskIdsRecursivelyById(id)
-        ),
+        subtasksRecursiveIds = useSelector(selectTodoSubtaskIdsRecursively(id)),
         dependencyOptions = useSelector((state) =>
             selectTodoIds(state).filter(
                 (i) => !subtasksRecursiveIds.includes(i) && i !== id
@@ -43,12 +41,15 @@ export default function Editor({ id }: EditorProps) {
     if (!todo) return null;
 
     return (
-        <div className="space-y-3 root text-light-text dark:text-dark-text">
+        <div className="h-full space-y-3 root text-light-text dark:text-dark-text">
             <TodoBreadcrumb id={id} />
             <div className="flex justify-between items-center gap-2 outlined-card">
                 <div className="flex gap-2 items-center">
                     <TodoCompleted id={id} />
-                    <TodoTitle id={id} />
+                    <TodoTitle
+                        id={id}
+                        className="text-2xl text-pri-500 font-bold"
+                    />
                 </div>
                 <TodoImportant id={id} />
             </div>
@@ -57,22 +58,24 @@ export default function Editor({ id }: EditorProps) {
             </div>
             <div className="outlined-card tiles">
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="schedule" size={28} wrap={true} />
+                    <Icon name="schedule" size={36} wrap={true} />
                     <span>Create date</span>
                     <TodoDate id={id} field="createDate" />
                 </div>
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="pending_actions" size={28} wrap={true} />
+                    <Icon name="pending_actions" size={36} wrap={true} />
                     <span>Due date</span>
                     <TodoDate id={id} field="dueDate" />
                 </div>
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <Icon name="timer" size={28} wrap={true} />
+                    <Icon name="timer" size={36} wrap={true} />
                     <span className="text">Duration</span>
-                    <TodoDuration id={id} />
+                    <TodoDuration id={id} className="text-2xl" />
                 </div>
                 <div className="bg-uim-100/50 dark:bg-uim-800/50 hover:bg-uim-100 hover:dark:bg-uim-800">
-                    <TodoTags id={id} />
+                    <Icon name="label" size={36} wrap={true} />
+                    <span className="text">Tags</span>
+                    <TodoTags id={id} className="mt-1" />
                 </div>
             </div>
             <div className="outlined-card space-y-3">
@@ -139,21 +142,23 @@ export default function Editor({ id }: EditorProps) {
             </div>
             <style jsx>{`
                 .outlined-card {
-                    @apply border border-uim-300 dark:border-uim-700 rounded-lg px-3 py-4;
+                    @apply border border-uim-300 dark:border-uim-700 rounded-lg px-4 py-4;
                 }
 
                 .tiles {
-                    @apply grid grid-cols-2 gap-2 p-4 justify-items-stretch;
+                    @apply grid gap-2 justify-items-stretch;
+                    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
                 }
 
+
                 .tiles div {
-                    aspect-ratio: 3/2;
                     @apply rounded-lg p-4;
 
                     span {
                         @apply text-sm;
                     }
                 }
+
 
                 .root {
                     max-height: 100%;

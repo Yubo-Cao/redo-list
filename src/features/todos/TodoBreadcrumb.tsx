@@ -6,6 +6,7 @@ import {
 } from "./todosSlice";
 import Icon from "@/components/Icon";
 import { AppDispatch } from "@/store";
+import { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
@@ -23,12 +24,12 @@ export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
                         last = i === todos.length - 1;
 
                     return (
-                        <>
+                        <Fragment>
                             <li
                                 onClick={() => {
                                     dispatch(todoStartEdit(todo.id));
                                 }}
-                                key={todo.id}
+                                key={`${todo.id}`}
                                 className={
                                     last
                                         ? "flex-1 whitespace-nowrap text-pri-500"
@@ -38,7 +39,10 @@ export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
                                 {todo.title}
                             </li>
                             {!last && (
-                                <li className="flex-none text-uim-500">
+                                <li
+                                    className="flex-none text-uim-500"
+                                    key={`${todo.id}-sep`}
+                                >
                                     <Icon
                                         name="chevron_right"
                                         size={24}
@@ -46,7 +50,7 @@ export default function TodoBreadcrumb({ id }: { id: Todo["id"] }) {
                                     />
                                 </li>
                             )}
-                        </>
+                        </Fragment>
                     );
                 })}
             </ol>
