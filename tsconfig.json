@@ -24,11 +24,6 @@
             "@lib/*": ["./src/lib/*"]
         }
     },
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        "src/pages/dashboard.tsx"
-    ],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/kanban.tsx"],
     "exclude": ["node_modules"]
 }

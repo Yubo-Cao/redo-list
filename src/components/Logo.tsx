@@ -26,7 +26,7 @@ export default function Logo({ className = "" }: LogoProps) {
             )}
         >
             <Icon
-                name="list"
+                name="/images/icon.png"
                 size={36}
                 iconSize={24}
                 wrapperClassName={cls(

@@ -1,6 +1,3 @@
-import { cls } from "@/lib/utils";
-import { AppDispatch, useAppDispatch } from "@/store";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import AddKanban from "./AddKanban";
 import KanbanItem from "./KanbanItem";
 import {
@@ -9,6 +6,9 @@ import {
     moveTodoInKanban,
     removeTodoFromKanban
 } from "./kanbansSlice";
+import { cls } from "@/lib/utils";
+import { AppDispatch, useAppDispatch } from "@/store";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 export type KanbansProps = {
     ids: Kanban["id"][];

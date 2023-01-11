@@ -1,3 +1,13 @@
+import { TransparentEditor } from "../documents/TransparentEditor";
+import TodoItem from "../todos/TodoItem";
+import TodoMultiselect from "../todos/TodoMultiselect";
+import {
+    Kanban,
+    currentKanbanChanged,
+    defaultKanban,
+    deleteKanban,
+    selectKanbanById
+} from "./kanbansSlice";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { TransparentInput } from "@/components/TransparentInput";
@@ -11,16 +21,6 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import React, { forwardRef } from "react";
 import { Draggable, Droppable, DroppableProvided } from "react-beautiful-dnd";
 import { Item, Menu, useContextMenu } from "react-contexify";
-import { TransparentEditor } from "../documents/TransparentEditor";
-import TodoItem from "../todos/TodoItem";
-import TodoMultiselect from "../todos/TodoMultiselect";
-import {
-    Kanban,
-    currentKanbanChanged,
-    defaultKanban,
-    deleteKanban,
-    selectKanbanById
-} from "./kanbansSlice";
 
 export type KanbanProps = {
     id: Kanban["id"];

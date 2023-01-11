@@ -36,16 +36,10 @@ const navigationItems: NavigationItemProps[] = [
         id: "tasks"
     },
     {
-        name: "Dashboard",
+        name: "Kanban",
         icon: "dashboard",
-        href: "/dashboard",
-        id: "dashboard"
-    },
-    {
-        name: "Settings",
-        icon: "settings",
-        href: "/settings",
-        id: "settings"
+        href: "/Kanban",
+        id: "Kanban"
     }
 ];
 

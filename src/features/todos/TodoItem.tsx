@@ -26,9 +26,9 @@ import {
 } from "./todosSlice";
 import { pauseEvent } from "@/lib/common";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
+import { forwardRef } from "react";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
-import { forwardRef } from "react";
 
 export type TodoItemProps = {
     id: Todo["id"];

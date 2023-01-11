@@ -59,9 +59,9 @@ export default function Board() {
     if (kanbanStatus !== "idle") dispatch(getAllKanbans());
 
     return (
-        <Layout activeItemId="dashboard">
+        <Layout activeItemId="Kanban">
             <div className="flex flex-col h-full">
-                <Title title="Dashboard" />
+                <Title title="Kanban" />
                 <Dashboard />
             </div>
             <Sidebar
