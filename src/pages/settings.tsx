@@ -1,11 +1,10 @@
 import Layout from "@/components/Layout";
+import Title from "@/components/Title";
 
 export default function Index() {
     return (
         <Layout activeItemId="settings">
-            <h1 className="text-xl font-bold text-light-text dark:text-dark-text">
-                <p>Settings</p>
-            </h1>
+            <Title title="Settings" />
         </Layout>
     );
 }

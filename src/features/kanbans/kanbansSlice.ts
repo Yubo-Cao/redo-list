@@ -19,10 +19,10 @@ export type Kanban = {
     tasks: Todo["id"][];
 };
 
-const defaultKanban = {
-    id: -1,
+export const defaultKanban = {
+    id: 0,
     title: "",
-    description: -1,
+    description: 0,
     tasks: []
 };
 
@@ -94,6 +94,18 @@ const kanbanSlice = createSlice({
             kanban.tasks = kanban.tasks.filter((id) => id !== todoId);
             kanban.tasks.splice(index, 0, todoId);
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getAllKanbans.fulfilled, (state, action) => {
+            kanbanAdapter.setAll(state, action.payload);
+            state.status = "idle";
+        });
+        builder.addCase(getAllKanbans.pending, (state) => {
+            state.status = "loading";
+        });
+        builder.addCase(getAllKanbans.rejected, (state, action) => {
+            state.status = "failed";
+        });
     }
 });
 
@@ -110,12 +122,17 @@ export const {
 } = kanbanSlice.actions;
 
 // selector
-const selectKanban = (state) => state.kanbans;
+const selectKanban = (state: RootState) => state.kanbans;
 export const {
     selectAll: sleectAllKanbans,
     selectById: selectKanbanById,
     selectTotal: selectKanbanTotal
 } = kanbanAdapter.getSelectors(selectKanban);
+
+export const selectKanbanStatus = createSelector(
+    selectKanban,
+    (state) => state.status
+);
 
 // thunks
 export const addKanban = createAsyncThunk(
@@ -199,5 +216,5 @@ export const moveTodoInKanban = createAsyncThunk(
 
 export const getAllKanbans = createAsyncThunk(
     "kanbans/getAllKanbans",
-    async (_) => await invoke("get_all_kanbans")
+    async (_) => (await invoke("get_all_kanbans")) as Kanban[]
 );

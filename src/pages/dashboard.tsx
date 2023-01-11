@@ -1,8 +1,20 @@
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import NoSsr from "@/components/NoSsr";
+import Title from "@/components/Title";
+import {
+    getAllKanbans,
+    selectKanbanStatus,
+    sleectAllKanbans
+} from "@/features/kanbans/kanbansSlice";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+    DragDropContext,
+    Draggable,
+    DropResult,
+    Droppable
+} from "react-beautiful-dnd";
 
 const getItems = (count, offset = 0) =>
     Array.from({ length: count }, (v, k) => k).map((k) => ({
@@ -50,26 +62,31 @@ const getListStyle = (isDraggingOver) => ({
 });
 
 function Dashboard() {
-    const [state, setState] = useState([getItems(10), getItems(5, 10)]);
+    const [state, setState] = useState([getItems(10), getItems(5, 10)]),
+        kanbans = useAppSelector(sleectAllKanbans),
+        status = useAppSelector(selectKanbanStatus),
+        dispatch = useAppDispatch();
 
-    function onDragEnd(result) {
+    if (status !== "idle") dispatch(getAllKanbans());
+
+    function onDragEnd(result: DropResult) {
         const { source, destination } = result;
 
         if (!destination) return;
 
-        const sInd: number = +source.droppableId;
-        const dInd: number = +destination.droppableId;
+        const src: number = +source.droppableId;
+        const dst: number = +destination.droppableId;
 
-        if (sInd === dInd) {
-            const items = reorder(state[sInd], source.index, destination.index);
+        if (src === dst) {
+            const items = reorder(state[src], source.index, destination.index);
             const newState = [...state];
-            newState[sInd] = items;
+            newState[src] = items;
             setState(newState);
         } else {
-            const result = move(state[sInd], state[dInd], source, destination);
+            const result = move(state[src], state[dst], source, destination);
             const newState = [...state];
-            newState[sInd] = result[sInd];
-            newState[dInd] = result[dInd];
+            newState[src] = result[src];
+            newState[dst] = result[dst];
             setState(newState.filter((group) => group.length));
         }
     }
@@ -80,7 +97,7 @@ function Dashboard() {
                 <Button onClick={() => setState([...state, []])}>
                     Add new board
                 </Button>
-                <div style={{ display: "flex" }}>
+                <div className="flex">
                     <DragDropContext onDragEnd={onDragEnd}>
                         {state.map((el, ind) => (
                             <Droppable key={ind} droppableId={`${ind}`}>
@@ -163,9 +180,7 @@ function Dashboard() {
 export default function Board() {
     return (
         <Layout activeItemId="dashboard">
-            <h1 className="text-xl font-bold text-light-text dark:text-dark-text">
-                <p>Dashboard</p>
-            </h1>
+            <Title title="Dashboard" />
             <Dashboard />
         </Layout>
     );

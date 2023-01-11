@@ -1,41 +1,10 @@
-import DocumentEditor from "../documents/DocumentEditor";
-import { DocumentViewer } from "../documents/DocumentViewer";
+import { TransparentEditor } from "../documents/TransparentEditor";
 import { Todo, selectTodoById } from "./todosSlice";
 import { useAppSelector } from "@/store";
-import { useRef, useState } from "react";
 
 export default function TodoDescription({ id }: { id: Todo["id"] }) {
     const todo = useAppSelector((state) => selectTodoById(state, id)),
-        { description } = todo,
-        [edit, setEdit] = useState(false),
-        ref = useRef<HTMLDivElement>(null);
+        { description } = todo;
 
-    return (
-        <div
-            onKeyDown={(e) => {
-                if (e.ctrlKey && e.key === "Enter") {
-                    setEdit(false);
-                }
-                if (document.activeElement === ref.current) {
-                    if (e.key === "Enter" || e.key === " ") {
-                        setEdit(true);
-                    }
-                }
-                if (e.key === "Escape") setEdit(false);
-            }}
-            ref={ref}
-            tabIndex={0}
-        >
-            {edit ? (
-                <DocumentEditor id={description} />
-            ) : (
-                <DocumentViewer
-                    id={description}
-                    placeholder="Write the description of the todo."
-                    onClick={(e) => setEdit(true)}
-                    className="px-3 py-2 cursor-pointer"
-                />
-            )}
-        </div>
-    );
+    return <TransparentEditor id={description} />;
 }

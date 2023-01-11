@@ -12,6 +12,7 @@ import { Editor, EditorProps } from "@bytemd/react";
 import "bytemd/dist/index.css";
 
 import fileImage from "./fileImage";
+import NoSsr from "@/components/NoSsr";
 import { cls } from "@/lib/utils";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import { useEffect, useRef } from "react";
@@ -67,70 +68,72 @@ export default function DocumentEditor(props: MdEditorProps) {
     }
 
     return (
-        <div className={cls("documentEditor", className)} ref={ref}>
-            <Editor
-                value={value}
-                plugins={[gfm(), fileImage()]}
-                onChange={(value) =>
-                    dispatch(
-                        updateDocument({
-                            id: props.id,
-                            update: { content: value }
-                        })
-                    )
-                }
-                editorConfig={{
-                    ...editorConfig
-                }}
-                {...rest}
-                uploadImages={async (files: File[]) => {
-                    const {
-                        payload: { resources }
-                    } = (await dispatch(
-                        addResourcesToDocument({
-                            id: props.id,
-                            images: files
-                        })
-                    )) as unknown as {
-                        payload: {
-                            id: Document["id"];
-                            resources: Document["resources"];
-                        };
-                    }; // TODO: Fix type for dispatch
-                    return resources.map((path) => ({
-                        url: `https://file/${encodeURIComponent(path)}`,
-                        alt: ""
-                    }));
-                }}
-            />
-            <style jsx global>{`
-                .documentEditor {
-                    .bytemd {
-                        @apply rounded-lg border-none shadow-none;
-                        @apply bg-light-surface dark:bg-dark-surface;
+        <NoSsr>
+            <div className={cls("documentEditor", className)} ref={ref}>
+                <Editor
+                    value={value}
+                    plugins={[gfm(), fileImage()]}
+                    onChange={(value) =>
+                        dispatch(
+                            updateDocument({
+                                id: props.id,
+                                update: { content: value }
+                            })
+                        )
                     }
-
-                    .bytemd-toolbar-tab-active {
-                        @apply text-pri-500 dark:text-pri-600 font-bold;
-                    }
-
-                    [bytemd-tippy-path="5"] {
-                        @apply hidden;
-                    }
-
-                    .bytemd-editor {
-                        .cm-header {
-                            @apply text-pri-500 dark:text-pri-300;
+                    editorConfig={{
+                        ...editorConfig
+                    }}
+                    {...rest}
+                    uploadImages={async (files: File[]) => {
+                        const {
+                            payload: { resources }
+                        } = (await dispatch(
+                            addResourcesToDocument({
+                                id: props.id,
+                                images: files
+                            })
+                        )) as unknown as {
+                            payload: {
+                                id: Document["id"];
+                                resources: Document["resources"];
+                            };
+                        }; // TODO: Fix type for dispatch
+                        return resources.map((path) => ({
+                            url: `https://file/${encodeURIComponent(path)}`,
+                            alt: ""
+                        }));
+                    }}
+                />
+                <style jsx global>{`
+                    .documentEditor {
+                        .bytemd {
+                            @apply rounded-lg border-none shadow-none;
+                            @apply bg-light-surface dark:bg-dark-surface;
                         }
-                        .cm-header-1 {
-                            @apply text-xl;
+
+                        .bytemd-toolbar-tab-active {
+                            @apply text-pri-500 dark:text-pri-600 font-bold;
                         }
-                        .cm-header-2 {
-                            @apply text-lg;
+
+                        [bytemd-tippy-path="5"] {
+                            @apply hidden;
+                        }
+
+                        .bytemd-editor {
+                            .cm-header {
+                                @apply text-pri-500 dark:text-pri-300;
+                            }
+                            .cm-header-1 {
+                                @apply text-xl;
+                            }
+                            .cm-header-2 {
+                                @apply text-lg;
+                            }
                         }
                     }
-                }
-            `}</style>
-        </div>
+                `}</style>
+            </div>
+        </NoSsr>
     );
 }

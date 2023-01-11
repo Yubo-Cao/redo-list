@@ -1,15 +1,14 @@
+import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 import {
     TransparentInput,
     TransparentInputProps
 } from "@/components/TransparentInput";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { forwardRef } from "react";
-import { Todo, selectTodoById, updateTodo } from "./todosSlice";
 
-function TodoTitle(
-    { id, ...rest }: { id: Todo["id"] } & TransparentInputProps,
-    ref?: React.RefObject<HTMLInputElement>
-) {
+export default function TodoTitle({
+    id,
+    ...rest
+}: { id: Todo["id"] } & Omit<TransparentInputProps, "value" | "onChange">) {
     const todo = useAppSelector((state) => selectTodoById(state, id)),
         { title } = todo,
         dispatch = useAppDispatch();
@@ -24,7 +23,3 @@ function TodoTitle(
         />
     );
 }
-
-const ForwardedTodoTitle = forwardRef(TodoTitle);
-export default ForwardedTodoTitle;
-export { TodoTitle, ForwardedTodoTitle };

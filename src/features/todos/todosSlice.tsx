@@ -3,6 +3,7 @@ import { invoke } from "@lib/tauri";
 
 import { addDocument } from "../documents/documentSlice";
 import { Document } from "../documents/documentSlice";
+import { toISO } from "@/components/Date";
 import { RootState } from "@/store";
 import {
     createAsyncThunk,
@@ -239,8 +240,8 @@ export const addTodo = createAsyncThunk(
             (await dispatch(addDocument(""))).payload as any
         ).id;
         final.description = descriptionId;
-        const createDate = new Date();
-        final.createDate = createDate.toISOString().split("T")[0];
+        const createDate = toISO(new Date());
+        final.createDate = createDate;
         const todoId: number = await invoke("add_todo", { todo: final });
         const result = { ...final, id: todoId };
         return result;

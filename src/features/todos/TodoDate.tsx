@@ -110,10 +110,9 @@ export default function TodoDate({
             <style jsx>
                 {`
                     :global(.date-picker-menu) {
-                        --contexify-menu-minWidth: 20rem;
+                        --contexify-menu-minWidth: 0;
                         --contexify-menu-padding: 1rem;
                         --contexify-activeItem-bgColor: transparent;
-                        --contexify-menu-minWidth: 0;
                     }
                 `}
             </style>

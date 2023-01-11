@@ -1,4 +1,4 @@
-export function formatDate(date: Date | String) {
+export function formatDate(date: Date | String, relative = true) {
     if (typeof date === "string") {
         try {
             date = fromISO(date);
@@ -7,9 +7,13 @@ export function formatDate(date: Date | String) {
         }
     }
     date = date as Date;
-    if (date.toLocaleDateString() === new Date().toLocaleDateString()) {
-        return "Today";
+
+    if (relative) {
+        if (date.toLocaleDateString() === new Date().toLocaleDateString()) {
+            return "Today";
+        }
     }
+
     return date.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",

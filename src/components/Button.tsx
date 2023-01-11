@@ -9,8 +9,9 @@ export type ButtonProps = Omit<
     > & {
         content?: "text" | "icon" | "both";
         variant?: "solid" | "outline" | "none";
-        accent?: "pri" | "sec" | "uim";
+        accent?: "pri" | "sec" | "uim" | "none";
         stack?: "horizontal" | "vertical";
+        ring?: boolean;
         padding?: boolean;
     },
     "ref"
@@ -60,6 +61,7 @@ function button(props: ButtonProps, ref): React.ReactElement<ButtonProps> {
         accent = "pri",
         stack = "horizontal",
         padding = true,
+        ring = true,
         className,
         ...rest
     } = props;
@@ -77,7 +79,8 @@ function button(props: ButtonProps, ref): React.ReactElement<ButtonProps> {
                     COLOR_CLASSNAMES[variant][accent],
                     padding && PADDING_CLASSNAMES[stack][content],
                     CONTENT_CLASSNAMES[content],
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-black",
+                    ring &&
+                        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-black",
                     className
                 )}
             >

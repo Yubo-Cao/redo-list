@@ -1,6 +1,5 @@
 use crate::error::Error;
 use crate::globals::PROJECT_DIRS;
-use crate::todos::Todo;
 
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
@@ -18,7 +17,8 @@ lazy_static! {
 #[serde(rename_all = "camelCase")]
 pub struct Kanban {
     pub id: u64,
-    pub name: String,
+    pub title: String,
+    pub description: u64,
     pub tasks: Vec<u64>,
 }
 
