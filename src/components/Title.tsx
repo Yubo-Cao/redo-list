@@ -8,7 +8,7 @@ export type TitleProps = {
 
 const Title: FC<TitleProps> = ({ title, subtitle, children }) => {
     return (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold text-light-text dark:text-dark-text">
                 <p>{title}</p>
                 <p className="text-uim-400 text-sm font-normal">{subtitle}</p>

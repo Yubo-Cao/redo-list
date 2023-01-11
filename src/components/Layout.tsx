@@ -133,12 +133,12 @@ export default function Layout({
             <LayoutContext.Provider
                 value={{ headerWidth: hw, sideBarWidth: sw, mainWidth: mw }}
             >
-                <div className="header-layout dark:bg-dark-surface">
+                <div className="header-layout bg-uim-50 dark:bg-black">
                     {header}
                     {main}
                     <aside
                         className={cls(
-                            "bg-light-surface dark:bg-dark-surface",
+                            "bg-light-surface dark:bg-black",
                             "shadow-lg",
                             "h-full",
                             "overflow-y-auto",

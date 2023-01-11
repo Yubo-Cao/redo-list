@@ -2,10 +2,11 @@ import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import NoSsr from "@/components/NoSsr";
 import Title from "@/components/Title";
+import Kanbans from "@/features/kanbans/Kanbans";
 import {
     getAllKanbans,
     selectKanbanStatus,
-    sleectAllKanbans
+    selectAllKanbanIds
 } from "@/features/kanbans/kanbansSlice";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useState } from "react";
@@ -63,7 +64,7 @@ const getListStyle = (isDraggingOver) => ({
 
 function Dashboard() {
     const [state, setState] = useState([getItems(10), getItems(5, 10)]),
-        kanbans = useAppSelector(sleectAllKanbans),
+        kanbans = useAppSelector(selectAllKanbanIds),
         status = useAppSelector(selectKanbanStatus),
         dispatch = useAppDispatch();
 
@@ -93,6 +94,7 @@ function Dashboard() {
 
     return (
         <NoSsr>
+            <Kanbans ids={kanbans} className="m-4" />
             <div>
                 <Button onClick={() => setState([...state, []])}>
                     Add new board

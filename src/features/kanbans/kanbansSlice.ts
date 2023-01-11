@@ -124,7 +124,7 @@ export const {
 // selector
 const selectKanban = (state: RootState) => state.kanbans;
 export const {
-    selectAll: sleectAllKanbans,
+    selectAll: selectAllKanbans,
     selectById: selectKanbanById,
     selectTotal: selectKanbanTotal
 } = kanbanAdapter.getSelectors(selectKanban);
@@ -132,6 +132,10 @@ export const {
 export const selectKanbanStatus = createSelector(
     selectKanban,
     (state) => state.status
+);
+
+export const selectAllKanbanIds = createSelector(selectAllKanbans, (kanbans) =>
+    kanbans.map((kanban) => kanban.id)
 );
 
 // thunks
