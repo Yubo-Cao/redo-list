@@ -6,5 +6,7 @@ export default function TodoDescription({ id }: { id: Todo["id"] }) {
     const todo = useAppSelector((state) => selectTodoById(state, id)),
         { description } = todo;
 
-    return <TransparentEditor id={description} />;
+    return (
+        <TransparentEditor id={description} placeholder="Add description..." />
+    );
 }

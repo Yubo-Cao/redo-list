@@ -2,11 +2,11 @@ import gfm from "@bytemd/plugin-gfm";
 import { Viewer } from "@bytemd/react";
 import "bytemd/dist/index.css";
 
-import { Document, selectDocumentById } from "./documentSlice";
+import { Document, fetchDocument, selectDocumentById } from "./documentSlice";
 import fileImage from "./fileImage";
 import NoSsr from "@/components/NoSsr";
 import { cls } from "@/lib/utils";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 export type DocumentViewerProps = Omit<
     React.HTMLAttributes<HTMLDivElement>,
@@ -22,8 +22,11 @@ export default function DocumentViewer({
     className,
     ...rest
 }: DocumentViewerProps) {
-    const document = useAppSelector(selectDocumentById(id)),
-        { content } = document;
+    const dispatch = useAppDispatch(),
+        document = useAppSelector(selectDocumentById(id)),
+        { content, fieldsStatus } = document;
+
+    if (fieldsStatus.content !== "updated") dispatch(fetchDocument(id));
 
     return (
         <NoSsr>

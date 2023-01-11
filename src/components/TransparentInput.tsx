@@ -1,3 +1,4 @@
+import { pauseEvent } from "@/lib/common";
 import { cls } from "@/lib/utils";
 import { MutableRefObject, forwardRef, useState } from "react";
 
@@ -25,7 +26,7 @@ export const TransparentInput: React.FC<TransparentInputProps> = forwardRef(
 
         return (
             <div
-                onClick={(e) => onEdit(true)}
+                onClick={(e) => [onEdit(true), pauseEvent(e)]}
                 onKeyDown={(e) => e.key === "Enter" && onEdit(false)}
                 style={style}
                 className={cls(className)}

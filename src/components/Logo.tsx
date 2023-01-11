@@ -1,7 +1,8 @@
 import { cls } from "../lib/utils";
 
-import Icon from "./Icon";
+import Image from "next/image";
 import Link from "next/link";
+import icon from "../assets/icon.svg";
 
 type LogoProps = {
     className?: string;
@@ -25,21 +26,17 @@ export default function Logo({ className = "" }: LogoProps) {
                 className
             )}
         >
-            <Icon
-                name="/images/icon.png"
-                size={36}
-                iconSize={24}
-                wrapperClassName={cls(
-                    "rounded-full",
-                    "bg-gradient-to-tr from-pri-100 to-sec-200",
-                    "dark:bg-gradient-to-tr dark:from-pri-500 dark:to-sec-500"
-                )}
+            <Image
+                src={icon}
                 className={cls(
                     "text-transparent",
                     "bg-clip-text",
                     "bg-gradient-to-tr from-pri-500 to-pri-500",
                     "dark:bg-gradient-to-tr dark:from-pri-100 dark:to-pri-100"
                 )}
+                width={36}
+                height={36}
+                alt="Logo"
             />
             <span
                 className={cls(

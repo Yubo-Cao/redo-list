@@ -38,7 +38,7 @@ const navigationItems: NavigationItemProps[] = [
     {
         name: "Kanban",
         icon: "dashboard",
-        href: "/Kanban",
+        href: "/kanban",
         id: "Kanban"
     }
 ];

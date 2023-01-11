@@ -20,7 +20,8 @@
             "fs": {
                 "readFile": true,
                 "scope": [
-                    "C:/Users/yubo/AppData/Roaming/yubo/redo/data/images/**/*"
+                    "C:/Users/yubo/AppData/Roaming/yubo/redo/data/images/**/*",
+                    "$RESOURCE/**/*"
                 ]
             },
             "path": {
@@ -45,7 +46,6 @@
                 "providerShortName": null,
                 "signingIdentity": null
             },
-            "resources": [],
             "shortDescription": "",
             "targets": "all",
             "windows": {

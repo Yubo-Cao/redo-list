@@ -6,6 +6,7 @@ import {
     currentKanbanChanged,
     defaultKanban,
     deleteKanban,
+    selectCurrentKanbanId,
     selectKanbanById
 } from "./kanbansSlice";
 import Button from "@/components/Button";
@@ -50,17 +51,18 @@ const KanbanItem = ({ id, className, style, provided, ...rest }, ref) => {
     // expand
     const [exapnded, setExpanded] = React.useState(false);
 
-    // capable of being todo
+    // add todo
     const todoIds = useAppSelector((state) => {
-        const kanbans = selectAllKanbans(state),
-            usedTodos = new Set(
-                kanbans.reduce((acc, kanban) => {
-                    if (kanban.id !== id) acc.push(...kanban.tasks);
-                    return acc;
-                }, [])
-            );
-        return selectRootTodoIds(state).filter((id) => !usedTodos.has(id));
-    });
+            const kanbans = selectAllKanbans(state),
+                usedTodos = new Set(
+                    kanbans.reduce((acc, kanban) => {
+                        if (kanban.id !== id) acc.push(...kanban.tasks);
+                        return acc;
+                    }, [])
+                );
+            return selectRootTodoIds(state).filter((id) => !usedTodos.has(id));
+        }),
+        currentKaban = useAppSelector(selectCurrentKanbanId);
 
     if (!kanban) return null;
 
@@ -83,12 +85,17 @@ const KanbanItem = ({ id, className, style, provided, ...rest }, ref) => {
         <li
             className={cls(
                 "kanban-item card clickable p-4 flex flex-col",
+                currentKaban === id &&
+                    "border-2 border-dashed border-uim-300 dark:border-uim-600",
                 className
             )}
             onContextMenu={handleMenu}
             ref={ref}
             style={style}
-            onClick={(e) => dispatch(currentKanbanChanged(id))}
+            onClick={(e) =>
+                (currentKaban !== id && dispatch(currentKanbanChanged(id))) ||
+                dispatch(currentKanbanChanged(null))
+            }
         >
             <div className="flex justify-between">
                 <TransparentInput

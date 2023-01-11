@@ -19,11 +19,7 @@ import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import NoSsr from "@/components/NoSsr";
 import { useAppDispatch, useAppSelector } from "@/store";
-import dynamic from "next/dynamic";
-
-const TodoDescription = dynamic(() => import("./TodoDescription"), {
-    ssr: false
-});
+import TodoDescription from "./TodoDescription";
 
 export type EditorProps = {
     id: Todo["id"];

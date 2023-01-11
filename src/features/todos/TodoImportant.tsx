@@ -23,6 +23,7 @@ export default function TodoImportant({ id }: { id: Todo["id"] }, ref) {
             variant="none"
             padding={false}
             accent={important ? "pri" : "uim"}
+            ring={false}
         >
             <Icon name="star" size={24} fill={true} />
         </Button>

@@ -39,7 +39,7 @@ function HorizontalSidebar({
         maxW = (maxWidth || width) < 0 ? 9999 : maxWidth || width;
 
     let { onExpand, onCollapse } = rest;
-    let [_collapsed, _setCollapsed] = useState(collapsed);
+    let [_collapsed, _setCollapsed] = useState(collapsed === undefined);
     _collapsed = collapsed === undefined ? _collapsed : collapsed;
     onExpand = onExpand != null ? onExpand : () => _setCollapsed(false);
     onCollapse = onCollapse != null ? onCollapse : () => _setCollapsed(true);
