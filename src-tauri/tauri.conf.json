@@ -63,7 +63,7 @@
         "windows": [
             {
                 "fullscreen": false,
-                "height": 768,
+                "height": 500,
                 "resizable": true,
                 "title": "redo",
                 "width": 1024

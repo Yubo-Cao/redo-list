@@ -1,6 +1,6 @@
 import { Document, addDocument } from "../documents/documentSlice";
 import { Todo, todoAdded } from "../todos/todosSlice";
-import { Status } from "@/lib/common";
+import { Status, unique } from "@/lib/common";
 import { invoke } from "@/lib/tauri";
 import { RootState } from "@/store";
 import {
@@ -30,12 +30,14 @@ export type KanbanState = {
     status: Status;
     error: string | null;
     entities: { [key: Kanban["id"]]: Kanban };
+    currentKanban: Kanban["id"] | null;
 };
 
-const initialState = {
+const initialState: KanbanState = {
     status: "needsUpdate",
     error: null,
-    enities: {}
+    entities: {},
+    currentKanban: null
 };
 
 const kanbanAdapter = createEntityAdapter<Kanban>();
@@ -68,7 +70,7 @@ const kanbanSlice = createSlice({
         ) => {
             const { kanbanId, todoId } = action.payload;
             const kanban = state.entities[kanbanId];
-            kanban.tasks.push(todoId);
+            kanban.tasks = unique([...kanban.tasks, todoId]);
         },
         kanbanTodoRemoved: (
             state,
@@ -78,7 +80,7 @@ const kanbanSlice = createSlice({
             }>
         ) => {
             const { kanbanId, todoId } = action.payload;
-            const kanban = state.enities[kanbanId];
+            const kanban = state.entities[kanbanId];
             kanban.tasks = kanban.tasks.filter((id) => id !== todoId);
         },
         kanbanTodoMoved: (
@@ -93,6 +95,12 @@ const kanbanSlice = createSlice({
             const kanban = state.entities[kanbanId];
             kanban.tasks = kanban.tasks.filter((id) => id !== todoId);
             kanban.tasks.splice(index, 0, todoId);
+        },
+        currentKanbanChanged: (
+            state,
+            action: PayloadAction<Kanban["id"] | null>
+        ) => {
+            state.currentKanban = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -118,7 +126,8 @@ export const {
     kanbanUpdated,
     kanbanTodoAdded,
     kanbanTodoRemoved,
-    kanbanTodoMoved
+    kanbanTodoMoved,
+    currentKanbanChanged
 } = kanbanSlice.actions;
 
 // selector
@@ -136,6 +145,11 @@ export const selectKanbanStatus = createSelector(
 
 export const selectAllKanbanIds = createSelector(selectAllKanbans, (kanbans) =>
     kanbans.map((kanban) => kanban.id)
+);
+
+export const selectCurrentKanbanId = createSelector(
+    selectKanban,
+    (state) => state.currentKanban
 );
 
 // thunks
@@ -168,7 +182,7 @@ const updateQueue: Queue<[number, Partial<Kanban>]> = new Queue();
 export const updateKanban = createAsyncThunk(
     "kanbans/updateKanban",
     async (
-        { id, update }: { id: number; update: Partial<Todo> },
+        { id, update }: { id: number; update: Partial<Kanban> },
         { dispatch }
     ) => {
         updateQueue.enqueue([id, update]);
@@ -177,7 +191,7 @@ export const updateKanban = createAsyncThunk(
 );
 const updateWorker = async () => {
     if (!updateQueue.length) return;
-    const updates = new Map<number, Partial<Todo>>();
+    const updates = new Map<number, Partial<Kanban>>();
     while (updateQueue.length) {
         const [id, update] = updateQueue.dequeue();
         if (updates.has(id)) updates.set(id, { ...updates.get(id), ...update });
@@ -191,7 +205,7 @@ const updateWorker = async () => {
 };
 setInterval(updateWorker, 15000);
 
-export const addTodoToKaFnban = createAsyncThunk(
+export const addTodoToKanban = createAsyncThunk(
     "kanbans/addTodoToKanban",
     async (payload: { kanbanId: number; todoId: number }, { dispatch }) => {
         await invoke("add_todo_to_kanban", payload);

@@ -28,6 +28,7 @@ import { pauseEvent } from "@/lib/common";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
 import { Item, Menu, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
+import { forwardRef } from "react";
 
 export type TodoItemProps = {
     id: Todo["id"];
@@ -42,12 +43,12 @@ export type TodoItemProps = {
 };
 
 const VARIANT_CLASSNAMES = {
-    main: "card hover:bg-uim-50/50 dark:hover:bg-uim-900",
+    main: "card clickable",
     subtask:
         "bg-uim-50 dark:bg-uim-900 rounded-lg hover:bg-uim-100 dark:hover:bg-uim-800"
 };
 
-export default function TodoItem(props: TodoItemProps): JSX.Element {
+function TodoItem(props: TodoItemProps, ref = null): JSX.Element {
     let {
         id,
         variant,
@@ -65,7 +66,7 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
             pauseEvent(e);
         },
         className = "",
-        style = {}
+        ...rest
     } = props;
 
     const dispatch = useAppDispatch(),
@@ -176,7 +177,8 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
             onDoubleClick={(e) => onDoubleClick(e, id)}
             onContextMenu={handleContextMenu}
             tabIndex={0}
-            style={style}
+            ref={ref}
+            {...rest}
         >
             {features?.includes("complete") && <TodoCompleted id={id} />}
             <div className={cls("flex-1", "flex", "flex-col", "min-w-0")}>
@@ -234,3 +236,5 @@ export default function TodoItem(props: TodoItemProps): JSX.Element {
         </li>
     );
 }
+
+export default forwardRef(TodoItem);

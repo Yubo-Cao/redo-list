@@ -57,9 +57,9 @@ export default function Index() {
                 collapsed={collapsed}
                 onCollapse={() => setCollapsed(!collapsed)}
                 onExpand={() => setCollapsed(!collapsed)}
-                minWidth={500}
-                width={500}
-                maxWidth={728}
+                minSize={500}
+                size={500}
+                maxSize={728}
             >
                 <TodoList
                     ids={ids}

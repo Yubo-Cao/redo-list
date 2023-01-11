@@ -1,29 +1,35 @@
-import { TransparentEditor } from "../documents/TransparentEditor";
-import TodoList from "../todos/TodoList";
-import {
-    Kanban,
-    defaultKanban,
-    deleteKanban,
-    kanbanUpdated,
-    selectKanbanById
-} from "./kanbansSlice";
 import Button from "@/components/Button";
 import Icon from "@/components/Icon";
 import { TransparentInput } from "@/components/TransparentInput";
+import {
+    selectAllKanbans,
+    updateKanban
+} from "@/features/kanbans/kanbansSlice";
+import { Todo, selectRootTodoIds } from "@/features/todos/todosSlice";
 import { cls } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store";
-import React from "react";
+import React, { forwardRef } from "react";
+import { Draggable, Droppable, DroppableProvided } from "react-beautiful-dnd";
 import { Item, Menu, useContextMenu } from "react-contexify";
+import { TransparentEditor } from "../documents/TransparentEditor";
+import TodoItem from "../todos/TodoItem";
+import TodoMultiselect from "../todos/TodoMultiselect";
+import {
+    Kanban,
+    currentKanbanChanged,
+    defaultKanban,
+    deleteKanban,
+    selectKanbanById
+} from "./kanbansSlice";
 
-export type KanbanProps = Omit<React.HTMLAttributes<HTMLDivElement>, "id"> & {
+export type KanbanProps = {
     id: Kanban["id"];
+    provided: DroppableProvided;
+    className?: string;
+    style?: React.CSSProperties;
 };
 
-export const KanbanItem: React.FC<KanbanProps> = ({
-    id,
-    className,
-    ...props
-}: KanbanProps) => {
+const KanbanItem = ({ id, className, style, provided, ...rest }, ref) => {
     const dispatch = useAppDispatch();
 
     // kanban
@@ -44,6 +50,18 @@ export const KanbanItem: React.FC<KanbanProps> = ({
     // expand
     const [exapnded, setExpanded] = React.useState(false);
 
+    // capable of being todo
+    const todoIds = useAppSelector((state) => {
+        const kanbans = selectAllKanbans(state),
+            usedTodos = new Set(
+                kanbans.reduce((acc, kanban) => {
+                    if (kanban.id !== id) acc.push(...kanban.tasks);
+                    return acc;
+                }, [])
+            );
+        return selectRootTodoIds(state).filter((id) => !usedTodos.has(id));
+    });
+
     if (!kanban) return null;
 
     const IconButton = (
@@ -62,25 +80,76 @@ export const KanbanItem: React.FC<KanbanProps> = ({
     );
 
     return (
-        <div
-            className={cls("card p-4", cls(className))}
+        <li
+            className={cls(
+                "kanban-item card clickable p-4 flex flex-col",
+                className
+            )}
             onContextMenu={handleMenu}
-            {...props}
+            ref={ref}
+            style={style}
+            onClick={(e) => dispatch(currentKanbanChanged(id))}
         >
             <div className="flex justify-between">
                 <TransparentInput
                     value={title}
                     onChange={(value) =>
-                        dispatch(
-                            kanbanUpdated({ id, update: { title: value } })
-                        )
+                        dispatch(updateKanban({ id, update: { title: value } }))
                     }
                     className="text-xl font-medium"
                 />
                 {IconButton("more_horiz", (e) => setExpanded(!exapnded))}
             </div>
-            <TransparentEditor id={description} />
-            <TodoList ids={tasks} />
+            <TransparentEditor
+                id={description}
+                placeholder="Add description..."
+                className={cls(exapnded && "expanded", exapnded || "collapsed")}
+            />
+            <div className="flex flex-col gap-2 flex-1">
+                <Droppable key={id} droppableId={`kanban-${id}`}>
+                    {(provided, snapshot) => (
+                        <ul
+                            className={cls(
+                                "flex gap-2 flex-col h-32 flex-1 overflow-y-auto",
+                                className
+                            )}
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            {tasks.map((id, idx) => (
+                                <Draggable
+                                    key={id}
+                                    draggableId={`task-${id}`}
+                                    index={idx}
+                                >
+                                    {(provided) => (
+                                        <TodoItem
+                                            id={id}
+                                            ref={provided.innerRef}
+                                            metas={["dueDate"]}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                        />
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </ul>
+                    )}
+                </Droppable>
+                <TodoMultiselect
+                    ids={todoIds}
+                    value={tasks}
+                    onChange={(e: Todo["id"][]) => {
+                        dispatch(
+                            updateKanban({
+                                id,
+                                update: { tasks: e }
+                            })
+                        );
+                    }}
+                />
+            </div>
             <Menu
                 id={menuId}
                 theme="accent"
@@ -93,23 +162,31 @@ export const KanbanItem: React.FC<KanbanProps> = ({
                     </div>
                 </Item>
             </Menu>
-            <style jsx>
+            <style global jsx>
                 {`
-                    :global(.kanban-menu) {
+                    .kanban-menu {
                         --contexify-menu-minWidth: 12rem;
                         --contexify-activeItem-bgColor: transparent;
                         --contexify-menu-padding: 0.5rem 1rem;
                     }
 
-                    .collapsed {
+                    .kanban-item .collapsed {
                         clip-path: polygon(0 0, 100% 0%, 100% 0, 0 0);
+                        @apply absolute;
                     }
 
-                    .expanded {
+                    .kanban-item .collapsed + *::before {
+                        content: "";
+                        @apply h-0.5 w-full bg-uim-500 dark:bg-uim-400;
+                    }
+
+                    .kanban-item .expanded {
                         clip-path: polygon(0 0, 100% 0%, 100% 100%, 0 100%);
                     }
                 `}
             </style>
-        </div>
+        </li>
     );
 };
+
+export default forwardRef(KanbanItem);

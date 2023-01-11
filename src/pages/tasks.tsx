@@ -42,9 +42,9 @@ export default function Tasks() {
             </Title>
             <TodoList className="mt-4" ids={ids} />
             <Sidebar
-                width={512}
-                minWidth={256}
-                maxWidth={768}
+                size={512}
+                minSize={256}
+                maxSize={768}
                 onClick={(e) => e.stopPropagation()}
                 collapsed={!extendedEditing}
                 onCollapse={() => dispatch(todoExtendedEditingChanged(false))}

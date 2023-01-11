@@ -1,35 +1,33 @@
 import Icon from "./Icon";
 import { pauseEvent } from "@/lib/common";
 import { cls, coerce } from "@/lib/utils";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 export type SidebarProps = React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
 > & {
     children: React.ReactNode;
-    minWidth?: number;
-    maxWidth?: number;
-    width?: number;
+    minSize?: number;
+    maxSize?: number;
+    size?: number;
     direction?: "left" | "right" | "top" | "bottom";
     collapsable?: boolean;
     collapsed?: boolean;
-    onCollapse: () => void;
-    onExpand: () => void;
+    onCollapse?: () => void;
+    onExpand?: () => void;
 };
 
 const SIDEBAR_RESIZE_HANDLE_SIZE = 4;
 
 function HorizontalSidebar({
     children,
-    minWidth,
-    maxWidth,
-    width = 256,
+    minSize: minWidth,
+    maxSize: maxWidth,
+    size: width = 256,
     direction,
     collapsable = true,
-    onCollapse,
-    onExpand,
-    collapsed = false,
+    collapsed,
     className = "",
     ...rest
 }: Omit<SidebarProps, "direction"> & { direction: "left" | "right" }) {
@@ -39,6 +37,12 @@ function HorizontalSidebar({
         [resizing, setResizing] = React.useState(false),
         minW = (minWidth || width) < 0 ? 0 : minWidth || width,
         maxW = (maxWidth || width) < 0 ? 9999 : maxWidth || width;
+
+    let { onExpand, onCollapse } = rest;
+    let [_collapsed, _setCollapsed] = useState(collapsed);
+    _collapsed = collapsed === undefined ? _collapsed : collapsed;
+    onExpand = onExpand != null ? onExpand : () => _setCollapsed(false);
+    onCollapse = onCollapse != null ? onCollapse : () => _setCollapsed(true);
 
     const cc = (v) => coerce(coerce(v, minW, maxW), 0, window.innerWidth);
 
@@ -68,7 +72,7 @@ function HorizontalSidebar({
 
     const collapse = () => {
         if (collapsable) {
-            if (collapsed) {
+            if (_collapsed) {
                 onExpand();
             } else {
                 onCollapse();
@@ -81,7 +85,7 @@ function HorizontalSidebar({
             <div
                 className={cls(
                     "horizontal-sidebar",
-                    collapsed && "collapsed",
+                    _collapsed && "collapsed",
                     "bg-light-surface dark:bg-dark-surface",
                     !resizing && "transition-all",
                     className
@@ -97,7 +101,7 @@ function HorizontalSidebar({
                 className={cls(
                     "horizontal-sidebar-resize-handle",
                     "hover:bg-uim-100 dark:hover:bg-uim-800",
-                    collapsed &&
+                    _collapsed &&
                         "shadow-lg bg-light-surface dark:bg-dark-surface collapsed",
                     minW === maxW && "hidden"
                 )}
@@ -107,8 +111,8 @@ function HorizontalSidebar({
                 <div
                     className={cls(
                         "expand-collapse-button",
-                        collapsed && "collapsed",
-                        direction === "right" && collapsed && "justify-end"
+                        _collapsed && "collapsed",
+                        direction === "right" && _collapsed && "justify-end"
                     )}
                     onClick={collapse}
                 >
@@ -117,14 +121,14 @@ function HorizontalSidebar({
                         size={24}
                         className={cls(
                             "text-uim-500 dark:text-uim-400",
-                            collapsed && "collapsed"
+                            _collapsed && "collapsed"
                         )}
                         style={{
                             transform:
                                 (direction === "left"
                                     ? "rotate(0)"
                                     : "rotate(180deg)") +
-                                (collapsed ? "rotate(0)" : "rotate(180deg)")
+                                (_collapsed ? "rotate(0)" : "rotate(180deg)")
                         }}
                     />
                 </div>
@@ -178,6 +182,7 @@ function HorizontalSidebar({
         </>
     );
 }
+
 function Sidebar(props: SidebarProps) {
     const { direction = "right", ...rest } = props;
     return direction === "left" || direction === "right" ? (

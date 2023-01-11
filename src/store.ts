@@ -15,22 +15,20 @@ const store = configureStore({
         myday: myDayReducer,
         kanbans: kanbansReducer
     }
-    /*
-        // For state debug
-        middleware: (getDefaultMiddleware) => {
-            function log_state(store) {
-                return function (next) {
-                    return function (action) {
-                        console.log("dispatching", action);
-                        let result = next(action);
-                        console.log("next state", store.getState());
-                        return result;
-                    };
-                };
-            }
-            return getDefaultMiddleware().concat([log_state]);
-        }
-    */
+    // For state debug
+    // ,middleware: (getDefaultMiddleware) => {
+    //     function log_state(store) {
+    //         return function (next) {
+    //             return function (action) {
+    //                 console.log("dispatching", action);
+    //                 let result = next(action);
+    //                 console.log("next state", store.getState());
+    //                 return result;
+    //             };
+    //         };
+    //     }
+    //     return getDefaultMiddleware().concat([log_state]);
+    // }
 });
 
 store.dispatch(fetchDocumentIds());

@@ -21,6 +21,7 @@ type TodoMultiselectProps = Omit<SelectProps, "onChange"> & {
     ids: IdList;
     value: IdList;
     onChange: (value: IdList) => void;
+    showList?: boolean;
 };
 
 const createOptions = (
@@ -55,7 +56,7 @@ const flattenOptions = (options: SelectProps["options"]) => {
 };
 
 export default function TodoMultiselect(props: TodoMultiselectProps) {
-    let { ids, value, onChange, ...rest } = props;
+    let { ids, value, onChange, showList, ...rest } = props;
     const options = useAppSelector((state: RootState) =>
             createOptions(state, ids)
         ),
@@ -71,7 +72,7 @@ export default function TodoMultiselect(props: TodoMultiselectProps) {
 
     return (
         <>
-            <TodoList ids={value} variant="subtask" metas={[]} />
+            {showList && <TodoList ids={value} variant="subtask" metas={[]} />}
             <Select
                 options={options}
                 value={value.map(idToOption)}

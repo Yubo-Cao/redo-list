@@ -7,3 +7,14 @@ export function pauseEvent(e) {
     e.returnValue = false;
     return false;
 }
+
+export function unique<T>(array: T[]): T[] {
+    const seen = new Set<T>(),
+        result = [];
+    for (let e of array) {
+        if (seen.has(e)) continue;
+        seen.add(e);
+        result.push(e);
+    }
+    return result;
+}

@@ -50,6 +50,10 @@
     .card {
         @apply px-3 py-2 rounded-lg shadow dark:border dark:border-uim-500 bg-light-surface dark:bg-dark-surface;
     }
+
+    .card.clickable {
+        @apply cursor-pointer hover:bg-uim-50/50 dark:hover:bg-uim-900;
+    }
 }
 
 @layer utilities {
@@ -60,6 +64,7 @@
     .center {
         @apply flex justify-center items-center;
     }
+
 }
 
 .contexify_theme-accent {
