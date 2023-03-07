@@ -8,7 +8,7 @@
     font-display: swap;
     font-style: normal;
     font-named-instance: "Regular";
-    src: url("/fonts/Inter-roman.ttf") format("woff2");
+    src: url("../fonts/Inter-roman.ttf") format("ttf");
 }
 
 @font-face {
@@ -17,7 +17,7 @@
     font-display: swap;
     font-style: italic;
     font-named-instance: "Italic";
-    src: url("/fonts/Inter-italic.var.woff2?v=3.19") format("woff2");
+    src: url("../fonts/Inter-italic.ttf") format("ttf");
 }
 
 @font-face {
@@ -25,7 +25,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: block;
-    src: url("/fonts/MaterialIcons-Regular.woff2") format("woff2");
+    src: url("../fonts/material-symbols.woff2") format("woff2");
 }
 
 /* fira */
