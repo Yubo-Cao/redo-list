@@ -49,7 +49,7 @@ export default function Logo({ className = "" }: LogoProps) {
                     "min-w-fit"
                 )}
             >
-                GRADE TODO
+                REDO LIST
             </span>
         </Link>
     );
